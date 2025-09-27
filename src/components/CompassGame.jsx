@@ -26,6 +26,7 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
 const MAX_TURNS = 10;
 const WIN_SCORE = 12; // Seuil de victoire
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
+const ZERO_VALUES = { 'Liberté': 0, 'Cœur': 0, 'Règles': 0, 'Sécurité': 0 };
 const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 15;
 const PLAYERS_STORAGE_KEY = 'compass-game.players.v1';
@@ -48,6 +49,98 @@ const QUESTIONS = {
   'Sécurité': [
     'Quel risque si tu donnes ton mot de passe à un copain ?',
     'On te demande une photo gênante en ligne. Que fais-tu ?',
+  ],
+};
+
+// Situations de la "ronde des décisions" (8 exemples)
+const DECISIONS = {
+  'Liberté': [
+    {
+      id: 'S1',
+      title: 'Soirée pyjama',
+      situation: "Léo veut garder son smartphone sous l’oreiller pour chatter avec ses amis jusqu’à minuit. Ses parents veulent qu’il l’éteigne.",
+      choices: [
+        { label: 'A', text: 'Léo garde son smartphone, il veut sa liberté.', value: 'Liberté' },
+        { label: 'B', text: 'Il accepte de l’éteindre pour rassurer ses parents.', value: 'Sécurité' },
+        { label: 'C', text: 'Il propose de négocier : seulement le vendredi soir.', value: 'Règles' },
+      ],
+    },
+    {
+      id: 'S2',
+      title: 'Weekend (Liberté vs Famille)',
+      situation: 'Julie veut passer la matinée sur TikTok, ses parents lui proposent une balade.',
+      choices: [
+        { label: 'A', text: 'Elle reste sur TikTok.', value: 'Liberté' },
+        { label: 'B', text: 'Elle part avec sa famille pour passer du temps ensemble.', value: 'Cœur' },
+        { label: 'C', text: 'Elle propose : TikTok 1h, puis la balade.', value: 'Règles' },
+      ],
+    },
+  ],
+  'Cœur': [
+    {
+      id: 'S6',
+      title: 'Repas silencieux',
+      situation: 'Pendant le dîner, chaque membre de la famille a son smartphone en main. Personne ne se parle.',
+      choices: [
+        { label: 'A', text: 'Continuer comme ça, chacun fait ce qu’il veut.', value: 'Liberté' },
+        { label: 'B', text: 'Poser les téléphones et discuter ensemble.', value: 'Cœur' },
+        { label: 'C', text: 'Instaurer une règle “zéro téléphone à table”.', value: 'Règles' },
+      ],
+    },
+    {
+      id: 'S7',
+      title: 'Ami absent (émotion)',
+      situation: 'Emma envoie plein de messages à son amie qui ne répond pas. Elle se sent rejetée.',
+      choices: [
+        { label: 'A', text: 'Elle continue à écrire jusqu’à obtenir une réponse.', value: 'Liberté' },
+        { label: 'B', text: 'Elle patiente, son amie doit être occupée.', value: 'Sécurité' },
+        { label: 'C', text: 'Elle parle de son ressenti à ses parents.', value: 'Cœur' },
+      ],
+    },
+  ],
+  'Règles': [
+    {
+      id: 'S11',
+      title: 'Durée d’écran',
+      situation: 'Les parents annoncent “2h d’écran max par jour”. Les ados trouvent ça injuste.',
+      choices: [
+        { label: 'A', text: 'Respecter la règle même si ça frustre.', value: 'Règles' },
+        { label: 'B', text: 'Proposer une négociation : plus le week-end, moins la semaine.', value: 'Liberté' },
+        { label: 'C', text: 'Accepter la limite parce que ça protège la santé.', value: 'Sécurité' },
+      ],
+    },
+    {
+      id: 'S13',
+      title: 'Contrôle parental',
+      situation: 'Les parents vérifient les messages de Jade sans prévenir.',
+      choices: [
+        { label: 'A', text: 'Jade accepte, ses parents veulent la protéger.', value: 'Sécurité' },
+        { label: 'B', text: 'Jade proteste, c’est son espace privé.', value: 'Liberté' },
+        { label: 'C', text: 'Jade propose qu’ils en parlent ensemble.', value: 'Règles' },
+      ],
+    },
+  ],
+  'Sécurité': [
+    {
+      id: 'S16',
+      title: 'Mot de passe',
+      situation: 'Chloé donne son code à sa meilleure amie “par confiance”.',
+      choices: [
+        { label: 'A', text: 'Elle garde ce geste, c’est normal entre amies.', value: 'Cœur' },
+        { label: 'B', text: 'Elle comprend que c’est risqué et change son mot de passe.', value: 'Sécurité' },
+        { label: 'C', text: 'Elle décide qu’elle a le droit de partager ce qu’elle veut.', value: 'Liberté' },
+      ],
+    },
+    {
+      id: 'S18',
+      title: 'Photo gênante',
+      situation: 'Un copain demande à Clara une photo qu’elle n’a pas envie d’envoyer.',
+      choices: [
+        { label: 'A', text: 'Elle l’envoie pour faire plaisir.', value: 'Cœur' },
+        { label: 'B', text: 'Elle refuse et bloque le copain.', value: 'Sécurité' },
+        { label: 'C', text: 'Elle dit qu’elle fera comme elle veut, personne ne décide à sa place.', value: 'Liberté' },
+      ],
+    },
   ],
 };
 
@@ -85,6 +178,7 @@ export default function CompassGame() {
   const [currentCategory, setCurrentCategory] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [winnerIndex, setWinnerIndex] = useState(null);
+  const [decision, setDecision] = useState(null); // { category, item, selected }
 
   // Gestion joueurs
   const [players, setPlayers] = useState([
@@ -111,6 +205,37 @@ export default function CompassGame() {
     setCurrentQuestion('');
   }, []);
 
+  // Charger les joueurs depuis localStorage (si présent)
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(PLAYERS_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length >= MIN_PLAYERS && parsed.length <= MAX_PLAYERS) {
+        const restored = parsed.map((p, idx) => ({
+          name: typeof p.name === 'string' && p.name.trim() ? p.name.trim() : `Joueur ${idx + 1}`,
+          score: 0,
+        }));
+        setPlayers(restored);
+        setActivePlayerIndex(0);
+        setTurn(1);
+        setWinnerIndex(null);
+      }
+    } catch (_) {
+      // ignore
+    }
+  }, []);
+
+  // Persister les joueurs (noms seulement)
+  useEffect(() => {
+    try {
+      const slim = players.map((p) => ({ name: p.name }));
+      window.localStorage.setItem(PLAYERS_STORAGE_KEY, JSON.stringify(slim));
+    } catch (_) {
+      // ignore
+    }
+  }, [players]);
+
   // Détermine le quadrant à partir d'un angle normalisé [0, 360)
   const getQuadrantFromAngle = (angleDeg) => {
     const a = ((angleDeg % 360) + 360) % 360;
@@ -122,15 +247,24 @@ export default function CompassGame() {
 
   const randomCategory = () => CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
 
+  const advanceTurn = () => {
+    if (winnerIndex !== null) return;
+    if (turn >= MAX_TURNS) return;
+    setTurn((t) => t + 1);
+    setActivePlayerIndex((i) => (i + 1) % players.length);
+  };
+
   // Lance l'animation complète de l'aiguille et calcule le résultat
   const handleSpin = () => {
     if (isSpinning) return;
+    if (players.length < MIN_PLAYERS) return;
 
     setIsSpinning(true);
     setResultText('');
     setJackpotHit(false);
     setFinalQuadrant(null);
     setCurrentQuestion('');
+    setDecision(null);
 
     // 1) Choix aléatoire du quadrant final
     const target = QUADRANTS[Math.floor(Math.random() * QUADRANTS.length)];
@@ -172,7 +306,7 @@ export default function CompassGame() {
         setTransitionMs(step.duration);
         setCurrentAngleDeg(step.angle);
 
-        // Dernière étape: calcul du résultat + score + passage au joueur suivant
+        // Dernière étape: calcul du résultat + score
         if (idx === steps.length - 1) {
           const norm = ((step.angle % 360) + 360) % 360;
           const finalQ = getQuadrantFromAngle(norm);
@@ -182,25 +316,18 @@ export default function CompassGame() {
           const update = computeAndApplyScoring(finalQ, willJackpot);
           setResultText(update.message);
 
-          // Détection de zone frontière -> tirage d'une question
+          // Détection de zone frontière -> tirer une situation QCM
           const boundaryCategory = getBoundaryCategoryFromAngle(norm);
-          if (boundaryCategory) {
-            const pool = QUESTIONS[boundaryCategory] || [];
-            if (pool.length > 0) {
-              const q = pool[Math.floor(Math.random() * pool.length)];
-              setCurrentCategory(boundaryCategory);
-              setCurrentQuestion(q);
-            }
-          } else {
-            setCurrentQuestion('');
-          }
-
-          // Passage au tour suivant si la partie continue
           setIsSpinning(false);
-          if (!update.hasWinner && turn < MAX_TURNS) {
-            setTurn((t) => t + 1);
-            setActivePlayerIndex((i) => (i + 1) % players.length);
-            // La catégorie sera définie à la prochaine fin de spin si frontière
+          if (boundaryCategory) {
+            setCurrentCategory(boundaryCategory);
+            const poolDec = DECISIONS[boundaryCategory] || [];
+            if (poolDec.length > 0) {
+              const item = poolDec[Math.floor(Math.random() * poolDec.length)];
+              setDecision({ category: boundaryCategory, item, selected: null });
+            }
+          } else if (!update.hasWinner && turn < MAX_TURNS) {
+            advanceTurn();
           }
         }
       }, delay);
@@ -268,6 +395,47 @@ export default function CompassGame() {
     return { delta: deltaActive, message: msg, hasWinner: nextWinnerIndex !== -1, winnerIndex: nextWinnerIndex };
   };
 
+  // Gestion joueurs: ajout / suppression / renommage
+  const canAddPlayer = players.length < MAX_PLAYERS;
+  const canRemovePlayer = players.length > MIN_PLAYERS;
+
+  const handleAddPlayer = () => {
+    if (!canAddPlayer || isSpinning) return;
+    const nextIndex = players.length + 1;
+    setPlayers((prev) => [...prev, { name: `Joueur ${nextIndex}`, score: 0 }]);
+  };
+
+  const handleRemovePlayer = (index) => {
+    if (!canRemovePlayer || isSpinning) return;
+    const next = players.filter((_, i) => i !== index);
+    if (next.length < MIN_PLAYERS) return;
+    setPlayers(next);
+    setActivePlayerIndex((idx) => Math.min(idx, next.length - 1));
+  };
+
+  const handlePlayerNameChange = (index, name) => {
+    const trimmed = name.slice(0, 24);
+    setPlayers((prev) => prev.map((p, i) => (i === index ? { ...p, name: trimmed } : p)));
+  };
+
+  // QCM – Ronde des décisions
+  const handleSelectDecision = (label) => {
+    setDecision((prev) => (prev ? { ...prev, selected: label } : prev));
+  };
+
+  const handleValidateDecision = () => {
+    if (!decision || !decision.selected) return;
+    const selected = decision.item.choices.find((c) => c.label === decision.selected);
+    if (selected) {
+      setResultText((prev) => `${prev} — Choix: ${decision.selected} (${selected.value})`);
+    }
+    setDecision(null);
+    setCurrentCategory('');
+    if (winnerIndex === null && turn < MAX_TURNS) {
+      advanceTurn();
+    }
+  };
+
   // Styles inline basiques (responsives et simples)
   const styles = useMemo(() => ({
     container: {
@@ -286,6 +454,7 @@ export default function CompassGame() {
       color: '#2563eb',
       marginTop: '4px',
     },
+    subtitle: { fontSize: '12px', color: '#475569' },
     svgWrap: {
       width: 'min(86vw, 360px)',
       height: 'min(86vw, 360px)',
@@ -336,6 +505,67 @@ export default function CompassGame() {
     },
     row: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px' },
     activeDot: { width: 8, height: 8, borderRadius: 8, background: '#22c55e', marginRight: 10 },
+    playersPanel: {
+      width: '100%',
+      maxWidth: '420px',
+      textAlign: 'left',
+      background: 'rgba(255,255,255,0.85)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      color: '#0f172a',
+    },
+    input: {
+      width: '100%',
+      padding: '8px 10px',
+      borderRadius: '8px',
+      border: '1px solid #cbd5e1',
+      fontSize: '14px',
+    },
+    smallBtn: {
+      backgroundColor: '#0ea5e9',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '8px',
+      padding: '6px 10px',
+      fontWeight: 600,
+      cursor: 'pointer',
+    },
+    qcmBox: {
+      width: '100%',
+      maxWidth: '420px',
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      textAlign: 'left',
+      color: '#0f172a',
+    },
+    qcmTitle: { fontWeight: 700, fontSize: '14px', marginBottom: 6, color: '#334155' },
+    qcmSituation: { fontSize: '14px', marginBottom: 8, color: '#0f172a' },
+    qcmChoice: (active) => ({
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '8px 10px',
+      borderRadius: '8px',
+      border: `1px solid ${active ? '#2563eb' : '#cbd5e1'}`,
+      background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
+      cursor: 'pointer',
+    }),
+    qcmValidate: {
+      marginTop: 10,
+      backgroundColor: '#16a34a',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '10px',
+      padding: '10px 16px',
+      fontWeight: 700,
+      cursor: 'pointer',
+      minWidth: '140px',
+    },
   }), [isSpinning]);
 
   // Style de l'aiguille (groupe) -> on anime la rotation + easing
@@ -384,6 +614,33 @@ export default function CompassGame() {
     </svg>
   );
 
+  // Icônes rétrofuturistes médiévales (inline)
+  const IconCrown = ({ size = 18 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M3 7l4 3 5-6 5 6 4-3v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#f59e0b" stroke="#92400e" strokeWidth="1.5" />
+    </svg>
+  );
+  const IconShield = ({ size = 14 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 2l7 3v6c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5z" fill="#60a5fa" stroke="#1e3a8a" strokeWidth="1.5" />
+    </svg>
+  );
+  const IconSpark = ({ size = 14 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="#22d3ee" stroke="#155e75" strokeWidth="1.2" />
+    </svg>
+  );
+  const IconPlus = ({ size = 14 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 5v14M5 12h14" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+  const IconMinus = ({ size = 14 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 12h14" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+
   // Rendu des 4 cadrans en paths (quart de disque)
   function renderQuadrants() {
     const r = 100;
@@ -422,21 +679,76 @@ export default function CompassGame() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>La Famille Déboussolée</div>
+      <div style={styles.title}>
+        <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+          <IconCrown /> La Famille Déboussolée
+        </span>
+      </div>
       <div style={styles.turnInfo}>
         {gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
       </div>
-      {!gameOver && currentQuestion && (
-        <div style={styles.questionBox}>
-          <div style={styles.questionTitle}>Question – {currentCategory}</div>
-          <div style={styles.questionText}>{currentQuestion}</div>
+      <div style={styles.subtitle}>Configurez {MIN_PLAYERS}–{MAX_PLAYERS} joueurs et lancez la boussole.</div>
+
+      <div style={styles.playersPanel} aria-label="Configuration des joueurs">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <strong style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <IconShield /> Joueurs ({players.length})
+          </strong>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button type="button" onClick={handleAddPlayer} disabled={!canAddPlayer || isSpinning} style={{ ...styles.smallBtn, backgroundColor: canAddPlayer && !isSpinning ? '#0ea5e9' : '#93c5fd' }} aria-label="Ajouter un joueur">
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IconPlus /> Ajouter</span>
+            </button>
+          </div>
+        </div>
+        <div style={{ display: 'grid', gap: 8 }}>
+          {players.map((p, idx) => (
+            <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <input
+                type="text"
+                value={p.name}
+                onChange={(e) => handlePlayerNameChange(idx, e.target.value)}
+                style={styles.input}
+                placeholder={`Joueur ${idx + 1}`}
+                disabled={isSpinning}
+                aria-label={`Pseudo du joueur ${idx + 1}`}
+              />
+              <button
+                type="button"
+                onClick={() => handleRemovePlayer(idx)}
+                disabled={!canRemovePlayer || isSpinning}
+                style={{ ...styles.smallBtn, backgroundColor: canRemovePlayer && !isSpinning ? '#ef4444' : '#fca5a5' }}
+                aria-label={`Retirer le joueur ${idx + 1}`}
+              >
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IconMinus /> Retirer</span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {!gameOver && decision && (
+        <div style={styles.qcmBox}>
+          <div style={styles.qcmTitle}>Ronde des décisions – {decision.category} · {decision.item.title}</div>
+          <div style={styles.qcmSituation}>{decision.item.situation}</div>
+          <div style={{ display: 'grid', gap: 8 }}>
+            {decision.item.choices.map((c) => (
+              <div key={c.label} role="button" tabIndex={0} onClick={() => handleSelectDecision(c.label)} onKeyDown={(e) => { if (e.key === 'Enter') handleSelectDecision(c.label); }} style={styles.qcmChoice(decision.selected === c.label)} aria-label={`Choix ${c.label}: ${c.text}`}>
+                <strong style={{ minWidth: 18 }}>{c.label}.</strong> <span>{c.text}</span>
+              </div>
+            ))}
+          </div>
+          <button type="button" onClick={handleValidateDecision} disabled={!decision.selected} style={styles.qcmValidate}>
+            Valider mon choix
+          </button>
         </div>
       )}
 
       <div style={styles.svgWrap}>{renderCompass()}</div>
 
       <button type="button" onClick={handleSpin} disabled={isSpinning || gameOver} style={styles.button}>
-        {isSpinning ? 'Lancer…' : gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : 'Lancer'}
+        <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
+          <IconSpark /> {isSpinning ? 'Lancer…' : gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : 'Lancer'}
+        </span>
       </button>
 
       <div style={styles.result}>{resultText}</div>
@@ -446,7 +758,7 @@ export default function CompassGame() {
           <div key={p.name} style={{ ...styles.row, background: idx % 2 ? 'rgba(148,163,184,0.06)' : 'transparent' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               {idx === activePlayerIndex && !gameOver ? <span style={styles.activeDot} /> : <span style={{ width: 8, height: 8, marginRight: 10 }} />}
-              <strong style={{ color: '#0f172a' }}>{p.name}</strong>
+              <strong style={{ color: '#0f172a', display: 'inline-flex', alignItems: 'center', gap: 6 }}><IconShield /> {p.name}</strong>
             </div>
             <div style={{ fontWeight: 700, color: '#111827' }}>{p.score}</div>
           </div>
