@@ -26,6 +26,10 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
 const MAX_TURNS = 10;
 const WIN_SCORE = 12; // Seuil de victoire
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
+const MIN_PLAYERS = 2;
+const MAX_PLAYERS = 15;
+const PLAYERS_STORAGE_KEY = 'compass-game.players.v1';
+const DEFAULT_PLAYER_PREFIX = 'Joueur';
 
 // Banque de questions (exemples fournis)
 const QUESTIONS = {
@@ -86,8 +90,6 @@ export default function CompassGame() {
   const [players, setPlayers] = useState([
     { name: 'Joueur 1', score: 0 },
     { name: 'Joueur 2', score: 0 },
-    { name: 'Joueur 3', score: 0 },
-    { name: 'Joueur 4', score: 0 },
   ]);
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [turn, setTurn] = useState(1);
