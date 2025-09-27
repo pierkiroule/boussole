@@ -24,6 +24,8 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
 }, {});
 
 const MAX_TURNS = 10;
+const WIN_SCORE = 12; // Seuil de victoire
+const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
 
 export default function CompassGame() {
   // Angle absolu en degrés (peut croître au‑delà de 360 pour animer correctement)
@@ -34,6 +36,8 @@ export default function CompassGame() {
   const [resultText, setResultText] = useState('');
   const [jackpotHit, setJackpotHit] = useState(false);
   const [finalQuadrant, setFinalQuadrant] = useState(null); // 'N' | 'E' | 'S' | 'O' | null
+  const [currentCategory, setCurrentCategory] = useState('');
+  const [winnerIndex, setWinnerIndex] = useState(null);
 
   // Gestion joueurs
   const [players, setPlayers] = useState([
@@ -56,6 +60,11 @@ export default function CompassGame() {
     };
   }, []);
 
+  // Catégorie initiale pour le tour 1
+  useEffect(() => {
+    setCurrentCategory(CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)]);
+  }, []);
+
   // Détermine le quadrant à partir d'un angle normalisé [0, 360)
   const getQuadrantFromAngle = (angleDeg) => {
     const a = ((angleDeg % 360) + 360) % 360;
@@ -64,6 +73,8 @@ export default function CompassGame() {
     if (a >= 135 && a < 225) return 'S';
     return 'O';
   };
+
+  const randomCategory = () => CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
 
   // Lance l'animation complète de l'aiguille et calcule le résultat
   const handleSpin = () => {
@@ -126,9 +137,10 @@ export default function CompassGame() {
 
           // Passage au tour suivant si la partie continue
           setIsSpinning(false);
-          if (turn < MAX_TURNS) {
+          if (!update.hasWinner && turn < MAX_TURNS) {
             setTurn((t) => t + 1);
             setActivePlayerIndex((i) => (i + 1) % players.length);
+            setCurrentCategory(randomCategory());
           }
         }
       }, delay);
@@ -146,49 +158,54 @@ export default function CompassGame() {
 
     let deltaActive = 0;
     let extraMessage = '';
+    const deltas = new Map(); // index -> delta
 
     if (quadrantId === 'N') {
-      deltaActive = 3; // max points
-      if (jackpot) {
-        deltaActive += 1; // bonus jackpot
-        extraMessage = ' + 🎉 JACKPOT PILE-POIL NORD 🎉';
-      }
-      applyScoreDelta(currentIndex, deltaActive);
+      // Trésor: max points + bonus jackpot éventuel
+      deltaActive = 3 + (jackpot ? 1 : 0);
+      deltas.set(currentIndex, deltaActive);
+      if (jackpot) extraMessage = ' + 🎉 JACKPOT PILE-POIL NORD 🎉';
     } else if (quadrantId === 'E') {
-      // Partage: on divise les points de base entre le joueur et un autre
+      // Cadeau: donner une partie de ses points à un autre joueur (transfert)
       const otherCandidates = Array.from({ length: playerCount }, (_, i) => i).filter((i) => i !== currentIndex);
       const otherIndex = otherCandidates[Math.floor(Math.random() * otherCandidates.length)];
-      const activeGain = Math.ceil(base / 2);
-      const otherGain = Math.floor(base / 2);
-      deltaActive = activeGain;
-      applyScoreDelta(currentIndex, activeGain);
-      applyScoreDelta(otherIndex, otherGain);
-      extraMessage = ` (+${otherGain} pour ${players[otherIndex].name})`;
+      const available = players[currentIndex].score;
+      const transfer = Math.min(base, available);
+      deltaActive = -transfer;
+      if (transfer > 0) {
+        deltas.set(currentIndex, -transfer);
+        deltas.set(otherIndex, (deltas.get(otherIndex) || 0) + transfer);
+        extraMessage = ` (donné ${transfer} à ${players[otherIndex].name})`;
+      } else {
+        extraMessage = ' (rien à donner)';
+      }
     } else if (quadrantId === 'S') {
       // Gage: 50% de chance de réussir et garder les points de base, sinon 0
       const success = Math.random() < 0.5;
       deltaActive = success ? base : 0;
-      applyScoreDelta(currentIndex, deltaActive);
+      if (deltaActive !== 0) deltas.set(currentIndex, deltaActive);
       extraMessage = success ? ' (gage réussi ✅)' : ' (gage raté ❌)';
     } else {
       // Ouest: perdu, aucun point
       deltaActive = 0;
-      // rien à ajouter
     }
 
-    const label = ID_TO_LABEL[quadrantId] || '';
-    const msg = `${label} → +${deltaActive} point${deltaActive > 1 ? 's' : ''}${extraMessage}`;
-
-    return { delta: deltaActive, message: msg };
-  };
-
-  // Applique un delta de score à un joueur donné
-  const applyScoreDelta = (playerIndex, delta) => {
-    if (!delta) return;
-    setPlayers((prev) => {
-      const next = prev.map((p, idx) => (idx === playerIndex ? { ...p, score: p.score + delta } : p));
-      return next;
+    // Calcul du tableau de scores mis à jour en une seule passe
+    const nextPlayers = players.map((p, idx) => {
+      const d = deltas.get(idx) || 0;
+      return { ...p, score: p.score + d };
     });
+    setPlayers(nextPlayers);
+
+    const nextWinnerIndex = nextPlayers.findIndex((p) => p.score >= WIN_SCORE);
+    setWinnerIndex(nextWinnerIndex !== -1 ? nextWinnerIndex : null);
+
+    const label = ID_TO_LABEL[quadrantId] || '';
+    const sign = deltaActive >= 0 ? '+' : '-';
+    const absDelta = Math.abs(deltaActive);
+    const msg = `${label} → ${sign}${absDelta} point${absDelta > 1 ? 's' : ''}${extraMessage}`;
+
+    return { delta: deltaActive, message: msg, hasWinner: nextWinnerIndex !== -1, winnerIndex: nextWinnerIndex };
   };
 
   // Styles inline basiques (responsives et simples)
@@ -233,6 +250,7 @@ export default function CompassGame() {
     },
     result: { fontSize: '14px', color: '#334155', minHeight: '24px' },
     turnInfo: { fontSize: '12px', color: '#475569' },
+    category: { fontSize: '13px', color: '#0f172a' },
     scoreboard: {
       width: '100%',
       maxWidth: '420px',
@@ -327,19 +345,22 @@ export default function CompassGame() {
     );
   }
 
-  const gameOver = turn > MAX_TURNS;
+  const gameOver = turn > MAX_TURNS || winnerIndex !== null;
 
   return (
     <div style={styles.container}>
       <div style={styles.title}>La Famille Déboussolée</div>
       <div style={styles.turnInfo}>
-        {gameOver ? 'Partie terminée' : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
+        {gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
       </div>
+      {!gameOver && (
+        <div style={styles.category}>Question: {currentCategory}</div>
+      )}
 
       <div style={styles.svgWrap}>{renderCompass()}</div>
 
       <button type="button" onClick={handleSpin} disabled={isSpinning || gameOver} style={styles.button}>
-        {isSpinning ? 'Lancer…' : gameOver ? 'Partie terminée' : 'Lancer'}
+        {isSpinning ? 'Lancer…' : gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : 'Lancer'}
       </button>
 
       <div style={styles.result}>{resultText}</div>
