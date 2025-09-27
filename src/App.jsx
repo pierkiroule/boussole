@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import LogoBoussole from './components/LogoBoussole.jsx';
+import CompassGame from './components/CompassGame.jsx';
 import Accordion from './components/Accordion.jsx';
 import AccordionItem from './components/AccordionItem.jsx';
 
@@ -89,6 +90,10 @@ export default function App() {
               />
             ))}
           </Accordion>
+        </div>
+
+        <div className="mt-10">
+          <CompassGame />
         </div>
       </div>
     </div>
