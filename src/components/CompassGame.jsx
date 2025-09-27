@@ -223,7 +223,7 @@ export default function CompassGame() {
     title: {
       fontSize: '20px',
       fontWeight: 700,
-      color: '#0f172a',
+      color: '#2563eb',
       marginTop: '4px',
     },
     svgWrap: {
