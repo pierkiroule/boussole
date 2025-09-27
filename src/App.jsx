@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import LogoBoussole from './components/LogoBoussole.jsx';
 import Accordion from './components/Accordion.jsx';
 import AccordionItem from './components/AccordionItem.jsx';
+import CompassGame from './components/CompassGame.jsx';
 
 const STEP_METADATA = {
   N: { title: 'N – Nommer', color: 'blue-600' },
@@ -21,6 +22,7 @@ function Slogan() {
 export default function App() {
   const [activeStep, setActiveStep] = useState(null); // null | 'N' | 'E' | 'S' | 'O'
   const [notes, setNotes] = useState({ N: '', E: '', S: '', O: '' });
+  const [view, setView] = useState('main'); // 'main' | 'game'
 
   const storageKey = useMemo(() => 'boussole-parentale', []);
 
@@ -70,26 +72,51 @@ export default function App() {
   return (
     <div className="flex min-h-screen items-start sm:items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="flex flex-col items-center">
-          <LogoBoussole activeStep={activeStep} />
-          <Slogan />
+        <div className="mb-4 flex justify-center gap-2">
+          <button
+            type="button"
+            className={`btn glass ${view === 'main' ? 'ring-2 ring-slate-400' : ''}`}
+            onClick={() => setView('main')}
+          >
+            Cadre parental
+          </button>
+          <button
+            type="button"
+            className={`btn glass ${view === 'game' ? 'ring-2 ring-slate-400' : ''}`}
+            onClick={() => setView('game')}
+          >
+            Mini‑jeu
+          </button>
         </div>
 
-        <div className="mt-8 space-y-3">
-          <Accordion defaultOpenId="N">
-            {(['N', 'E', 'S', 'O']).map((step) => (
-              <AccordionItem
-                key={step}
-                id={step}
-                title={STEP_METADATA[step].title}
-                color={STEP_METADATA[step].color}
-                value={notes[step]}
-                onChange={(v) => setNotes((prev) => ({ ...prev, [step]: v }))}
-                onValidate={() => handleValidate(step)}
-              />
-            ))}
-          </Accordion>
-        </div>
+        {view === 'game' ? (
+          <div className="flex justify-center">
+            <CompassGame />
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col items-center">
+              <LogoBoussole activeStep={activeStep} />
+              <Slogan />
+            </div>
+
+            <div className="mt-8 space-y-3">
+              <Accordion defaultOpenId="N">
+                {(['N', 'E', 'S', 'O']).map((step) => (
+                  <AccordionItem
+                    key={step}
+                    id={step}
+                    title={STEP_METADATA[step].title}
+                    color={STEP_METADATA[step].color}
+                    value={notes[step]}
+                    onChange={(v) => setNotes((prev) => ({ ...prev, [step]: v }))}
+                    onValidate={() => handleValidate(step)}
+                  />
+                ))}
+              </Accordion>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
