@@ -130,20 +130,36 @@ export default function CompassGame() {
     setFinalQuadrant(null);
     setCurrentQuestion('');
 
-    // 1) Choix aléatoire du quadrant final
-    const target = QUADRANTS[Math.floor(Math.random() * QUADRANTS.length)];
+    // 1) Décider si l'on atterrit sur une frontière ou un cadran
+    const landingIsBoundary = Math.random() < 0.3; // ~30% de chances
+    // 2) Choix de la cible (quadrant si pas frontière)
+    const target = landingIsBoundary ? null : QUADRANTS[Math.floor(Math.random() * QUADRANTS.length)];
 
-    // 2) Spécial Nord: 1 chance sur 3 de pile 0°
-    const willJackpot = target.id === 'N' && Math.random() < 1 / 3;
+    // 3) Spécial Nord: 1 chance sur 3 de pile 0° (uniquement si quadrant Nord)
+    const willJackpot = !landingIsBoundary && target.id === 'N' && Math.random() < 1 / 3;
     setJackpotHit(willJackpot);
 
-    // 3) Au moins 3 tours complets
+    // 4) Au moins 3 tours complets
     const baseTurns = 3 + Math.floor(Math.random() * 3); // 3..5 tours
 
-    // 4) Angle final absolu
+    // 5) Angle final absolu
     const current = currentAngleDeg;
-    const baseTarget = current + baseTurns * 360 + (willJackpot ? 0 : target.angle);
-    const finalTarget = willJackpot ? baseTarget - ((baseTarget % 360 + 360) % 360) : baseTarget;
+    let finalTarget;
+    if (landingIsBoundary) {
+      const boundary = BOUNDARIES[Math.floor(Math.random() * BOUNDARIES.length)];
+      const jitter = (Math.random() * 2 - 1) * (BOUNDARY_THRESHOLD_DEG * 0.6); // rester proche de la frontière
+      const angleNormalized = boundary.angle + jitter;
+      finalTarget = current + baseTurns * 360 + angleNormalized;
+    } else if (willJackpot) {
+      // S'arrêter exactement à 0° absolu
+      const baseTarget = current + baseTurns * 360;
+      finalTarget = baseTarget - ((baseTarget % 360 + 360) % 360);
+    } else {
+      // Viser le centre du quadrant avec un léger jitter pour éviter les frontières
+      const jitter = (Math.random() * 2 - 1) * 7; // ±7°
+      const angleNormalized = target.angle + jitter;
+      finalTarget = current + baseTurns * 360 + angleNormalized;
+    }
 
     // 5) Séquence d'animation: grand spin + 2–3 oscillations
     //    On génère des étapes successives avec durées décroissantes et amplitudes réduites
@@ -170,35 +186,39 @@ export default function CompassGame() {
         setTransitionMs(step.duration);
         setCurrentAngleDeg(step.angle);
 
-        // Dernière étape: calcul du résultat + score + passage au joueur suivant
+        // Dernière étape: résultat (frontière => question; cadran => score) + passage au joueur suivant
         if (idx === steps.length - 1) {
           const norm = ((step.angle % 360) + 360) % 360;
-          const finalQ = getQuadrantFromAngle(norm);
-          setFinalQuadrant(finalQ);
-
-          // Calcul des points
-          const update = computeAndApplyScoring(finalQ, willJackpot);
-          setResultText(update.message);
-
-          // Détection de zone frontière -> tirage d'une question
           const boundaryCategory = getBoundaryCategoryFromAngle(norm);
+          setIsSpinning(false);
           if (boundaryCategory) {
+            // Zone frontière: poser une question (pas d'effet de cadran)
+            setFinalQuadrant(null);
             const pool = QUESTIONS[boundaryCategory] || [];
             if (pool.length > 0) {
               const q = pool[Math.floor(Math.random() * pool.length)];
               setCurrentCategory(boundaryCategory);
               setCurrentQuestion(q);
+            } else {
+              setCurrentCategory(boundaryCategory);
+              setCurrentQuestion('');
+            }
+            setResultText(`Question — ${boundaryCategory}`);
+            if (turn < MAX_TURNS) {
+              setTurn((t) => t + 1);
+              setActivePlayerIndex((i) => (i + 1) % players.length);
             }
           } else {
+            // Cadran: appliquer l'effet et les points
+            const finalQ = getQuadrantFromAngle(norm);
+            setFinalQuadrant(finalQ);
+            const update = computeAndApplyScoring(finalQ, willJackpot);
+            setResultText(update.message);
             setCurrentQuestion('');
-          }
-
-          // Passage au tour suivant si la partie continue
-          setIsSpinning(false);
-          if (!update.hasWinner && turn < MAX_TURNS) {
-            setTurn((t) => t + 1);
-            setActivePlayerIndex((i) => (i + 1) % players.length);
-            // La catégorie sera définie à la prochaine fin de spin si frontière
+            if (!update.hasWinner && turn < MAX_TURNS) {
+              setTurn((t) => t + 1);
+              setActivePlayerIndex((i) => (i + 1) % players.length);
+            }
           }
         }
       }, delay);
