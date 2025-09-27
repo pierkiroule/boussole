@@ -27,6 +27,48 @@ const MAX_TURNS = 10;
 const WIN_SCORE = 12; // Seuil de victoire
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
 
+// Banque de questions (exemples fournis)
+const QUESTIONS = {
+  'Liberté': [
+    "Tu veux garder ton smartphone la nuit. Qu’en penses-tu ?",
+    'Un ami t’envoie un message tard. Tu réponds ou tu attends demain ?',
+  ],
+  'Cœur': [
+    'Que ressens-tu si tes parents te demandent de poser ton smartphone au dîner ?',
+    'Ton meilleur ami ne te répond pas. Comment réagis-tu ?',
+  ],
+  'Règles': [
+    'Tes parents fixent une limite de 2h d’écran. Est-ce juste selon toi ?',
+    'En classe, tu reçois une notification. Que fais-tu ?',
+  ],
+  'Sécurité': [
+    'Quel risque si tu donnes ton mot de passe à un copain ?',
+    'On te demande une photo gênante en ligne. Que fais-tu ?',
+  ],
+};
+
+// Zones de frontière (entre cadrans) -> catégorie associée
+const BOUNDARIES = [
+  { angle: 45, category: 'Liberté' },
+  { angle: 135, category: 'Cœur' },
+  { angle: 225, category: 'Règles' },
+  { angle: 315, category: 'Sécurité' },
+];
+const BOUNDARY_THRESHOLD_DEG = 10; // ±10° autour de la frontière
+
+function angularDistance(a, b) {
+  const norm = (x) => ((x % 360) + 360) % 360;
+  const da = Math.abs(norm(a) - norm(b));
+  return Math.min(da, 360 - da);
+}
+
+function getBoundaryCategoryFromAngle(angleDeg) {
+  for (const b of BOUNDARIES) {
+    if (angularDistance(angleDeg, b.angle) <= BOUNDARY_THRESHOLD_DEG) return b.category;
+  }
+  return null;
+}
+
 export default function CompassGame() {
   // Angle absolu en degrés (peut croître au‑delà de 360 pour animer correctement)
   const [currentAngleDeg, setCurrentAngleDeg] = useState(0);
@@ -37,6 +79,7 @@ export default function CompassGame() {
   const [jackpotHit, setJackpotHit] = useState(false);
   const [finalQuadrant, setFinalQuadrant] = useState(null); // 'N' | 'E' | 'S' | 'O' | null
   const [currentCategory, setCurrentCategory] = useState('');
+  const [currentQuestion, setCurrentQuestion] = useState('');
   const [winnerIndex, setWinnerIndex] = useState(null);
 
   // Gestion joueurs
@@ -60,9 +103,10 @@ export default function CompassGame() {
     };
   }, []);
 
-  // Catégorie initiale pour le tour 1
+  // Catégorie/question initiales: rien
   useEffect(() => {
-    setCurrentCategory(CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)]);
+    setCurrentCategory('');
+    setCurrentQuestion('');
   }, []);
 
   // Détermine le quadrant à partir d'un angle normalisé [0, 360)
@@ -84,6 +128,7 @@ export default function CompassGame() {
     setResultText('');
     setJackpotHit(false);
     setFinalQuadrant(null);
+    setCurrentQuestion('');
 
     // 1) Choix aléatoire du quadrant final
     const target = QUADRANTS[Math.floor(Math.random() * QUADRANTS.length)];
@@ -135,12 +180,25 @@ export default function CompassGame() {
           const update = computeAndApplyScoring(finalQ, willJackpot);
           setResultText(update.message);
 
+          // Détection de zone frontière -> tirage d'une question
+          const boundaryCategory = getBoundaryCategoryFromAngle(norm);
+          if (boundaryCategory) {
+            const pool = QUESTIONS[boundaryCategory] || [];
+            if (pool.length > 0) {
+              const q = pool[Math.floor(Math.random() * pool.length)];
+              setCurrentCategory(boundaryCategory);
+              setCurrentQuestion(q);
+            }
+          } else {
+            setCurrentQuestion('');
+          }
+
           // Passage au tour suivant si la partie continue
           setIsSpinning(false);
           if (!update.hasWinner && turn < MAX_TURNS) {
             setTurn((t) => t + 1);
             setActivePlayerIndex((i) => (i + 1) % players.length);
-            setCurrentCategory(randomCategory());
+            // La catégorie sera définie à la prochaine fin de spin si frontière
           }
         }
       }, delay);
@@ -251,6 +309,19 @@ export default function CompassGame() {
     result: { fontSize: '14px', color: '#334155', minHeight: '24px' },
     turnInfo: { fontSize: '12px', color: '#475569' },
     category: { fontSize: '13px', color: '#0f172a' },
+    questionBox: {
+      width: '100%',
+      maxWidth: '420px',
+      textAlign: 'left',
+      background: 'rgba(255,255,255,0.8)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      color: '#0f172a',
+    },
+    questionTitle: { fontWeight: 700, fontSize: '13px', marginBottom: 6 },
+    questionText: { fontSize: '14px', lineHeight: 1.45 },
     scoreboard: {
       width: '100%',
       maxWidth: '420px',
@@ -353,8 +424,11 @@ export default function CompassGame() {
       <div style={styles.turnInfo}>
         {gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
       </div>
-      {!gameOver && (
-        <div style={styles.category}>Question: {currentCategory}</div>
+      {!gameOver && currentQuestion && (
+        <div style={styles.questionBox}>
+          <div style={styles.questionTitle}>Question – {currentCategory}</div>
+          <div style={styles.questionText}>{currentQuestion}</div>
+        </div>
       )}
 
       <div style={styles.svgWrap}>{renderCompass()}</div>
