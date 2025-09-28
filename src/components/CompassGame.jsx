@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getRandomQuestion } from '../data/questions.js';
 import { getRandomSituation } from '../data/situations.js';
 import { getRandomGage, getAgeGroupFromProfile } from '../data/gages.js';
+import { getRandomRiddle, checkRiddleAnswer } from '../data/riddles.js';
 
 /**
  * La Famille Déboussolée — Mini‑jeu de boussole
@@ -26,9 +27,10 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
   return acc;
 }, {});
 
-const MAX_TURNS = 10;
-const WIN_SCORE = 12; // Seuil de victoire individuel
-const FAMILY_STARS_TARGET = 5; // Étoiles familiales pour victoire d'équipe
+const DEFAULT_MAX_TURNS = 10;
+const DEFAULT_WIN_SCORE = 12; // Seuil de victoire individuel
+const DEFAULT_FAMILY_STARS_TARGET = 5; // Étoiles familiales pour victoire d'équipe
+const DEFAULT_TIME_LIMIT = 30; // Durée en minutes
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
 const ZERO_VALUES = { 'Liberté': 0, 'Cœur': 0, 'Règles': 0, 'Sécurité': 0 };
 const MIN_PLAYERS = 2;
@@ -191,6 +193,28 @@ export default function CompassGame({ config, onBackToHome }) {
   const [votesCount, setVotesCount] = useState({ ...ZERO_VALUES });
   const [familyStars, setFamilyStars] = useState(0);
   const [teamWin, setTeamWin] = useState(false);
+  const [riddle, setRiddle] = useState(null); // { category, item, answer, solved }
+  const [riddlePhase, setRiddlePhase] = useState('question'); // 'question' | 'answer' | 'result'
+  const [riddleAnswer, setRiddleAnswer] = useState('');
+  
+  // Configuration de la partie
+  const [gameConfig, setGameConfig] = useState({
+    maxTurns: DEFAULT_MAX_TURNS,
+    winScore: DEFAULT_WIN_SCORE,
+    familyStarsTarget: DEFAULT_FAMILY_STARS_TARGET,
+    timeLimit: DEFAULT_TIME_LIMIT,
+    enableTimeLimit: false
+  });
+  
+  // Chronomètre et gestion du temps
+  const [gameStartTime, setGameStartTime] = useState(null);
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  const [gameEndReason, setGameEndReason] = useState(null); // 'turns' | 'score' | 'time' | 'stars'
+  
+  // Animation de victoire
+  const [victoryAnimation, setVictoryAnimation] = useState(false);
+  const [victoryWinner, setVictoryWinner] = useState(null);
+  const [tiebreakerMode, setTiebreakerMode] = useState(false);
 
   // Gestion joueurs - initialisation basée sur la config
   const [players, setPlayers] = useState(() => {
@@ -218,6 +242,34 @@ export default function CompassGame({ config, onBackToHome }) {
       timeoutsRef.current = [];
     };
   }, []);
+
+  // Gestion du chronomètre
+  useEffect(() => {
+    if (!gameConfig.enableTimeLimit || !gameStartTime) return;
+    
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - gameStartTime;
+      const remaining = Math.max(0, gameConfig.timeLimit * 60 * 1000 - elapsed);
+      setTimeRemaining(remaining);
+      
+      if (remaining === 0) {
+        setGameEndReason('time');
+        setVictoryAnimation(true);
+        clearInterval(interval);
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [gameConfig.enableTimeLimit, gameConfig.timeLimit, gameStartTime]);
+
+  // Détecter automatiquement la fin de partie
+  useEffect(() => {
+    if (gameStartTime && !victoryAnimation) {
+      if (teamWin || winnerIndex !== null || turn > gameConfig.maxTurns || (gameConfig.enableTimeLimit && timeRemaining === 0)) {
+        handleGameEnd();
+      }
+    }
+  }, [teamWin, winnerIndex, turn, gameConfig.maxTurns, gameConfig.enableTimeLimit, timeRemaining, gameStartTime, victoryAnimation]);
 
   // Catégorie/question initiales: rien
   useEffect(() => {
@@ -277,7 +329,7 @@ export default function CompassGame({ config, onBackToHome }) {
 
   const advanceTurn = () => {
     if (winnerIndex !== null) return;
-    if (turn >= MAX_TURNS) return;
+    if (turn >= gameConfig.maxTurns) return;
     setTurn((t) => t + 1);
     setActivePlayerIndex((i) => (i + 1) % players.length);
   };
@@ -361,15 +413,28 @@ export default function CompassGame({ config, onBackToHome }) {
           const update = computeAndApplyScoring(finalQ, willJackpot);
           setResultText(update.message);
 
-          // Détection de zone frontière -> tirer une situation QCM
+          // Détection de zone frontière -> tirer une situation QCM ou une énigme
           const boundaryCategory = getBoundaryCategoryFromAngle(norm);
           setIsSpinning(false);
           if (boundaryCategory) {
             setCurrentCategory(boundaryCategory);
             const difficulty = config?.difficulty || 'medium';
-            const situation = getRandomSituation(boundaryCategory, difficulty);
-            if (situation) {
-              setDecision({ category: boundaryCategory, item: situation, selected: null });
+            
+            // 50% de chance d'avoir une énigme, 50% d'avoir une situation
+            const isRiddle = Math.random() < 0.5;
+            
+            if (isRiddle) {
+              const riddleItem = getRandomRiddle(boundaryCategory, difficulty);
+              if (riddleItem) {
+                setRiddle({ category: boundaryCategory, item: riddleItem, solved: false });
+                setRiddlePhase('question');
+                setRiddleAnswer('');
+              }
+            } else {
+              const situation = getRandomSituation(boundaryCategory, difficulty);
+              if (situation) {
+                setDecision({ category: boundaryCategory, item: situation, selected: null });
+              }
             }
           } else if (!update.hasWinner && turn < MAX_TURNS) {
             advanceTurn();
@@ -430,8 +495,13 @@ export default function CompassGame({ config, onBackToHome }) {
     });
     setPlayers(nextPlayers);
 
-    const nextWinnerIndex = nextPlayers.findIndex((p) => p.score >= WIN_SCORE);
+    const nextWinnerIndex = nextPlayers.findIndex((p) => p.score >= gameConfig.winScore);
     setWinnerIndex(nextWinnerIndex !== -1 ? nextWinnerIndex : null);
+    
+    // Détecter la victoire d'équipe
+    const nextFamilyStars = familyStars + (max > 0 && winners.length === 1 && activeValue === winners[0] ? 1 : 0);
+    const hasTeamWin = nextFamilyStars >= gameConfig.familyStarsTarget;
+    setTeamWin(hasTeamWin);
 
     const label = ID_TO_LABEL[quadrantId] || '';
     const sign = deltaActive >= 0 ? '+' : '-';
@@ -535,6 +605,99 @@ export default function CompassGame({ config, onBackToHome }) {
       next[valueKey] = nextVal;
       return next;
     });
+  };
+
+  // Gestion des énigmes
+  const handleRiddleAnswer = () => {
+    if (!riddle || !riddleAnswer.trim()) return;
+    
+    const isCorrect = checkRiddleAnswer(riddle.item, riddleAnswer);
+    setRiddle(prev => ({ ...prev, solved: isCorrect }));
+    setRiddlePhase('result');
+    
+    // Bonus pour une énigme résolue
+    if (isCorrect) {
+      setPlayers((prev) => prev.map((p, idx) => 
+        idx === activePlayerIndex ? { ...p, score: p.score + 2 } : p
+      ));
+      setFamilyStars((s) => s + 1);
+      setResultText(prev => `${prev} + 🧩 Énigme résolue (+2 points, +1 étoile)`);
+    } else {
+      setResultText(prev => `${prev} + 🧩 Énigme non résolue`);
+    }
+  };
+
+  const handleRiddleNext = () => {
+    setRiddle(null);
+    setRiddlePhase('question');
+    setRiddleAnswer('');
+    setCurrentCategory('');
+    if (!teamWin && winnerIndex === null && turn < gameConfig.maxTurns) {
+      advanceTurn();
+    }
+  };
+
+  // Fonction pour démarrer une partie
+  const startGame = () => {
+    setGameStartTime(Date.now());
+    setTimeRemaining(gameConfig.timeLimit * 60 * 1000);
+    setVictoryAnimation(false);
+    setGameEndReason(null);
+    setTurn(1);
+    setActivePlayerIndex(0);
+    setWinnerIndex(null);
+    setTeamWin(false);
+    setFamilyStars(0);
+    setPlayers(prev => prev.map(p => ({ ...p, score: 0 })));
+  };
+
+  // Fonction pour gérer la fin de partie
+  const handleGameEnd = () => {
+    if (victoryAnimation) return;
+    
+    let endReason = 'turns';
+    let winner = null;
+    
+    if (teamWin) {
+      endReason = 'stars';
+      winner = 'team';
+    } else if (winnerIndex !== null) {
+      endReason = 'score';
+      winner = winnerIndex;
+    } else if (turn > gameConfig.maxTurns) {
+      endReason = 'turns';
+      // Vérifier s'il y a égalité
+      const maxScore = Math.max(...players.map(p => p.score));
+      const winners = players.filter(p => p.score === maxScore);
+      if (winners.length > 1) {
+        setTiebreakerMode(true);
+        return;
+      }
+      winner = players.findIndex(p => p.score === maxScore);
+    }
+    
+    setGameEndReason(endReason);
+    setVictoryWinner(winner);
+    setVictoryAnimation(true);
+  };
+
+  // Fonction pour le départage
+  const handleTiebreaker = () => {
+    const maxScore = Math.max(...players.map(p => p.score));
+    const tiedPlayers = players.filter(p => p.score === maxScore);
+    
+    // Départage par nombre d'énigmes résolues, puis par étoiles familiales
+    const tiebreakerResults = tiedPlayers.map((player, index) => ({
+      ...player,
+      originalIndex: players.findIndex(p => p.name === player.name),
+      tiebreakerScore: Math.random() // Pour l'instant, aléatoire
+    }));
+    
+    tiebreakerResults.sort((a, b) => b.tiebreakerScore - a.tiebreakerScore);
+    const winner = tiebreakerResults[0].originalIndex;
+    
+    setVictoryWinner(winner);
+    setTiebreakerMode(false);
   };
 
   // Styles inline basiques (responsives et simples)
@@ -667,7 +830,152 @@ export default function CompassGame({ config, onBackToHome }) {
       cursor: 'pointer',
       minWidth: '140px',
     },
+    riddleBox: {
+      width: '100%',
+      maxWidth: '420px',
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      textAlign: 'left',
+      color: '#0f172a',
+    },
+    riddleTitle: { fontWeight: 700, fontSize: '14px', marginBottom: 6, color: '#334155' },
+    riddleQuestion: { fontSize: '14px', marginBottom: 8, color: '#0f172a', fontStyle: 'italic' },
+    riddleAnswer: {
+      width: '100%',
+      padding: '8px 10px',
+      borderRadius: '8px',
+      border: '1px solid #cbd5e1',
+      fontSize: '14px',
+      marginBottom: '8px',
+    },
+    riddleValidate: {
+      backgroundColor: '#7c3aed',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '10px',
+      padding: '10px 16px',
+      fontWeight: 700,
+      cursor: 'pointer',
+      minWidth: '140px',
+    },
+    riddleResult: {
+      fontSize: '14px',
+      marginBottom: '8px',
+      padding: '8px',
+      borderRadius: '8px',
+      backgroundColor: 'rgba(34, 197, 94, 0.1)',
+      border: '1px solid rgba(34, 197, 94, 0.3)',
+    },
+    riddleExplanation: {
+      fontSize: '12px',
+      color: '#475569',
+      fontStyle: 'italic',
+      marginBottom: '8px',
+    },
+    configBox: {
+      width: '100%',
+      maxWidth: '420px',
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      textAlign: 'left',
+      color: '#0f172a',
+    },
+    configTitle: { fontWeight: 700, fontSize: '14px', marginBottom: 8, color: '#334155' },
+    configRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
+    configLabel: { fontSize: '13px', color: '#0f172a' },
+    configInput: {
+      width: '60px',
+      padding: '4px 6px',
+      borderRadius: '4px',
+      border: '1px solid #cbd5e1',
+      fontSize: '12px',
+    },
+    configCheckbox: { marginLeft: 8 },
+    victoryOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.8)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+    },
+    victoryBox: {
+      background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+      borderRadius: '20px',
+      padding: '40px',
+      textAlign: 'center',
+      color: '#fff',
+      boxShadow: '0 25px 50px rgba(0,0,0,0.3)',
+      animation: 'victoryPulse 2s ease-in-out infinite',
+    },
+    victoryTitle: { fontSize: '32px', fontWeight: 900, marginBottom: 16 },
+    victorySubtitle: { fontSize: '18px', marginBottom: 20 },
+    victoryButton: {
+      background: '#fff',
+      color: '#f59e0b',
+      border: 'none',
+      borderRadius: '12px',
+      padding: '12px 24px',
+      fontWeight: 700,
+      cursor: 'pointer',
+      fontSize: '16px',
+    },
+    timerBox: {
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      borderRadius: '8px',
+      padding: '8px 12px',
+      fontSize: '12px',
+      color: '#0f172a',
+      fontWeight: 600,
+    },
+    tiebreakerBox: {
+      width: '100%',
+      maxWidth: '420px',
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      textAlign: 'center',
+      color: '#0f172a',
+    },
   }), [isSpinning]);
+
+  // Ajouter les styles CSS pour l'animation de victoire
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes victoryPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      @keyframes confetti {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+      }
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: #fbbf24;
+        animation: confetti 3s linear infinite;
+        z-index: 1001;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
 
   // Style de l'aiguille (groupe) -> on anime la rotation + easing
   const needleStyle = useMemo(() => ({
@@ -776,7 +1084,7 @@ export default function CompassGame({ config, onBackToHome }) {
     );
   }
 
-  const gameOver = turn > MAX_TURNS || winnerIndex !== null || teamWin;
+  const gameOver = turn > gameConfig.maxTurns || winnerIndex !== null || teamWin || (gameConfig.enableTimeLimit && timeRemaining === 0);
 
   return (
     <div style={styles.container}>
@@ -806,9 +1114,87 @@ export default function CompassGame({ config, onBackToHome }) {
         <div style={{ width: '80px' }}></div> {/* Spacer pour centrer le titre */}
       </div>
       <div style={styles.turnInfo}>
-        {gameOver ? (teamWin ? `Victoire collective: ${familyStars}/${FAMILY_STARS_TARGET} étoiles ✨` : (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée')) : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
+        {gameOver ? (
+          teamWin ? `Victoire collective: ${familyStars}/${gameConfig.familyStarsTarget} étoiles ✨` : 
+          winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 
+          'Partie terminée'
+        ) : (
+          `Tour ${turn}/${gameConfig.maxTurns} — Joueur actif: ${players[activePlayerIndex].name}`
+        )}
       </div>
-      <div style={styles.subtitle}>Configurez {MIN_PLAYERS}–{MAX_PLAYERS} joueurs et lancez la boussole. Étoiles familiales: {familyStars}/{FAMILY_STARS_TARGET}</div>
+      <div style={styles.subtitle}>
+        Configurez {MIN_PLAYERS}–{MAX_PLAYERS} joueurs et lancez la boussole. 
+        Étoiles familiales: {familyStars}/{gameConfig.familyStarsTarget}
+        {gameConfig.enableTimeLimit && timeRemaining !== null && (
+          <span style={styles.timerBox}>
+            ⏰ {Math.floor(timeRemaining / 60000)}:{(Math.floor(timeRemaining / 1000) % 60).toString().padStart(2, '0')}
+          </span>
+        )}
+      </div>
+
+      {!gameStartTime && (
+        <div style={styles.configBox}>
+          <div style={styles.configTitle}>⚙️ Configuration de la partie</div>
+          <div style={styles.configRow}>
+            <span style={styles.configLabel}>Tours maximum:</span>
+            <input
+              type="number"
+              value={gameConfig.maxTurns}
+              onChange={(e) => setGameConfig(prev => ({ ...prev, maxTurns: Math.max(1, parseInt(e.target.value) || 1) }))}
+              style={styles.configInput}
+              min="1"
+              max="50"
+            />
+          </div>
+          <div style={styles.configRow}>
+            <span style={styles.configLabel}>Score pour gagner:</span>
+            <input
+              type="number"
+              value={gameConfig.winScore}
+              onChange={(e) => setGameConfig(prev => ({ ...prev, winScore: Math.max(1, parseInt(e.target.value) || 1) }))}
+              style={styles.configInput}
+              min="1"
+              max="50"
+            />
+          </div>
+          <div style={styles.configRow}>
+            <span style={styles.configLabel}>Étoiles familiales:</span>
+            <input
+              type="number"
+              value={gameConfig.familyStarsTarget}
+              onChange={(e) => setGameConfig(prev => ({ ...prev, familyStarsTarget: Math.max(1, parseInt(e.target.value) || 1) }))}
+              style={styles.configInput}
+              min="1"
+              max="20"
+            />
+          </div>
+          <div style={styles.configRow}>
+            <span style={styles.configLabel}>Limite de temps:</span>
+            <input
+              type="checkbox"
+              checked={gameConfig.enableTimeLimit}
+              onChange={(e) => setGameConfig(prev => ({ ...prev, enableTimeLimit: e.target.checked }))}
+              style={styles.configCheckbox}
+            />
+          </div>
+          {gameConfig.enableTimeLimit && (
+            <div style={styles.configRow}>
+              <span style={styles.configLabel}>Durée (minutes):</span>
+              <input
+                type="number"
+                value={gameConfig.timeLimit}
+                onChange={(e) => setGameConfig(prev => ({ ...prev, timeLimit: Math.max(1, parseInt(e.target.value) || 1) }))}
+                style={styles.configInput}
+                min="1"
+                max="120"
+              />
+            </div>
+          )}
+          <button type="button" onClick={startGame} style={styles.button} disabled={players.length < MIN_PLAYERS}>
+            🚀 Commencer la partie
+          </button>
+        </div>
+      )}
 
       <div style={styles.playersPanel} aria-label="Configuration des joueurs">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -887,11 +1273,51 @@ export default function CompassGame({ config, onBackToHome }) {
         </div>
       )}
 
+      {!gameOver && riddle && riddlePhase === 'question' && (
+        <div style={styles.riddleBox}>
+          <div style={styles.riddleTitle}>🧩 Énigme – {riddle.category}</div>
+          <div style={styles.riddleQuestion}>{riddle.item.question || riddle.item.challenge || riddle.item.problem}</div>
+          <input
+            type="text"
+            value={riddleAnswer}
+            onChange={(e) => setRiddleAnswer(e.target.value)}
+            placeholder="Ta réponse..."
+            style={styles.riddleAnswer}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleRiddleAnswer(); }}
+          />
+          <button type="button" onClick={handleRiddleAnswer} disabled={!riddleAnswer.trim()} style={styles.riddleValidate}>
+            Valider ma réponse
+          </button>
+        </div>
+      )}
+
+      {!gameOver && riddle && riddlePhase === 'result' && (
+        <div style={styles.riddleBox}>
+          <div style={styles.riddleTitle}>🧩 Résultat de l'énigme</div>
+          <div style={styles.riddleResult}>
+            {riddle.solved ? '✅ Correct !' : '❌ Incorrect'}
+          </div>
+          {riddle.item.explanation && (
+            <div style={styles.riddleExplanation}>
+              <strong>Explication :</strong> {riddle.item.explanation}
+            </div>
+          )}
+          {riddle.item.answer && !riddle.solved && (
+            <div style={styles.riddleExplanation}>
+              <strong>Réponse :</strong> {riddle.item.answer}
+            </div>
+          )}
+          <button type="button" onClick={handleRiddleNext} style={styles.riddleValidate}>
+            Continuer
+          </button>
+        </div>
+      )}
+
       <div style={styles.svgWrap}>{renderCompass()}</div>
 
-      <button type="button" onClick={handleSpin} disabled={isSpinning || gameOver} style={styles.button}>
+      <button type="button" onClick={handleSpin} disabled={isSpinning || gameOver || !gameStartTime} style={styles.button}>
         <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
-          <IconSpark /> {isSpinning ? 'Lancer…' : gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : 'Lancer'}
+          <IconSpark /> {isSpinning ? 'Lancer…' : gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : (!gameStartTime ? 'Configurez la partie' : 'Lancer')}
         </span>
       </button>
 
@@ -908,6 +1334,46 @@ export default function CompassGame({ config, onBackToHome }) {
           </div>
         ))}
       </div>
+
+      {/* Animation de victoire */}
+      {victoryAnimation && (
+        <div style={styles.victoryOverlay}>
+          <div style={styles.victoryBox}>
+            <div style={styles.victoryTitle}>
+              {victoryWinner === 'team' ? '🏆 VICTOIRE COLLECTIVE !' : 
+               victoryWinner !== null ? `🏆 ${players[victoryWinner].name} GAGNE !` : 
+               '⏰ TEMPS ÉCOULÉ !'}
+            </div>
+            <div style={styles.victorySubtitle}>
+              {victoryWinner === 'team' ? `Félicitations ! Vous avez collecté ${familyStars} étoiles familiales !` :
+               victoryWinner !== null ? `Score final: ${players[victoryWinner].score} points` :
+               'La partie est terminée par limite de temps'}
+            </div>
+            <button type="button" onClick={() => {
+              setVictoryAnimation(false);
+              setVictoryWinner(null);
+              setGameStartTime(null);
+              setTimeRemaining(null);
+              setGameEndReason(null);
+            }} style={styles.victoryButton}>
+              Nouvelle partie
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Système de départage */}
+      {tiebreakerMode && (
+        <div style={styles.tiebreakerBox}>
+          <div style={styles.configTitle}>🤝 Égalité détectée !</div>
+          <div style={{ marginBottom: 16 }}>
+            Plusieurs joueurs ont le même score. Départage en cours...
+          </div>
+          <button type="button" onClick={handleTiebreaker} style={styles.riddleValidate}>
+            Lancer le départage
+          </button>
+        </div>
+      )}
     </div>
   );
 }
