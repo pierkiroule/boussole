@@ -7,6 +7,13 @@ const FAMILY_PROFILES = {
   'adult': { label: 'Famille adulte (18+ ans)', icon: '👨‍👩‍👧‍👧', color: '#ecfdf5' }
 };
 
+const PLATEAU_OPTIONS = {
+  'rapide': { label: 'Plateau Rapide', description: '20 cases, idéal pour débuter', duration: '10-15 min', icon: '⚡' },
+  'classique': { label: 'Plateau Classique', description: '63 cases, jeu de l\'Oie traditionnel', duration: '30-45 min', icon: '🎯' },
+  'expert': { label: 'Plateau Expert', description: '100 cases, défis avancés', duration: '1h+', icon: '🧠' },
+  'personnalise': { label: 'Plateau Personnalisé', description: 'Nombre de cases au choix', duration: 'variable', icon: '⚙️' }
+};
+
 const GAME_MODES = {
   'quick': { label: 'Partie Rapide', description: '5 tours, idéal pour débuter', duration: '10-15 min', icon: '⚡' },
   'classic': { label: 'Partie Classique', description: '10 tours, expérience complète', duration: '20-30 min', icon: '🎯' },
@@ -21,14 +28,18 @@ const DIFFICULTY_LEVELS = {
 
 export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules }) {
   const [selectedProfile, setSelectedProfile] = useState('mixed');
+  const [selectedPlateau, setSelectedPlateau] = useState('classique');
   const [selectedMode, setSelectedMode] = useState('classic');
   const [selectedDifficulty, setSelectedDifficulty] = useState('medium');
   const [playerCount, setPlayerCount] = useState(4);
   const [familyName, setFamilyName] = useState('');
+  const [customCases, setCustomCases] = useState(63);
 
   const handleStartGame = () => {
     const gameConfig = {
       profile: selectedProfile,
+      plateauType: selectedPlateau,
+      customCases: customCases,
       mode: selectedMode,
       difficulty: selectedDifficulty,
       playerCount,
@@ -269,6 +280,49 @@ export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules })
               </div>
             ))}
           </div>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.sectionTitle}>
+            <span>🎯</span>
+            Plateau de jeu
+          </div>
+          <div style={styles.modeGrid}>
+            {Object.entries(PLATEAU_OPTIONS).map(([key, plateau]) => (
+              <div
+                key={key}
+                style={styles.modeCard(selectedPlateau === key)}
+                onClick={() => setSelectedPlateau(key)}
+              >
+                <div style={styles.modeIcon}>{plateau.icon}</div>
+                <div style={styles.modeTitle}>{plateau.label}</div>
+                <div style={styles.modeDescription}>{plateau.description}</div>
+                <div style={styles.modeDuration}>{plateau.duration}</div>
+              </div>
+            ))}
+          </div>
+          {selectedPlateau === 'personnalise' && (
+            <div style={{ marginTop: '16px', textAlign: 'center' }}>
+              <input
+                type="number"
+                value={customCases}
+                onChange={(e) => setCustomCases(Math.max(10, Math.min(200, parseInt(e.target.value) || 63)))}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  border: '2px solid #e2e8f0',
+                  fontSize: '14px',
+                  width: '100px',
+                  textAlign: 'center'
+                }}
+                min="10"
+                max="200"
+              />
+              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+                Nombre de cases (10-200)
+              </div>
+            </div>
+          )}
         </div>
 
         <div style={styles.section}>
