@@ -24,7 +24,8 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
 }, {});
 
 const MAX_TURNS = 10;
-const WIN_SCORE = 12; // Seuil de victoire
+const WIN_SCORE = 12; // Seuil de victoire individuel
+const FAMILY_STARS_TARGET = 5; // Étoiles familiales pour victoire d'équipe
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
 const ZERO_VALUES = { 'Liberté': 0, 'Cœur': 0, 'Règles': 0, 'Sécurité': 0 };
 const MIN_PLAYERS = 2;
@@ -183,6 +184,10 @@ export default function CompassGame() {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [winnerIndex, setWinnerIndex] = useState(null);
   const [decision, setDecision] = useState(null); // { category, item, selected }
+  const [decisionPhase, setDecisionPhase] = useState('question'); // 'question' | 'vote'
+  const [votesCount, setVotesCount] = useState({ ...ZERO_VALUES });
+  const [familyStars, setFamilyStars] = useState(0);
+  const [teamWin, setTeamWin] = useState(false);
 
   // Gestion joueurs
   const [players, setPlayers] = useState([
@@ -445,16 +450,71 @@ export default function CompassGame() {
   };
 
   const handleValidateDecision = () => {
-    if (!decision || !decision.selected) return;
-    const selected = decision.item.choices.find((c) => c.label === decision.selected);
-    if (selected) {
-      setResultText((prev) => `${prev} — Choix: ${decision.selected} (${selected.value})`);
+    if (!decision) return;
+    // Phase 1 -> passer au vote
+    if (decisionPhase === 'question') {
+      if (!decision.selected) return;
+      setDecisionPhase('vote');
+      setVotesCount({ ...ZERO_VALUES });
+      return;
     }
+    // Phase vote -> calcul majorité
+    const selectedChoice = decision.item.choices.find((c) => c.label === decision.selected);
+    const activeValue = selectedChoice ? selectedChoice.value : null;
+    const entries = Object.entries(votesCount);
+    let max = -1;
+    let winners = [];
+    let total = 0;
+    for (const [val, cnt] of entries) {
+      total += cnt;
+      if (cnt > max) { max = cnt; winners = [val]; } else if (cnt === max) { winners.push(val); }
+    }
+    let message = '';
+    if (max <= 0 || winners.length !== 1) {
+      message = ' — Vote: aucune majorité';
+    } else {
+      const majorityValue = winners[0];
+      message = ` — Vote majorité: ${majorityValue}`;
+      if (activeValue && activeValue === majorityValue) {
+        // Résonance: +2 points au joueur actif et +1 étoile familiale
+        setPlayers((prev) => prev.map((p, idx) => idx === activePlayerIndex ? { ...p, score: p.score + 2 } : p));
+        setFamilyStars((s) => s + 1);
+        message += ' ✅ Résonance (+2 points, +1 étoile)';
+      } else {
+        message += ' ❌ Pas de résonance';
+      }
+    }
+    setResultText((prev) => `${prev}${message}`);
+    // Vérifier victoire d'équipe
+    setTeamWin((prevWin) => {
+      if (prevWin) return true;
+      const next = familyStars + (max > 0 && winners.length === 1 && activeValue === winners[0] ? 1 : 0);
+      return next >= FAMILY_STARS_TARGET;
+    });
+    // Reset décision
     setDecision(null);
+    setDecisionPhase('question');
     setCurrentCategory('');
-    if (winnerIndex === null && turn < MAX_TURNS) {
+    if (!teamWin && winnerIndex === null && turn < MAX_TURNS) {
       advanceTurn();
     }
+  };
+
+  const votesTotal = useMemo(() => Object.values(votesCount).reduce((a, b) => a + b, 0), [votesCount]);
+  const votesMax = useMemo(() => Math.max(players.length - 1, 0), [players.length]);
+  const remainingVotes = Math.max(votesMax - votesTotal, 0);
+
+  const changeVote = (valueKey, delta) => {
+    setVotesCount((prev) => {
+      const next = { ...prev };
+      const newTotal = Object.values(prev).reduce((a, b) => a + b, 0) + delta;
+      if (delta > 0 && newTotal > votesMax) return prev;
+      const cur = prev[valueKey] || 0;
+      const nextVal = cur + delta;
+      if (nextVal < 0) return prev;
+      next[valueKey] = nextVal;
+      return next;
+    });
   };
 
   // Styles inline basiques (responsives et simples)
@@ -696,7 +756,7 @@ export default function CompassGame() {
     );
   }
 
-  const gameOver = turn > MAX_TURNS || winnerIndex !== null;
+  const gameOver = turn > MAX_TURNS || winnerIndex !== null || teamWin;
 
   return (
     <div style={styles.container}>
@@ -706,9 +766,9 @@ export default function CompassGame() {
         </span>
       </div>
       <div style={styles.turnInfo}>
-        {gameOver ? (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée') : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
+        {gameOver ? (teamWin ? `Victoire collective: ${familyStars}/${FAMILY_STARS_TARGET} étoiles ✨` : (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée')) : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
       </div>
-      <div style={styles.subtitle}>Configurez {MIN_PLAYERS}–{MAX_PLAYERS} joueurs et lancez la boussole.</div>
+      <div style={styles.subtitle}>Configurez {MIN_PLAYERS}–{MAX_PLAYERS} joueurs et lancez la boussole. Étoiles familiales: {familyStars}/{FAMILY_STARS_TARGET}</div>
 
       <div style={styles.playersPanel} aria-label="Configuration des joueurs">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -747,7 +807,7 @@ export default function CompassGame() {
         </div>
       </div>
 
-      {!gameOver && decision && (
+      {!gameOver && decision && decisionPhase === 'question' && (
         <div style={styles.qcmBox}>
           <div style={styles.qcmTitle}>Ronde des décisions – {decision.category} · {decision.item.title}</div>
           <div style={styles.qcmSituation}>{decision.item.situation}</div>
@@ -759,7 +819,30 @@ export default function CompassGame() {
             ))}
           </div>
           <button type="button" onClick={handleValidateDecision} disabled={!decision.selected} style={styles.qcmValidate}>
-            Valider mon choix
+            Valider mon choix → Passer au vote
+          </button>
+        </div>
+      )}
+
+      {!gameOver && decision && decisionPhase === 'vote' && (
+        <div style={styles.qcmBox}>
+          <div style={styles.qcmTitle}>Vote secret – {decision.category}</div>
+          <div style={{ fontSize: 12, color: '#475569', marginBottom: 6 }}>Les autres joueurs votent pour la valeur qui correspond le mieux.</div>
+          <div style={{ display: 'grid', gap: 8 }}>
+            {CATEGORIES.map((val) => (
+              <div key={val} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                <strong>{val}</strong>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button type="button" onClick={() => changeVote(val, -1)} disabled={votesCount[val] <= 0} style={{ ...styles.smallBtn, backgroundColor: votesCount[val] > 0 ? '#64748b' : '#cbd5e1' }}>−</button>
+                  <span style={{ minWidth: 24, textAlign: 'center' }}>{votesCount[val] || 0}</span>
+                  <button type="button" onClick={() => changeVote(val, +1)} disabled={remainingVotes <= 0} style={styles.smallBtn}>+</button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 12, color: '#475569', marginTop: 8 }}>Votes restants: {remainingVotes} / {votesMax}</div>
+          <button type="button" onClick={handleValidateDecision} disabled={remainingVotes !== 0} style={{ ...styles.qcmValidate, marginTop: 12 }}>
+            Calculer la majorité
           </button>
         </div>
       )}
