@@ -14,7 +14,7 @@ const STEP_METADATA = {
 function Slogan() {
   return (
     <p className="mt-3 text-center text-base sm:text-lg text-slate-600 dark:text-slate-300">
-      Re‑boussolez votre cadre parental — clarifiez, choisissez et organisez.
+      La Famille Déboussolée — tournez, choisissez, et retrouvez votre Nord.
     </p>
   );
 }
@@ -154,7 +154,7 @@ export default function App() {
   async function handleCopySummary() {
     try {
       const lines = [
-        '# Boussole Parentale',
+        '# La Famille Déboussolée',
         '',
         `N – Nommer:\n${notes.N || '—'}`,
         '',
