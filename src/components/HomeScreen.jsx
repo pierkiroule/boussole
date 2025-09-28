@@ -256,11 +256,11 @@ export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules })
     <div style={styles.container}>
       <div style={styles.card}>
         <div style={styles.title}>
-          <span>🧭</span>
-          La Famille Déboussolée
+          <span>👻</span>
+          Le Wifou et la famille De Boussolée
         </div>
         <div style={styles.subtitle}>
-          Un jeu pour retrouver l'équilibre numérique en famille
+          Un jeu pour chasser le fantôme du Wi-Fi et retrouver l'équilibre familial
         </div>
 
         <div style={styles.section}>
