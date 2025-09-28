@@ -15,6 +15,11 @@ const STEP_TO_COLOR = {
 };
 
 export default function LogoBoussole({ activeStep }) {
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
   const angle = useMemo(() => {
     if (!activeStep || !STEP_TO_ANGLE[activeStep]) return 0;
     return STEP_TO_ANGLE[activeStep];
@@ -25,7 +30,7 @@ export default function LogoBoussole({ activeStep }) {
   const needleStyle = {
     transform: `rotate(${angle}deg)`,
     transformOrigin: '120px 120px',
-    transition: 'transform 1s ease-in-out',
+    transition: prefersReducedMotion ? 'none' : 'transform 1s ease-in-out',
   };
 
   return (

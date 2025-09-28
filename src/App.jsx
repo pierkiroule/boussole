@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import LogoBoussole from './components/LogoBoussole.jsx';
 import Accordion from './components/Accordion.jsx';
 import AccordionItem from './components/AccordionItem.jsx';
@@ -23,6 +23,7 @@ export default function App() {
   const [notes, setNotes] = useState({ N: '', E: '', S: '', O: '' });
 
   const storageKey = useMemo(() => 'boussole-parentale', []);
+  const fileInputRef = useRef(null);
 
   function loadFromLocalStorage() {
     try {
@@ -67,6 +68,58 @@ export default function App() {
     saveToLocalStorage(notes, step);
   }
 
+  function handleExport() {
+    try {
+      const payload = { notes, activeStep };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'boussole-parentale.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  function handleImportClick() {
+    fileInputRef.current?.click();
+  }
+
+  async function handleImportChange(e) {
+    try {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      if (parsed && typeof parsed === 'object') {
+        if (parsed.notes && typeof parsed.notes === 'object') {
+          setNotes({ N: parsed.notes.N || '', E: parsed.notes.E || '', S: parsed.notes.S || '', O: parsed.notes.O || '' });
+        }
+        if (parsed.activeStep === 'N' || parsed.activeStep === 'E' || parsed.activeStep === 'S' || parsed.activeStep === 'O' || parsed.activeStep === null) {
+          setActiveStep(parsed.activeStep);
+        }
+      }
+    } catch (_) {
+      // ignore
+    } finally {
+      if (e?.target) e.target.value = '';
+    }
+  }
+
+  function handleReset() {
+    try {
+      setNotes({ N: '', E: '', S: '', O: '' });
+      setActiveStep(null);
+      window.localStorage.removeItem(storageKey);
+    } catch (_) {
+      // ignore
+    }
+  }
+
   return (
     <div className="flex min-h-screen items-start sm:items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
@@ -89,6 +142,19 @@ export default function App() {
               />
             ))}
           </Accordion>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+          <button type="button" onClick={handleExport} className="btn glass focus-visible:ring-slate-600">
+            Exporter
+          </button>
+          <button type="button" onClick={handleImportClick} className="btn glass focus-visible:ring-slate-600">
+            Importer
+          </button>
+          <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportChange} />
+          <button type="button" onClick={handleReset} className="btn glass focus-visible:ring-red-600 text-red-700 hover:bg-white/70">
+            Réinitialiser
+          </button>
         </div>
       </div>
     </div>

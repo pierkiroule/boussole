@@ -30,18 +30,22 @@ const colorRingClass = (color) => {
   }
 };
 
-export default function AccordionItem({ id, title, color, value, onChange, onValidate, isOpen, onToggle }) {
+export default function AccordionItem({ id, title, color, value, onChange, onValidate, isOpen, onToggle, headerId, panelId, headerRef, onHeaderKeyDown }) {
   return (
     <div className="glass rounded-xl overflow-hidden">
       <button
         type="button"
+        id={headerId}
+        ref={headerRef}
         aria-expanded={Boolean(isOpen)}
+        aria-controls={panelId}
+        onKeyDown={onHeaderKeyDown}
         onClick={onToggle}
         className={`w-full px-4 py-3 flex items-center justify-between font-semibold ${colorTextClass(color)}`}
       >
         <span>{title}</span>
         <svg
-          className={`h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          className={`h-5 w-5 transition-transform duration-300 motion-reduce:transition-none ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -50,11 +54,20 @@ export default function AccordionItem({ id, title, color, value, onChange, onVal
         </svg>
       </button>
 
-      <div className={`transition-all duration-500 ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}> 
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={headerId}
+        className={`transition-all duration-500 motion-reduce:transition-none motion-reduce:duration-0 ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}
+      > 
         <div className="px-4 pb-4 pt-1">
+          <label htmlFor={`${panelId}-notes`} className="sr-only">{title} — notes</label>
+          <p id={`${panelId}-hint`} className="sr-only">Ajoutez vos notes pour {title}.</p>
           <textarea
+            id={`${panelId}-notes`}
             className="textarea"
             placeholder="Écrivez vos notes ici..."
+            aria-describedby={`${panelId}-hint`}
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
           />

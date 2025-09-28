@@ -26,3 +26,12 @@ body {
   @apply w-full min-h-[120px] rounded-xl bg-white/60 backdrop-blur px-4 py-3 text-sm text-slate-800 placeholder-slate-500 outline-none ring-1 ring-white/60 focus:ring-2 focus:ring-slate-300;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

@@ -26,6 +26,10 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
 const MAX_TURNS = 10;
 
 export default function CompassGame() {
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
   // Angle absolu en degrés (peut croître au‑delà de 360 pour animer correctement)
   const [currentAngleDeg, setCurrentAngleDeg] = useState(0);
   // Durée de transition dynamique (ms) pour chaque étape d'animation
@@ -88,6 +92,23 @@ export default function CompassGame() {
     const current = currentAngleDeg;
     const baseTarget = current + baseTurns * 360 + (willJackpot ? 0 : target.angle);
     const finalTarget = willJackpot ? baseTarget - ((baseTarget % 360 + 360) % 360) : baseTarget;
+
+    // Mode reduced motion: pas d'animation, résultat immédiat
+    if (prefersReducedMotion) {
+      setTransitionMs(0);
+      setCurrentAngleDeg(finalTarget);
+      const norm = ((finalTarget % 360) + 360) % 360;
+      const finalQ = getQuadrantFromAngle(norm);
+      setFinalQuadrant(finalQ);
+      const update = computeAndApplyScoring(finalQ, willJackpot);
+      setResultText(update.message);
+      setIsSpinning(false);
+      if (turn < MAX_TURNS) {
+        setTurn((t) => t + 1);
+        setActivePlayerIndex((i) => (i + 1) % players.length);
+      }
+      return;
+    }
 
     // 5) Séquence d'animation: grand spin + 2–3 oscillations
     //    On génère des étapes successives avec durées décroissantes et amplitudes réduites
@@ -251,8 +272,8 @@ export default function CompassGame() {
   const needleStyle = useMemo(() => ({
     transform: `rotate(${currentAngleDeg}deg)`,
     transformOrigin: '120px 120px',
-    transition: `transform ${transitionMs}ms cubic-bezier(0.2, 0.7, 0.1, 1)`
-  }), [currentAngleDeg, transitionMs]);
+    transition: prefersReducedMotion ? 'none' : `transform ${transitionMs}ms cubic-bezier(0.2, 0.7, 0.1, 1)`
+  }), [currentAngleDeg, transitionMs, prefersReducedMotion]);
 
   // Rendu de la boussole SVG avec 4 cadrans + lettres + aiguille
   const renderCompass = () => (
@@ -342,7 +363,7 @@ export default function CompassGame() {
         {isSpinning ? 'Lancer…' : gameOver ? 'Partie terminée' : 'Lancer'}
       </button>
 
-      <div style={styles.result}>{resultText}</div>
+      <div style={styles.result} aria-live="polite">{resultText}</div>
 
       <div style={styles.scoreboard}>
         {players.map((p, idx) => (
