@@ -1,13 +1,24 @@
 import React, { useRef, useState } from 'react';
 
-export default function Accordion({ defaultOpenId = 'N', children }) {
-  const [openId, setOpenId] = useState(defaultOpenId);
+export default function Accordion({ defaultOpenId = 'N', openId: controlledOpenId, onOpenIdChange, children }) {
+  const [uncontrolledOpenId, setUncontrolledOpenId] = useState(defaultOpenId);
   const headerRefs = useRef([]);
 
   const childArray = React.Children.toArray(children);
 
   const getHeaderId = (id) => `accordion-header-${id}`;
   const getPanelId = (id) => `accordion-panel-${id}`;
+
+  const isControlled = controlledOpenId !== undefined;
+  const openId = isControlled ? controlledOpenId : uncontrolledOpenId;
+
+  const setOpenId = (next) => {
+    if (isControlled) {
+      onOpenIdChange?.(next);
+    } else {
+      setUncontrolledOpenId(next);
+    }
+  };
 
   const focusHeaderAt = (index) => {
     const ref = headerRefs.current[index];

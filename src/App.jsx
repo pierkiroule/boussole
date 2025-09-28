@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import LogoBoussole from './components/LogoBoussole.jsx';
 import Accordion from './components/Accordion.jsx';
 import AccordionItem from './components/AccordionItem.jsx';
+import CompassGame from './components/CompassGame.jsx';
 
 const STEP_METADATA = {
   N: { title: 'N – Nommer', color: 'blue-600' },
@@ -12,7 +13,7 @@ const STEP_METADATA = {
 
 function Slogan() {
   return (
-    <p className="mt-3 text-center text-base sm:text-lg text-slate-600">
+    <p className="mt-3 text-center text-base sm:text-lg text-slate-600 dark:text-slate-300">
       Re‑boussolez votre cadre parental — clarifiez, choisissez et organisez.
     </p>
   );
@@ -21,9 +22,13 @@ function Slogan() {
 export default function App() {
   const [activeStep, setActiveStep] = useState(null); // null | 'N' | 'E' | 'S' | 'O'
   const [notes, setNotes] = useState({ N: '', E: '', S: '', O: '' });
+  const [openId, setOpenId] = useState('N');
+  const [view, setView] = useState('main'); // 'main' | 'game'
+  const [dark, setDark] = useState(false);
 
   const storageKey = useMemo(() => 'boussole-parentale', []);
   const fileInputRef = useRef(null);
+  const [copyOk, setCopyOk] = useState(false);
 
   function loadFromLocalStorage() {
     try {
@@ -63,9 +68,35 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notes, activeStep]);
 
+  // Thème sombre persistant
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem('theme');
+      if (raw === 'dark') {
+        setDark(true);
+        document.documentElement.classList.add('dark');
+      }
+    } catch (_) {}
+  }, []);
+
+  useEffect(() => {
+    if (dark) {
+      document.documentElement.classList.add('dark');
+      window.localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      window.localStorage.setItem('theme', 'light');
+    }
+  }, [dark]);
+
   function handleValidate(step) {
     setActiveStep(step);
     saveToLocalStorage(notes, step);
+    // auto‑avance
+    const order = ['N', 'E', 'S', 'O'];
+    const idx = order.indexOf(step);
+    const next = order[(idx + 1) % order.length];
+    setOpenId(next);
   }
 
   function handleExport() {
@@ -120,31 +151,70 @@ export default function App() {
     }
   }
 
+  async function handleCopySummary() {
+    try {
+      const lines = [
+        '# Boussole Parentale',
+        '',
+        `N – Nommer:\n${notes.N || '—'}`,
+        '',
+        `E – Explorer:\n${notes.E || '—'}`,
+        '',
+        `S – Sélectionner:\n${notes.S || '—'}`,
+        '',
+        `O – Organiser:\n${notes.O || '—'}`,
+      ];
+      const text = lines.join('\n');
+      await navigator.clipboard.writeText(text);
+      setCopyOk(true);
+      setTimeout(() => setCopyOk(false), 1500);
+    } catch (_) {}
+  }
+
   return (
     <div className="flex min-h-screen items-start sm:items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="flex flex-col items-center">
-          <LogoBoussole activeStep={activeStep} />
-          <Slogan />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <LogoBoussole activeStep={activeStep} />
+            <div className="hidden sm:block">
+              <Slogan />
+            </div>
+          </div>
+          <button type="button" onClick={() => setView((v) => (v === 'main' ? 'game' : 'main'))} className="btn glass focus-visible:ring-slate-600">
+            {view === 'main' ? 'Mini‑jeu' : 'Retour'}
+          </button>
         </div>
 
-        <div className="mt-8 space-y-3">
-          <Accordion defaultOpenId="N">
-            {(['N', 'E', 'S', 'O']).map((step) => (
-              <AccordionItem
-                key={step}
-                id={step}
-                title={STEP_METADATA[step].title}
-                color={STEP_METADATA[step].color}
-                value={notes[step]}
-                onChange={(v) => setNotes((prev) => ({ ...prev, [step]: v }))}
-                onValidate={() => handleValidate(step)}
-              />
-            ))}
-          </Accordion>
-        </div>
+        {view === 'main' ? (
+          <div className="mt-8 space-y-3">
+            <Accordion defaultOpenId="N" openId={openId} onOpenIdChange={setOpenId}>
+              {(['N', 'E', 'S', 'O']).map((step) => (
+                <AccordionItem
+                  key={step}
+                  id={step}
+                  title={STEP_METADATA[step].title}
+                  color={STEP_METADATA[step].color}
+                  value={notes[step]}
+                  onChange={(v) => setNotes((prev) => ({ ...prev, [step]: v }))}
+                  onValidate={() => handleValidate(step)}
+                />
+              ))}
+            </Accordion>
+          </div>
+        ) : (
+          <div className="mt-6">
+            <CompassGame />
+          </div>
+        )}
 
-        <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <button type="button" onClick={() => setDark((v) => !v)} className="btn glass focus-visible:ring-slate-600">
+            {dark ? 'Mode clair' : 'Mode sombre'}
+          </button>
+          <button type="button" onClick={handleCopySummary} className="btn glass focus-visible:ring-slate-600">
+            {copyOk ? 'Copié ✔' : 'Copier le résumé'}
+          </button>
           <button type="button" onClick={handleExport} className="btn glass focus-visible:ring-slate-600">
             Exporter
           </button>
