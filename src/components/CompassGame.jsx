@@ -27,6 +27,39 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
   return acc;
 }, {});
 
+// Configuration des plateaux
+const PLATEAU_CONFIGS = {
+  'rapide': { 
+    cases: 20, 
+    duree: '10-15 min', 
+    icon: '⚡',
+    moves: { N: 4, E: 3, S: 2, O: 1 },
+    specialCases: [6, 12, 19] // Cases spéciales
+  },
+  'classique': { 
+    cases: 63, 
+    duree: '30-45 min', 
+    icon: '🎯',
+    moves: { N: 6, E: 5, S: 4, O: 3 },
+    specialCases: [6, 12, 19, 26, 31, 36, 42, 48, 53, 58] // Cases spéciales du jeu de l'Oie
+  },
+  'expert': { 
+    cases: 100, 
+    duree: '1h+', 
+    icon: '🧠',
+    moves: { N: 8, E: 6, S: 4, O: 2 },
+    specialCases: [6, 12, 19, 26, 31, 36, 42, 48, 53, 58, 65, 72, 79, 86, 93] // Plus de cases spéciales
+  },
+  'personnalise': { 
+    cases: 'custom', 
+    duree: 'variable', 
+    icon: '⚙️',
+    moves: { N: 4, E: 3, S: 2, O: 1 },
+    specialCases: []
+  }
+};
+
+const DEFAULT_PLATEAU = 'classique';
 const DEFAULT_MAX_TURNS = 10;
 const MAX_TURNS = DEFAULT_MAX_TURNS; // Alias pour compatibilité
 const DEFAULT_WIN_SCORE = 12; // Seuil de victoire individuel
@@ -35,6 +68,28 @@ const FAMILY_STARS_TARGET = DEFAULT_FAMILY_STARS_TARGET; // Alias pour compatibi
 const DEFAULT_TIME_LIMIT = 30; // Durée en minutes
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
 const ZERO_VALUES = { 'Liberté': 0, 'Cœur': 0, 'Règles': 0, 'Sécurité': 0 };
+
+// Cases spéciales du jeu de l'Oie
+const SPECIAL_CASES = {
+  6: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  12: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  19: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  26: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  31: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  36: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  42: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  48: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  53: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  58: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' },
+  
+  // Cases spéciales additionnelles
+  9: { type: 'pont', name: 'Pont', description: 'Tu traverses le pont ! Va à la case 12 !', action: 'teleport', target: 12 },
+  18: { type: 'hotel', name: 'Hôtel', description: 'Tu passes la nuit à l\'hôtel ! Passe ton prochain tour !', action: 'skip_turn' },
+  27: { type: 'prison', name: 'Prison', description: 'Tu es en prison ! Reste ici 2 tours !', action: 'prison', duration: 2 },
+  45: { type: 'labyrinthe', name: 'Labyrinthe', description: 'Tu es perdu ! Retourne à la case 30 !', action: 'teleport', target: 30 },
+  52: { type: 'mort', name: 'Mort', description: 'Tu meurs ! Retourne au début !', action: 'teleport', target: 1 },
+  59: { type: 'oie', name: 'Oie', description: 'Tu tombes sur une oie ! Relance la boussole !', action: 'relancer' }
+};
 const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 15;
 const PLAYERS_STORAGE_KEY = 'compass-game.players.v1';
@@ -201,6 +256,8 @@ export default function CompassGame({ config, onBackToHome }) {
   
   // Configuration de la partie
   const [gameConfig, setGameConfig] = useState({
+    plateauType: config?.plateauType || DEFAULT_PLATEAU,
+    customCases: config?.customCases || 63,
     maxTurns: DEFAULT_MAX_TURNS,
     winScore: DEFAULT_WIN_SCORE,
     familyStarsTarget: DEFAULT_FAMILY_STARS_TARGET,
@@ -223,16 +280,21 @@ export default function CompassGame({ config, onBackToHome }) {
     if (config && config.playerCount) {
       return Array.from({ length: config.playerCount }, (_, i) => ({
         name: `Joueur ${i + 1}`,
-        score: 0
+        score: 0,
+        position: 1, // Position sur le plateau (commence à la case 1)
+        skipTurns: 0, // Tours à passer (prison, hôtel)
+        prisonTurns: 0 // Tours en prison
       }));
     }
     return [
-      { name: 'Joueur 1', score: 0 },
-      { name: 'Joueur 2', score: 0 },
+      { name: 'Joueur 1', score: 0, position: 1, skipTurns: 0, prisonTurns: 0 },
+      { name: 'Joueur 2', score: 0, position: 1, skipTurns: 0, prisonTurns: 0 },
     ];
   });
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [turn, setTurn] = useState(1);
+  const [lastMove, setLastMove] = useState(null); // Dernier déplacement effectué
+  const [specialCaseTriggered, setSpecialCaseTriggered] = useState(null); // Case spéciale déclenchée
 
   // Références pour nettoyer les timeouts à l'unmount
   const timeoutsRef = useRef([]);
@@ -375,10 +437,17 @@ export default function CompassGame({ config, onBackToHome }) {
       const norm = ((finalTarget % 360) + 360) % 360;
       const finalQ = getQuadrantFromAngle(norm);
       setFinalQuadrant(finalQ);
-      const update = computeAndApplyScoring(finalQ, willJackpot);
+      const update = computeAndApplyMove(finalQ, willJackpot);
       setResultText(update.message);
       setIsSpinning(false);
-      if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
+      
+      // Si c'est une case spéciale qui demande de relancer, ne pas passer au tour suivant
+      if (update.shouldRelance) {
+        // Le joueur relance automatiquement
+        setTimeout(() => {
+          handleSpin();
+        }, 2000);
+      } else if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
         advanceTurn();
       }
       return;
@@ -415,49 +484,19 @@ export default function CompassGame({ config, onBackToHome }) {
           const finalQ = getQuadrantFromAngle(norm);
           setFinalQuadrant(finalQ);
 
-          // Calcul des points
-          const update = computeAndApplyScoring(finalQ, willJackpot);
+          // Calcul du déplacement
+          const update = computeAndApplyMove(finalQ, willJackpot);
           setResultText(update.message);
-
-          // Détection de zone frontière -> tirer une situation QCM ou une énigme
-          const boundaryCategory = getBoundaryCategoryFromAngle(norm);
           setIsSpinning(false);
           
-          if (boundaryCategory) {
-            setCurrentCategory(boundaryCategory);
-            const difficulty = config?.difficulty || 'medium';
-            
-            // 50% de chance d'avoir une énigme, 50% d'avoir une situation
-            const isRiddle = Math.random() < 0.5;
-            
-            if (isRiddle) {
-              const riddleItem = getRandomRiddle(boundaryCategory, difficulty);
-              if (riddleItem) {
-                setRiddle({ category: boundaryCategory, item: riddleItem, solved: false });
-                setRiddlePhase('question');
-                setRiddleAnswer('');
-              } else {
-                // Si pas d'énigme disponible, passer au tour suivant
-                if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
-                  advanceTurn();
-                }
-              }
-            } else {
-              const situation = getRandomSituation(boundaryCategory, difficulty);
-              if (situation) {
-                setDecision({ category: boundaryCategory, item: situation, selected: null });
-              } else {
-                // Si pas de situation disponible, passer au tour suivant
-                if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
-                  advanceTurn();
-                }
-              }
-            }
-          } else {
-            // Pas de zone frontière, passer au tour suivant
-            if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
-              advanceTurn();
-            }
+          // Si c'est une case spéciale qui demande de relancer, ne pas passer au tour suivant
+          if (update.shouldRelance) {
+            // Le joueur relance automatiquement
+            setTimeout(() => {
+              handleSpin();
+            }, 2000);
+          } else if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
+            advanceTurn();
           }
         }
       }, delay);
@@ -466,70 +505,101 @@ export default function CompassGame({ config, onBackToHome }) {
     });
   };
 
-  // Calcul et application des points en fonction du quadrant final
-  const computeAndApplyScoring = (quadrantId, jackpot) => {
-    // Simulation simple de congruence: 0..2 points de base
-    const base = Math.floor(Math.random() * 3); // 0,1,2
-    const playerCount = players.length;
+  // Calcul et application du déplacement en fonction du quadrant final
+  const computeAndApplyMove = (quadrantId, jackpot) => {
     const currentIndex = activePlayerIndex;
-
-    let deltaActive = 0;
-    let extraMessage = '';
-    const deltas = new Map(); // index -> delta
-
-    if (quadrantId === 'N') {
-      // Trésor: max points + bonus jackpot éventuel
-      deltaActive = 3 + (jackpot ? 1 : 0);
-      deltas.set(currentIndex, deltaActive);
-      if (jackpot) extraMessage = ' + 🎉 JACKPOT PILE-POIL NORD 🎉';
-    } else if (quadrantId === 'E') {
-      // Cadeau: donner une partie de ses points à un autre joueur (transfert)
-      const otherCandidates = Array.from({ length: playerCount }, (_, i) => i).filter((i) => i !== currentIndex);
-      const otherIndex = otherCandidates[Math.floor(Math.random() * otherCandidates.length)];
-      const available = players[currentIndex].score;
-      const transfer = Math.min(base, available);
-      deltaActive = -transfer;
-      if (transfer > 0) {
-        deltas.set(currentIndex, -transfer);
-        deltas.set(otherIndex, (deltas.get(otherIndex) || 0) + transfer);
-        extraMessage = ` (donné ${transfer} à ${players[otherIndex].name})`;
-      } else {
-        extraMessage = ' (rien à donner)';
-      }
-    } else if (quadrantId === 'S') {
-      // Gage: 50% de chance de réussir et garder les points de base, sinon 0
-      const success = Math.random() < 0.5;
-      deltaActive = success ? base : 0;
-      if (deltaActive !== 0) deltas.set(currentIndex, deltaActive);
-      const gageText = getAgeAppropriateGage();
-      extraMessage = success ? ` (gage réussi ✅: ${gageText})` : ` (gage raté ❌: ${gageText})`;
-    } else {
-      // Ouest: perdu, aucun point
-      deltaActive = 0;
+    const currentPlayer = players[currentIndex];
+    const plateauConfig = PLATEAU_CONFIGS[gameConfig.plateauType];
+    const maxCases = plateauConfig.cases === 'custom' ? gameConfig.customCases : plateauConfig.cases;
+    
+    // Déterminer le nombre de cases à avancer
+    let moveCount = plateauConfig.moves[quadrantId];
+    if (jackpot) {
+      moveCount *= 2; // Jackpot = double le déplacement
     }
-
-    // Calcul du tableau de scores mis à jour en une seule passe
+    
+    // Calculer la nouvelle position
+    let newPosition = currentPlayer.position + moveCount;
+    
+    // Vérifier si on dépasse la case finale
+    if (newPosition > maxCases) {
+      newPosition = maxCases - (newPosition - maxCases); // Reculer du surplus
+    }
+    
+    // Vérifier les cases spéciales
+    let specialCase = null;
+    let finalPosition = newPosition;
+    let specialMessage = '';
+    let shouldRelance = false;
+    
+    if (SPECIAL_CASES[newPosition]) {
+      specialCase = SPECIAL_CASES[newPosition];
+      specialMessage = specialCase.description;
+      
+      switch (specialCase.action) {
+        case 'relancer':
+          shouldRelance = true;
+          break;
+        case 'teleport':
+          finalPosition = specialCase.target;
+          specialMessage += ` Tu arrives à la case ${finalPosition} !`;
+          break;
+        case 'skip_turn':
+          // Le joueur passera son prochain tour
+          break;
+        case 'prison':
+          // Le joueur restera en prison
+          break;
+      }
+    }
+    
+    // Mettre à jour la position du joueur
     const nextPlayers = players.map((p, idx) => {
-      const d = deltas.get(idx) || 0;
-      return { ...p, score: p.score + d };
+      if (idx === currentIndex) {
+        return {
+          ...p,
+          position: finalPosition,
+          skipTurns: specialCase?.action === 'skip_turn' ? 1 : p.skipTurns,
+          prisonTurns: specialCase?.action === 'prison' ? specialCase.duration : p.prisonTurns
+        };
+      }
+      return p;
     });
     setPlayers(nextPlayers);
-
-    const nextWinnerIndex = nextPlayers.findIndex((p) => p.score >= gameConfig.winScore);
-    setWinnerIndex(nextWinnerIndex !== -1 ? nextWinnerIndex : null);
     
-    // Détecter la victoire d'équipe
-    const nextFamilyStars = familyStars + (deltaActive > 0 ? 1 : 0);
-    const hasTeamWin = nextFamilyStars >= gameConfig.familyStarsTarget;
-    setTeamWin(hasTeamWin);
-    setFamilyStars(nextFamilyStars);
-
+    // Vérifier la victoire
+    const winnerIndex = finalPosition >= maxCases ? currentIndex : null;
+    setWinnerIndex(winnerIndex);
+    
+    // Messages
     const label = ID_TO_LABEL[quadrantId] || '';
-    const sign = deltaActive >= 0 ? '+' : '-';
-    const absDelta = Math.abs(deltaActive);
-    const msg = `${label} → ${sign}${absDelta} point${absDelta > 1 ? 's' : ''}${extraMessage}`;
-
-    return { delta: deltaActive, message: msg, hasWinner: nextWinnerIndex !== -1, winnerIndex: nextWinnerIndex };
+    const jackpotMsg = jackpot ? ' 🎉 JACKPOT ! ' : '';
+    const moveMsg = `+${moveCount} case${moveCount > 1 ? 's' : ''}`;
+    const positionMsg = `Case ${currentPlayer.position} → ${finalPosition}`;
+    const msg = `${label}${jackpotMsg} → ${moveMsg} → ${positionMsg}${specialMessage ? `\n${specialMessage}` : ''}`;
+    
+    // Stocker les informations du mouvement
+    setLastMove({
+      quadrant: quadrantId,
+      moveCount,
+      fromPosition: currentPlayer.position,
+      toPosition: finalPosition,
+      specialCase,
+      jackpot
+    });
+    
+    if (specialCase) {
+      setSpecialCaseTriggered(specialCase);
+    }
+    
+    return { 
+      moveCount, 
+      message: msg, 
+      hasWinner: winnerIndex !== null, 
+      winnerIndex,
+      shouldRelance,
+      specialCase
+    };
   };
 
   // Gestion joueurs: ajout / suppression / renommage
@@ -669,7 +739,15 @@ export default function CompassGame({ config, onBackToHome }) {
     setWinnerIndex(null);
     setTeamWin(false);
     setFamilyStars(0);
-    setPlayers(prev => prev.map(p => ({ ...p, score: 0 })));
+    setPlayers(prev => prev.map(p => ({ 
+      ...p, 
+      score: 0, 
+      position: 1, 
+      skipTurns: 0, 
+      prisonTurns: 0 
+    })));
+    setLastMove(null);
+    setSpecialCaseTriggered(null);
   };
 
   // Fonction pour gérer la fin de partie
@@ -1015,6 +1093,112 @@ export default function CompassGame({ config, onBackToHome }) {
     transition: prefersReducedMotion ? 'none' : `transform ${transitionMs}ms cubic-bezier(0.2, 0.7, 0.1, 1)`
   }), [currentAngleDeg, transitionMs, prefersReducedMotion]);
 
+  // Rendu du plateau de jeu
+  const renderPlateau = () => {
+    const plateauConfig = PLATEAU_CONFIGS[gameConfig.plateauType];
+    const maxCases = plateauConfig.cases === 'custom' ? gameConfig.customCases : plateauConfig.cases;
+    const casesPerRow = Math.ceil(Math.sqrt(maxCases));
+    
+    return (
+      <div style={{
+        width: '100%',
+        maxWidth: '600px',
+        background: 'rgba(255,255,255,0.9)',
+        border: '1px solid rgba(255,255,255,0.7)',
+        boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+        borderRadius: '12px',
+        padding: '16px',
+        marginBottom: '16px'
+      }}>
+        <div style={{
+          fontSize: '16px',
+          fontWeight: '700',
+          marginBottom: '12px',
+          textAlign: 'center',
+          color: '#1e293b'
+        }}>
+          🎯 Plateau de Jeu - {maxCases} cases
+        </div>
+        
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${Math.min(casesPerRow, 10)}, 1fr)`,
+          gap: '4px',
+          maxHeight: '300px',
+          overflowY: 'auto'
+        }}>
+          {Array.from({ length: maxCases }, (_, i) => {
+            const caseNumber = i + 1;
+            const isSpecial = SPECIAL_CASES[caseNumber];
+            const playersOnCase = players.filter(p => p.position === caseNumber);
+            
+            return (
+              <div
+                key={caseNumber}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '6px',
+                  border: '2px solid',
+                  borderColor: isSpecial ? '#f59e0b' : '#e2e8f0',
+                  background: isSpecial ? '#fef3c7' : '#f8fafc',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: isSpecial ? '#92400e' : '#475569',
+                  position: 'relative',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                title={isSpecial ? `${isSpecial.name}: ${isSpecial.description}` : `Case ${caseNumber}`}
+              >
+                {caseNumber}
+                {playersOnCase.length > 0 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    right: '-8px',
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    background: '#ef4444',
+                    color: 'white',
+                    fontSize: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: '700'
+                  }}>
+                    {playersOnCase.length}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Légende des cases spéciales */}
+        <div style={{
+          marginTop: '12px',
+          fontSize: '12px',
+          color: '#64748b'
+        }}>
+          <div style={{ fontWeight: '600', marginBottom: '4px' }}>Cases spéciales :</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <span style={{ color: '#f59e0b' }}>🦆 Oie</span>
+            <span style={{ color: '#3b82f6' }}>🌉 Pont</span>
+            <span style={{ color: '#8b5cf6' }}>🏨 Hôtel</span>
+            <span style={{ color: '#ef4444' }}>🔒 Prison</span>
+            <span style={{ color: '#10b981' }}>🌀 Labyrinthe</span>
+            <span style={{ color: '#6b7280' }}>💀 Mort</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Rendu de la boussole SVG avec 4 cadrans + lettres + aiguille
   const renderCompass = () => (
     <svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Boussole du jeu">
@@ -1166,6 +1350,33 @@ export default function CompassGame({ config, onBackToHome }) {
       {!gameStartTime && (
         <div style={styles.configBox}>
           <div style={styles.configTitle}>⚙️ Configuration de la partie</div>
+          <div style={styles.configRow}>
+            <span style={styles.configLabel}>Plateau:</span>
+            <select
+              value={gameConfig.plateauType}
+              onChange={(e) => setGameConfig(prev => ({ ...prev, plateauType: e.target.value }))}
+              style={{ ...styles.configInput, width: '120px' }}
+            >
+              {Object.entries(PLATEAU_CONFIGS).map(([key, config]) => (
+                <option key={key} value={key}>
+                  {config.icon} {key.charAt(0).toUpperCase() + key.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+          {gameConfig.plateauType === 'personnalise' && (
+            <div style={styles.configRow}>
+              <span style={styles.configLabel}>Cases:</span>
+              <input
+                type="number"
+                value={gameConfig.customCases}
+                onChange={(e) => setGameConfig(prev => ({ ...prev, customCases: Math.max(10, Math.min(200, parseInt(e.target.value) || 63)) }))}
+                style={styles.configInput}
+                min="10"
+                max="200"
+              />
+            </div>
+          )}
           <div style={styles.configRow}>
             <span style={styles.configLabel}>Tours maximum:</span>
             <input
@@ -1344,6 +1555,7 @@ export default function CompassGame({ config, onBackToHome }) {
         </div>
       )}
 
+      {renderPlateau()}
       <div style={styles.svgWrap}>{renderCompass()}</div>
 
       <button type="button" onClick={handleSpin} disabled={isSpinning || gameOver || !gameStartTime} style={styles.button}>
@@ -1360,8 +1572,15 @@ export default function CompassGame({ config, onBackToHome }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               {idx === activePlayerIndex && !gameOver ? <span style={styles.activeDot} /> : <span style={{ width: 8, height: 8, marginRight: 10 }} />}
               <strong style={{ color: '#0f172a', display: 'inline-flex', alignItems: 'center', gap: 6 }}><IconShield /> {p.name}</strong>
+              {p.skipTurns > 0 && <span style={{ fontSize: '10px', color: '#f59e0b' }}>⏸️ {p.skipTurns}</span>}
+              {p.prisonTurns > 0 && <span style={{ fontSize: '10px', color: '#ef4444' }}>🔒 {p.prisonTurns}</span>}
             </div>
-            <div style={{ fontWeight: 700, color: '#111827' }}>{p.score}</div>
+            <div style={{ fontWeight: 700, color: '#111827' }}>
+              Case {p.position}
+              {p.position >= (PLATEAU_CONFIGS[gameConfig.plateauType].cases === 'custom' ? gameConfig.customCases : PLATEAU_CONFIGS[gameConfig.plateauType].cases) && (
+                <span style={{ color: '#10b981', marginLeft: '8px' }}>🏆</span>
+              )}
+            </div>
           </div>
         ))}
       </div>
