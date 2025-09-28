@@ -28,8 +28,10 @@ const ID_TO_LABEL = QUADRANTS.reduce((acc, q) => {
 }, {});
 
 const DEFAULT_MAX_TURNS = 10;
+const MAX_TURNS = DEFAULT_MAX_TURNS; // Alias pour compatibilité
 const DEFAULT_WIN_SCORE = 12; // Seuil de victoire individuel
 const DEFAULT_FAMILY_STARS_TARGET = 5; // Étoiles familiales pour victoire d'équipe
+const FAMILY_STARS_TARGET = DEFAULT_FAMILY_STARS_TARGET; // Alias pour compatibilité
 const DEFAULT_TIME_LIMIT = 30; // Durée en minutes
 const CATEGORIES = ['Liberté', 'Cœur', 'Règles', 'Sécurité'];
 const ZERO_VALUES = { 'Liberté': 0, 'Cœur': 0, 'Règles': 0, 'Sécurité': 0 };
@@ -265,7 +267,12 @@ export default function CompassGame({ config, onBackToHome }) {
   // Détecter automatiquement la fin de partie
   useEffect(() => {
     if (gameStartTime && !victoryAnimation) {
-      if (teamWin || winnerIndex !== null || turn > gameConfig.maxTurns || (gameConfig.enableTimeLimit && timeRemaining === 0)) {
+      const shouldEndGame = teamWin || 
+                           winnerIndex !== null || 
+                           turn > gameConfig.maxTurns || 
+                           (gameConfig.enableTimeLimit && timeRemaining === 0);
+      
+      if (shouldEndGame) {
         handleGameEnd();
       }
     }
@@ -328,7 +335,7 @@ export default function CompassGame({ config, onBackToHome }) {
   };
 
   const advanceTurn = () => {
-    if (winnerIndex !== null) return;
+    if (winnerIndex !== null || teamWin) return;
     if (turn >= gameConfig.maxTurns) return;
     setTurn((t) => t + 1);
     setActivePlayerIndex((i) => (i + 1) % players.length);
@@ -371,9 +378,8 @@ export default function CompassGame({ config, onBackToHome }) {
       const update = computeAndApplyScoring(finalQ, willJackpot);
       setResultText(update.message);
       setIsSpinning(false);
-      if (turn < MAX_TURNS) {
-        setTurn((t) => t + 1);
-        setActivePlayerIndex((i) => (i + 1) % players.length);
+      if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
+        advanceTurn();
       }
       return;
     }
@@ -416,6 +422,7 @@ export default function CompassGame({ config, onBackToHome }) {
           // Détection de zone frontière -> tirer une situation QCM ou une énigme
           const boundaryCategory = getBoundaryCategoryFromAngle(norm);
           setIsSpinning(false);
+          
           if (boundaryCategory) {
             setCurrentCategory(boundaryCategory);
             const difficulty = config?.difficulty || 'medium';
@@ -429,15 +436,28 @@ export default function CompassGame({ config, onBackToHome }) {
                 setRiddle({ category: boundaryCategory, item: riddleItem, solved: false });
                 setRiddlePhase('question');
                 setRiddleAnswer('');
+              } else {
+                // Si pas d'énigme disponible, passer au tour suivant
+                if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
+                  advanceTurn();
+                }
               }
             } else {
               const situation = getRandomSituation(boundaryCategory, difficulty);
               if (situation) {
                 setDecision({ category: boundaryCategory, item: situation, selected: null });
+              } else {
+                // Si pas de situation disponible, passer au tour suivant
+                if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
+                  advanceTurn();
+                }
               }
             }
-          } else if (!update.hasWinner && turn < MAX_TURNS) {
-            advanceTurn();
+          } else {
+            // Pas de zone frontière, passer au tour suivant
+            if (!update.hasWinner && !teamWin && turn < gameConfig.maxTurns) {
+              advanceTurn();
+            }
           }
         }
       }, delay);
@@ -499,9 +519,10 @@ export default function CompassGame({ config, onBackToHome }) {
     setWinnerIndex(nextWinnerIndex !== -1 ? nextWinnerIndex : null);
     
     // Détecter la victoire d'équipe
-    const nextFamilyStars = familyStars + (max > 0 && winners.length === 1 && activeValue === winners[0] ? 1 : 0);
+    const nextFamilyStars = familyStars + (deltaActive > 0 ? 1 : 0);
     const hasTeamWin = nextFamilyStars >= gameConfig.familyStarsTarget;
     setTeamWin(hasTeamWin);
+    setFamilyStars(nextFamilyStars);
 
     const label = ID_TO_LABEL[quadrantId] || '';
     const sign = deltaActive >= 0 ? '+' : '-';
@@ -579,13 +600,13 @@ export default function CompassGame({ config, onBackToHome }) {
     setTeamWin((prevWin) => {
       if (prevWin) return true;
       const next = familyStars + (max > 0 && winners.length === 1 && activeValue === winners[0] ? 1 : 0);
-      return next >= FAMILY_STARS_TARGET;
+      return next >= gameConfig.familyStarsTarget;
     });
     // Reset décision
     setDecision(null);
     setDecisionPhase('question');
     setCurrentCategory('');
-    if (!teamWin && winnerIndex === null && turn < MAX_TURNS) {
+    if (!teamWin && winnerIndex === null && turn < gameConfig.maxTurns) {
       advanceTurn();
     }
   };
@@ -668,8 +689,18 @@ export default function CompassGame({ config, onBackToHome }) {
       endReason = 'turns';
       // Vérifier s'il y a égalité
       const maxScore = Math.max(...players.map(p => p.score));
-      const winners = players.filter(p => p.score === maxScore);
-      if (winners.length > 1) {
+      const tiedPlayers = players.filter(p => p.score === maxScore);
+      if (tiedPlayers.length > 1) {
+        setTiebreakerMode(true);
+        return;
+      }
+      winner = players.findIndex(p => p.score === maxScore);
+    } else if (gameConfig.enableTimeLimit && timeRemaining === 0) {
+      endReason = 'time';
+      // En cas de limite de temps, le joueur avec le plus haut score gagne
+      const maxScore = Math.max(...players.map(p => p.score));
+      const tiedPlayers = players.filter(p => p.score === maxScore);
+      if (tiedPlayers.length > 1) {
         setTiebreakerMode(true);
         return;
       }
