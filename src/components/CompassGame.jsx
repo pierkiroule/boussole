@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { getRandomQuestion } from '../data/questions.js';
+import { getRandomSituation } from '../data/situations.js';
+import { getRandomGage, getAgeGroupFromProfile } from '../data/gages.js';
 
 /**
  * La Famille Déboussolée — Mini‑jeu de boussole
@@ -167,7 +170,7 @@ function getBoundaryCategoryFromAngle(angleDeg) {
   return null;
 }
 
-export default function CompassGame() {
+export default function CompassGame({ config, onBackToHome }) {
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return false;
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -189,11 +192,19 @@ export default function CompassGame() {
   const [familyStars, setFamilyStars] = useState(0);
   const [teamWin, setTeamWin] = useState(false);
 
-  // Gestion joueurs
-  const [players, setPlayers] = useState([
-    { name: 'Joueur 1', score: 0 },
-    { name: 'Joueur 2', score: 0 },
-  ]);
+  // Gestion joueurs - initialisation basée sur la config
+  const [players, setPlayers] = useState(() => {
+    if (config && config.playerCount) {
+      return Array.from({ length: config.playerCount }, (_, i) => ({
+        name: `Joueur ${i + 1}`,
+        score: 0
+      }));
+    }
+    return [
+      { name: 'Joueur 1', score: 0 },
+      { name: 'Joueur 2', score: 0 },
+    ];
+  });
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [turn, setTurn] = useState(1);
 
@@ -255,6 +266,14 @@ export default function CompassGame() {
   };
 
   const randomCategory = () => CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+
+  // Fonction pour obtenir un gage adapté à l'âge
+  const getAgeAppropriateGage = () => {
+    if (!config) return "Gage non disponible.";
+    const ageGroup = getAgeGroupFromProfile(config.profile);
+    const difficulty = config.difficulty || 'medium';
+    return getRandomGage(ageGroup, difficulty);
+  };
 
   const advanceTurn = () => {
     if (winnerIndex !== null) return;
@@ -347,10 +366,10 @@ export default function CompassGame() {
           setIsSpinning(false);
           if (boundaryCategory) {
             setCurrentCategory(boundaryCategory);
-            const poolDec = DECISIONS[boundaryCategory] || [];
-            if (poolDec.length > 0) {
-              const item = poolDec[Math.floor(Math.random() * poolDec.length)];
-              setDecision({ category: boundaryCategory, item, selected: null });
+            const difficulty = config?.difficulty || 'medium';
+            const situation = getRandomSituation(boundaryCategory, difficulty);
+            if (situation) {
+              setDecision({ category: boundaryCategory, item: situation, selected: null });
             }
           } else if (!update.hasWinner && turn < MAX_TURNS) {
             advanceTurn();
@@ -397,7 +416,8 @@ export default function CompassGame() {
       const success = Math.random() < 0.5;
       deltaActive = success ? base : 0;
       if (deltaActive !== 0) deltas.set(currentIndex, deltaActive);
-      extraMessage = success ? ' (gage réussi ✅)' : ' (gage raté ❌)';
+      const gageText = getAgeAppropriateGage();
+      extraMessage = success ? ` (gage réussi ✅: ${gageText})` : ` (gage raté ❌: ${gageText})`;
     } else {
       // Ouest: perdu, aucun point
       deltaActive = 0;
@@ -760,10 +780,30 @@ export default function CompassGame() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.title}>
-        <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
-          <IconCrown /> La Famille Déboussolée
-        </span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '16px' }}>
+        <button
+          onClick={onBackToHome}
+          style={{
+            background: 'transparent',
+            border: '1px solid #e2e8f0',
+            borderRadius: '8px',
+            padding: '8px 12px',
+            fontSize: '12px',
+            color: '#64748b',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          ← Retour
+        </button>
+        <div style={styles.title}>
+          <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+            <IconCrown /> La Famille Déboussolée
+          </span>
+        </div>
+        <div style={{ width: '80px' }}></div> {/* Spacer pour centrer le titre */}
       </div>
       <div style={styles.turnInfo}>
         {gameOver ? (teamWin ? `Victoire collective: ${familyStars}/${FAMILY_STARS_TARGET} étoiles ✨` : (winnerIndex !== null ? `Victoire: ${players[winnerIndex].name}` : 'Partie terminée')) : `Tour ${turn}/${MAX_TURNS} — Joueur actif: ${players[activePlayerIndex].name}`}
