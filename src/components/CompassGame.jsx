@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getRandomQuestion } from '../data/questions.js';
 import { getRandomSituation } from '../data/situations.js';
 import { getRandomGage, getAgeGroupFromProfile } from '../data/gages.js';
+import { getRandomRiddle, checkRiddleAnswer } from '../data/riddles.js';
 
 /**
  * La Famille Déboussolée — Mini‑jeu de boussole
@@ -191,6 +192,9 @@ export default function CompassGame({ config, onBackToHome }) {
   const [votesCount, setVotesCount] = useState({ ...ZERO_VALUES });
   const [familyStars, setFamilyStars] = useState(0);
   const [teamWin, setTeamWin] = useState(false);
+  const [riddle, setRiddle] = useState(null); // { category, item, answer, solved }
+  const [riddlePhase, setRiddlePhase] = useState('question'); // 'question' | 'answer' | 'result'
+  const [riddleAnswer, setRiddleAnswer] = useState('');
 
   // Gestion joueurs - initialisation basée sur la config
   const [players, setPlayers] = useState(() => {
@@ -361,15 +365,28 @@ export default function CompassGame({ config, onBackToHome }) {
           const update = computeAndApplyScoring(finalQ, willJackpot);
           setResultText(update.message);
 
-          // Détection de zone frontière -> tirer une situation QCM
+          // Détection de zone frontière -> tirer une situation QCM ou une énigme
           const boundaryCategory = getBoundaryCategoryFromAngle(norm);
           setIsSpinning(false);
           if (boundaryCategory) {
             setCurrentCategory(boundaryCategory);
             const difficulty = config?.difficulty || 'medium';
-            const situation = getRandomSituation(boundaryCategory, difficulty);
-            if (situation) {
-              setDecision({ category: boundaryCategory, item: situation, selected: null });
+            
+            // 50% de chance d'avoir une énigme, 50% d'avoir une situation
+            const isRiddle = Math.random() < 0.5;
+            
+            if (isRiddle) {
+              const riddleItem = getRandomRiddle(boundaryCategory, difficulty);
+              if (riddleItem) {
+                setRiddle({ category: boundaryCategory, item: riddleItem, solved: false });
+                setRiddlePhase('question');
+                setRiddleAnswer('');
+              }
+            } else {
+              const situation = getRandomSituation(boundaryCategory, difficulty);
+              if (situation) {
+                setDecision({ category: boundaryCategory, item: situation, selected: null });
+              }
             }
           } else if (!update.hasWinner && turn < MAX_TURNS) {
             advanceTurn();
@@ -537,6 +554,36 @@ export default function CompassGame({ config, onBackToHome }) {
     });
   };
 
+  // Gestion des énigmes
+  const handleRiddleAnswer = () => {
+    if (!riddle || !riddleAnswer.trim()) return;
+    
+    const isCorrect = checkRiddleAnswer(riddle.item, riddleAnswer);
+    setRiddle(prev => ({ ...prev, solved: isCorrect }));
+    setRiddlePhase('result');
+    
+    // Bonus pour une énigme résolue
+    if (isCorrect) {
+      setPlayers((prev) => prev.map((p, idx) => 
+        idx === activePlayerIndex ? { ...p, score: p.score + 2 } : p
+      ));
+      setFamilyStars((s) => s + 1);
+      setResultText(prev => `${prev} + 🧩 Énigme résolue (+2 points, +1 étoile)`);
+    } else {
+      setResultText(prev => `${prev} + 🧩 Énigme non résolue`);
+    }
+  };
+
+  const handleRiddleNext = () => {
+    setRiddle(null);
+    setRiddlePhase('question');
+    setRiddleAnswer('');
+    setCurrentCategory('');
+    if (!teamWin && winnerIndex === null && turn < MAX_TURNS) {
+      advanceTurn();
+    }
+  };
+
   // Styles inline basiques (responsives et simples)
   const styles = useMemo(() => ({
     container: {
@@ -666,6 +713,51 @@ export default function CompassGame({ config, onBackToHome }) {
       fontWeight: 700,
       cursor: 'pointer',
       minWidth: '140px',
+    },
+    riddleBox: {
+      width: '100%',
+      maxWidth: '420px',
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid rgba(255,255,255,0.7)',
+      boxShadow: '0 10px 30px rgba(2,6,23,0.06)',
+      borderRadius: '12px',
+      padding: '12px 14px',
+      textAlign: 'left',
+      color: '#0f172a',
+    },
+    riddleTitle: { fontWeight: 700, fontSize: '14px', marginBottom: 6, color: '#334155' },
+    riddleQuestion: { fontSize: '14px', marginBottom: 8, color: '#0f172a', fontStyle: 'italic' },
+    riddleAnswer: {
+      width: '100%',
+      padding: '8px 10px',
+      borderRadius: '8px',
+      border: '1px solid #cbd5e1',
+      fontSize: '14px',
+      marginBottom: '8px',
+    },
+    riddleValidate: {
+      backgroundColor: '#7c3aed',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '10px',
+      padding: '10px 16px',
+      fontWeight: 700,
+      cursor: 'pointer',
+      minWidth: '140px',
+    },
+    riddleResult: {
+      fontSize: '14px',
+      marginBottom: '8px',
+      padding: '8px',
+      borderRadius: '8px',
+      backgroundColor: 'rgba(34, 197, 94, 0.1)',
+      border: '1px solid rgba(34, 197, 94, 0.3)',
+    },
+    riddleExplanation: {
+      fontSize: '12px',
+      color: '#475569',
+      fontStyle: 'italic',
+      marginBottom: '8px',
     },
   }), [isSpinning]);
 
@@ -883,6 +975,46 @@ export default function CompassGame({ config, onBackToHome }) {
           <div style={{ fontSize: 12, color: '#475569', marginTop: 8 }}>Votes restants: {remainingVotes} / {votesMax}</div>
           <button type="button" onClick={handleValidateDecision} disabled={remainingVotes !== 0} style={{ ...styles.qcmValidate, marginTop: 12 }}>
             Calculer la majorité
+          </button>
+        </div>
+      )}
+
+      {!gameOver && riddle && riddlePhase === 'question' && (
+        <div style={styles.riddleBox}>
+          <div style={styles.riddleTitle}>🧩 Énigme – {riddle.category}</div>
+          <div style={styles.riddleQuestion}>{riddle.item.question || riddle.item.challenge || riddle.item.problem}</div>
+          <input
+            type="text"
+            value={riddleAnswer}
+            onChange={(e) => setRiddleAnswer(e.target.value)}
+            placeholder="Ta réponse..."
+            style={styles.riddleAnswer}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleRiddleAnswer(); }}
+          />
+          <button type="button" onClick={handleRiddleAnswer} disabled={!riddleAnswer.trim()} style={styles.riddleValidate}>
+            Valider ma réponse
+          </button>
+        </div>
+      )}
+
+      {!gameOver && riddle && riddlePhase === 'result' && (
+        <div style={styles.riddleBox}>
+          <div style={styles.riddleTitle}>🧩 Résultat de l'énigme</div>
+          <div style={styles.riddleResult}>
+            {riddle.solved ? '✅ Correct !' : '❌ Incorrect'}
+          </div>
+          {riddle.item.explanation && (
+            <div style={styles.riddleExplanation}>
+              <strong>Explication :</strong> {riddle.item.explanation}
+            </div>
+          )}
+          {riddle.item.answer && !riddle.solved && (
+            <div style={styles.riddleExplanation}>
+              <strong>Réponse :</strong> {riddle.item.answer}
+            </div>
+          )}
+          <button type="button" onClick={handleRiddleNext} style={styles.riddleValidate}>
+            Continuer
           </button>
         </div>
       )}
