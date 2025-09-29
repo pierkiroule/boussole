@@ -211,7 +211,7 @@ export default function TeamDebateGame() {
     );
   };
 
-  // Écran de débat
+  // Écran de débat - Version simplifiée
   const DebateScreen = () => {
     const [currentSpeaker, setCurrentSpeaker] = useState(null);
     const [speechTime, setSpeechTime] = useState(0);
@@ -233,20 +233,30 @@ export default function TeamDebateGame() {
 
     // Vérifier si tous les joueurs ont parlé
     const allPlayersSpoken = Object.keys(arguments).length === players.length;
+    const debatePhase = currentSpeaker === null ? 'waiting' : 'speaking';
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-600 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full">
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold bg-purple-600">1</div>
+              <div className="w-16 h-1 bg-gray-300 rounded"></div>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold bg-purple-600">2</div>
+              <div className="w-16 h-1 bg-gray-300 rounded"></div>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold bg-gray-300">3</div>
+            </div>
+            
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               💬 Phase de Débat
             </h2>
-            <p className="text-xl text-gray-600 mb-4">
-              Chaque rôle doit argumenter sa position sur cette situation
-            </p>
+            
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <p className="text-blue-800 font-semibold">
-                📋 Instructions : Cliquez sur "Prendre la Parole" pour votre rôle, puis argumentez selon votre personnage !
+              <p className="text-blue-800 font-semibold text-lg">
+                🎯 Chaque joueur argumente selon son rôle
+              </p>
+              <p className="text-blue-600 text-sm mt-1">
+                Cliquez sur votre carte pour prendre la parole !
               </p>
             </div>
           </div>
@@ -268,8 +278,9 @@ export default function TeamDebateGame() {
             </div>
           </div>
 
+          {/* Cartes des joueurs simplifiées */}
           <div className="mb-8">
-            <h3 className="text-2xl font-semibold mb-6">Joueurs et leurs rôles :</h3>
+            <h3 className="text-2xl font-semibold mb-6 text-center">Vos rôles :</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {players.map((player) => {
                 const role = getRole(playerRoles[player.id]);
@@ -279,44 +290,36 @@ export default function TeamDebateGame() {
                 return (
                   <div 
                     key={player.id} 
-                    className={`${role.color} text-white p-6 rounded-xl shadow-lg transition-all ${
-                      isSpeaking ? 'ring-4 ring-white ring-opacity-50 scale-105' : ''
+                    className={`${role.color} text-white p-6 rounded-xl shadow-lg transition-all cursor-pointer ${
+                      isSpeaking ? 'ring-4 ring-white ring-opacity-50 scale-105' : 
+                      hasSpoken ? 'opacity-75' : 'hover:scale-105'
                     }`}
+                    onClick={() => !hasSpoken && currentSpeaker === null && startSpeech(player.id)}
                   >
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-2xl">{role.icon}</span>
-                      <div>
-                        <h4 className="font-bold">{role.name}</h4>
-                        <p className="text-sm opacity-90">{player.name}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <p className="text-sm font-semibold mb-2">Votre mission :</p>
-                      <p className="text-xs">{currentScenario.roles[role.name] || role.objective}</p>
-                    </div>
-
-                    <div className="space-y-2">
+                    <div className="text-center">
+                      <div className="text-4xl mb-3">{role.icon}</div>
+                      <h4 className="font-bold text-lg mb-1">{role.name}</h4>
+                      <p className="text-sm opacity-90 mb-3">{player.name}</p>
+                      
                       {!hasSpoken ? (
-                        <button
-                          onClick={() => startSpeech(player.id)}
-                          disabled={currentSpeaker !== null && currentSpeaker !== player.id}
-                          className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                            currentSpeaker === null
-                              ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30'
-                              : currentSpeaker === player.id
-                              ? 'bg-yellow-400 text-gray-800 hover:bg-yellow-500'
-                              : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                          }`}
-                        >
-                          {currentSpeaker === player.id ? '🎤 En cours...' : '🎤 Prendre la Parole'}
-                        </button>
+                        <div className="text-center">
+                          {currentSpeaker === null ? (
+                            <div className="bg-white bg-opacity-20 px-4 py-2 rounded-lg">
+                              <span className="text-sm font-semibold">🎤 Cliquez pour parler</span>
+                            </div>
+                          ) : isSpeaking ? (
+                            <div className="bg-yellow-400 text-gray-800 px-4 py-2 rounded-lg">
+                              <span className="text-sm font-bold">🎤 En cours...</span>
+                            </div>
+                          ) : (
+                            <div className="bg-gray-400 px-4 py-2 rounded-lg">
+                              <span className="text-sm">⏳ En attente</span>
+                            </div>
+                          )}
+                        </div>
                       ) : (
                         <div className="text-center">
                           <span className="text-green-200 text-sm font-semibold">✅ A parlé</span>
-                          <div className="mt-2 text-xs text-green-200">
-                            {arguments[player.id]?.length > 0 ? `${arguments[player.id].length} caractères` : ''}
-                          </div>
                         </div>
                       )}
                     </div>
@@ -326,16 +329,23 @@ export default function TeamDebateGame() {
             </div>
           </div>
 
+          {/* Zone de prise de parole simplifiée */}
           {currentSpeaker && (
             <div className="mb-8">
-              <div className="bg-gradient-to-r from-red-100 to-blue-100 p-6 rounded-xl border-2 border-purple-300">
-                <h4 className="text-xl font-bold text-purple-800 mb-4">
-                  🎤 {players.find(p => p.id === currentSpeaker)?.name} s'exprime...
-                </h4>
+              <div className="bg-gradient-to-r from-purple-100 to-blue-100 p-6 rounded-xl border-2 border-purple-300">
+                <div className="text-center mb-4">
+                  <h4 className="text-2xl font-bold text-purple-800 mb-2">
+                    🎤 {players.find(p => p.id === currentSpeaker)?.name} s'exprime
+                  </h4>
+                  <p className="text-purple-600">
+                    Rôle : <span className="font-bold">{getRole(playerRoles[currentSpeaker])?.name}</span>
+                  </p>
+                </div>
+                
                 <div className="bg-white p-4 rounded-lg mb-4">
                   <textarea
                     placeholder="Exprimez votre argument selon votre rôle..."
-                    className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                    className="w-full h-40 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none text-lg"
                     onChange={(e) => {
                       setArguments(prev => ({
                         ...prev,
@@ -345,29 +355,30 @@ export default function TeamDebateGame() {
                     value={arguments[currentSpeaker] || ''}
                   />
                 </div>
-                <div className="flex gap-3">
+                
+                <div className="text-center">
                   <button
                     onClick={endSpeech}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold"
+                    className="px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-bold text-lg shadow-lg transform hover:scale-105 transition-all"
                   >
-                    ✅ Terminer
-                  </button>
-                  <button
-                    onClick={() => setCurrentSpeaker(null)}
-                    className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold"
-                  >
-                    ❌ Annuler
+                    ✅ Terminer mon argument
                   </button>
                 </div>
               </div>
             </div>
           )}
 
-          {Object.keys(arguments).length === players.length && (
+          {/* Bouton de passage au vote */}
+          {allPlayersSpoken && (
             <div className="text-center">
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
+                <p className="text-green-800 font-semibold text-lg">
+                  ✅ Tous les joueurs ont argumenté !
+                </p>
+              </div>
               <button
                 onClick={nextPhase}
-                className="px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-lg text-xl font-semibold hover:from-green-700 hover:to-blue-700 shadow-lg"
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl text-xl font-bold hover:from-green-700 hover:to-blue-700 shadow-lg transform hover:scale-105 transition-all"
               >
                 🗳️ Passer au Vote !
               </button>
@@ -378,7 +389,7 @@ export default function TeamDebateGame() {
     );
   };
 
-  // Écran de vote
+  // Écran de vote simplifié
   const VotingScreen = () => {
     const [hasVoted, setHasVoted] = useState({});
     const [allVoted, setAllVoted] = useState(false);
@@ -409,80 +420,85 @@ export default function TeamDebateGame() {
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-600 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full">
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold bg-green-500">1</div>
+              <div className="w-16 h-1 bg-gray-300 rounded"></div>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold bg-green-500">2</div>
+              <div className="w-16 h-1 bg-gray-300 rounded"></div>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold bg-purple-600">3</div>
+            </div>
+            
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               🗳️ Phase de Vote
             </h2>
-            <p className="text-xl text-gray-600">
-              Votez pour l'argument qui vous semble le plus convaincant !
-            </p>
-          </div>
-
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold mb-6">Arguments présentés :</h3>
-            <div className="space-y-6">
-              {players.map((player) => {
-                const role = getRole(playerRoles[player.id]);
-                const argument = arguments[player.id];
-                
-                return (
-                  <div key={player.id} className="bg-gradient-to-r from-gray-50 to-blue-50 p-6 rounded-xl border border-gray-200">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className={`${role.color} text-white px-4 py-2 rounded-lg flex items-center gap-2`}>
-                        <span className="text-xl">{role.icon}</span>
-                        <span className="font-semibold">{role.name}</span>
-                      </div>
-                      <span className="text-lg font-medium">{player.name}</span>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border">
-                      <p className="text-gray-700">{argument}</p>
-                    </div>
-                  </div>
-                );
-              })}
+            
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <p className="text-green-800 font-semibold text-lg">
+                🎯 Votez pour l'argument le plus convaincant !
+              </p>
+              <p className="text-green-600 text-sm mt-1">
+                Chaque joueur vote pour un autre joueur (pas pour soi-même)
+              </p>
             </div>
           </div>
 
+          {/* Interface de vote simplifiée */}
           <div className="mb-8">
-            <h3 className="text-2xl font-semibold mb-6">Vos votes :</h3>
+            <h3 className="text-2xl font-semibold mb-6 text-center">Qui mérite votre vote ?</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {players.map((voter) => (
-                <div key={voter.id} className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold mb-3">{voter.name} :</h4>
-                  <div className="space-y-2">
-                    {players.filter(p => p.id !== voter.id).map((candidate) => {
-                      const candidateRole = getRole(playerRoles[candidate.id]);
-                      const isVotedFor = votes[voter.id] === candidate.id;
-                      
-                      return (
-                        <button
-                          key={candidate.id}
-                          onClick={() => handleVote(voter.id, candidate.id)}
-                          disabled={hasVoted[voter.id]}
-                          className={`w-full p-3 rounded-lg border-2 transition-all ${
-                            isVotedFor 
-                              ? 'border-green-500 bg-green-50' 
-                              : 'border-gray-200 hover:border-blue-300'
-                          } ${hasVoted[voter.id] ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{candidateRole.icon}</span>
-                            <span className="font-medium">{candidate.name}</span>
-                            {isVotedFor && <span className="ml-auto text-green-600 font-bold">✓</span>}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+                <div key={voter.id} className="bg-gray-50 p-6 rounded-xl border-2 border-gray-200">
+                  <h4 className="font-bold text-lg mb-4 text-center">{voter.name}</h4>
+                  
+                  {!hasVoted[voter.id] ? (
+                    <div className="space-y-3">
+                      {players.filter(p => p.id !== voter.id).map((candidate) => {
+                        const candidateRole = getRole(playerRoles[candidate.id]);
+                        const candidateArgument = arguments[candidate.id];
+                        
+                        return (
+                          <button
+                            key={candidate.id}
+                            onClick={() => handleVote(voter.id, candidate.id)}
+                            className="w-full p-4 rounded-lg border-2 border-gray-200 bg-white hover:border-green-300 hover:bg-green-50 transition-all text-left"
+                          >
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="text-2xl">{candidateRole.icon}</span>
+                              <div>
+                                <div className="font-bold">{candidate.name}</div>
+                                <div className="text-sm text-gray-600">{candidateRole.name}</div>
+                              </div>
+                            </div>
+                            <div className="text-sm text-gray-700 line-clamp-2">
+                              {candidateArgument?.substring(0, 100)}...
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="bg-green-100 p-4 rounded-lg text-center">
+                      <p className="text-green-800 font-semibold">
+                        ✅ A voté pour : <span className="font-bold">{players.find(p => p.id === votes[voter.id])?.name}</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
 
+          {/* Bouton de résultats */}
           {allVoted && (
             <div className="text-center">
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
+                <p className="text-green-800 font-semibold text-lg">
+                  ✅ Tous les joueurs ont voté !
+                </p>
+              </div>
               <button
                 onClick={calculateResults}
-                className="px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-lg text-xl font-semibold hover:from-green-700 hover:to-blue-700 shadow-lg"
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl text-xl font-bold hover:from-green-700 hover:to-blue-700 shadow-lg transform hover:scale-105 transition-all"
               >
                 🎯 Voir les Résultats !
               </button>
