@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GameContainer from './components/GameContainer';
 import WelcomeScreen from './components/WelcomeScreen';
+import NotificationSystem from './components/NotificationSystem';
+import SaveGamePrompt from './components/SaveGamePrompt';
 import { GAME_CONFIG } from './data/gameConfig';
+import { GameSaveManager } from './utils/gameSaveManager';
 
 export default function App() {
   const [gameState, setGameState] = useState('welcome'); // 'welcome', 'playing', 'ended'
   const [gameConfig, setGameConfig] = useState(null);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
 
   const handleStartGame = (config) => {
     setGameConfig(config);
@@ -19,10 +23,39 @@ export default function App() {
   const handleBackToWelcome = () => {
     setGameState('welcome');
     setGameConfig(null);
+    GameSaveManager.clearSave();
   };
+
+  const handleLoadGame = (loadedGameData) => {
+    setGameConfig(loadedGameData.gameConfig);
+    setGameState('playing');
+    setShowSavePrompt(false);
+  };
+
+  const handleDismissSavePrompt = () => {
+    setShowSavePrompt(false);
+  };
+
+  // Vérifier s'il y a une sauvegarde au chargement
+  useEffect(() => {
+    if (GameSaveManager.hasSave()) {
+      setShowSavePrompt(true);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+      {/* Système de notifications */}
+      <NotificationSystem />
+      
+      {/* Prompt de reprise de partie */}
+      {showSavePrompt && (
+        <SaveGamePrompt
+          onLoadGame={handleLoadGame}
+          onDismiss={handleDismissSavePrompt}
+        />
+      )}
+      
       {gameState === 'welcome' && (
         <WelcomeScreen onStartGame={handleStartGame} />
       )}

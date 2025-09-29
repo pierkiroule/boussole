@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { getAllGameDurations, validatePlayerCount } from '../data/gameConfig';
 import Tutorial from './Tutorial';
+import StatsDisplay from './StatsDisplay';
+import { GameStatsManager } from '../utils/gameStatsManager';
+import { SoundManager } from '../utils/soundManager';
 
 export default function WelcomeScreen({ onStartGame }) {
   const [playerCount, setPlayerCount] = useState(4);
@@ -8,6 +11,7 @@ export default function WelcomeScreen({ onStartGame }) {
   const [playerNames, setPlayerNames] = useState(['']);
   const [currentStep, setCurrentStep] = useState(0); // 0: tutorial, 1: config, 2: names
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showStats, setShowStats] = useState(false);
 
   const durations = getAllGameDurations();
 
@@ -36,6 +40,7 @@ export default function WelcomeScreen({ onStartGame }) {
   };
 
   const handleStartGame = () => {
+    SoundManager.playSuccess();
     const config = {
       playerCount,
       gameDuration,
@@ -52,11 +57,21 @@ export default function WelcomeScreen({ onStartGame }) {
   };
 
   const handleShowTutorial = () => {
+    SoundManager.playClick();
     setShowTutorial(true);
+  };
+
+  const handleShowStats = () => {
+    SoundManager.playClick();
+    setShowStats(true);
   };
 
   if (showTutorial) {
     return <Tutorial onComplete={handleTutorialComplete} />;
+  }
+
+  if (showStats) {
+    return <StatsDisplay onClose={() => setShowStats(false)} />;
   }
 
   return (
@@ -72,14 +87,22 @@ export default function WelcomeScreen({ onStartGame }) {
           </p>
         </div>
 
-        {/* Bouton Tutoriel */}
+        {/* Boutons d'action */}
         <div className="text-center mb-8">
-          <button
-            onClick={handleShowTutorial}
-            className="btn-primary mb-4"
-          >
-            📚 Voir le Tutoriel
-          </button>
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={handleShowTutorial}
+              className="btn-primary"
+            >
+              📚 Tutoriel
+            </button>
+            <button
+              onClick={handleShowStats}
+              className="btn-secondary"
+            >
+              📊 Statistiques
+            </button>
+          </div>
         </div>
 
         {/* Étapes */}

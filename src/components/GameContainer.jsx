@@ -4,9 +4,14 @@ import AttackDisplay from './AttackDisplay';
 import MasterVoting from './MasterVoting';
 import ScoreDisplay from './ScoreDisplay';
 import RiddleDisplay from './RiddleDisplay';
+import LiveScoreDisplay from './LiveScoreDisplay';
+import PhaseTransition from './PhaseTransition';
 import { getGameDurationConfig } from '../data/gameConfig';
 import { getAttackById } from '../data/attacks';
 import { getChapterById } from '../data/chapters';
+import { GameSaveManager } from '../utils/gameSaveManager';
+import { GameStatsManager } from '../utils/gameStatsManager';
+import { SoundManager } from '../utils/soundManager';
 
 export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }) {
   const [currentTurn, setCurrentTurn] = useState(1);
@@ -17,6 +22,8 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
   const [playerScores, setPlayerScores] = useState({});
   const [playerParades, setPlayerParades] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
+  const [showTransition, setShowTransition] = useState(false);
+  const [transitionPhase, setTransitionPhase] = useState('');
 
   const durationConfig = getGameDurationConfig(gameConfig.gameDuration);
   const totalTurns = durationConfig.turns;
@@ -29,6 +36,24 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     });
     setPlayerScores(initialScores);
   }, [gameConfig.playerNames]);
+
+  // Sauvegarde automatique
+  useEffect(() => {
+    const gameData = {
+      gameConfig,
+      currentTurn,
+      currentMaster,
+      currentAttack,
+      currentChapter,
+      gamePhase,
+      playerScores,
+      playerParades,
+      gameHistory,
+      durationConfig
+    };
+    
+    GameSaveManager.saveGame(gameData);
+  }, [currentTurn, currentMaster, gamePhase, playerScores, gameHistory]);
 
   // Déterminer l'attaque actuelle
   useEffect(() => {
@@ -46,11 +71,19 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
 
   const handleStartAttack = () => {
     setGamePhase('attack');
+    SoundManager.playTransition();
+    if (window.showNotification) {
+      window.showNotification(`⚔️ ${getCurrentMasterName()} lance l'attaque !`, 'info');
+    }
   };
 
   const handleParadesSubmitted = (parades) => {
     setPlayerParades(parades);
     setGamePhase('voting');
+    SoundManager.playSuccess();
+    if (window.showNotification) {
+      window.showNotification('🛡️ Toutes les parades sont soumises ! Votez maintenant.', 'success');
+    }
   };
 
   const handleMasterVote = (scores) => {
@@ -74,9 +107,17 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     // Passer à la phase d'énigme ou au tour suivant
     if (currentTurn >= totalTurns) {
       setGamePhase('ended');
+      SoundManager.playVictory();
+      if (window.showNotification) {
+        window.showNotification('🎉 Partie terminée ! Vérifiez les résultats finaux.', 'success');
+      }
     } else {
       // Ajouter une phase d'énigme après chaque vote
       setGamePhase('riddle');
+      SoundManager.playTransition();
+      if (window.showNotification) {
+        window.showNotification('🤔 Réfléchissez à cette énigme pour approfondir votre compréhension.', 'info');
+      }
     }
   };
 
@@ -86,6 +127,15 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
       const bonusScores = { ...playerScores };
       bonusScores[currentMaster] = (bonusScores[currentMaster] || 0) + 1;
       setPlayerScores(bonusScores);
+      SoundManager.playSuccess();
+      if (window.showNotification) {
+        window.showNotification(`🎉 ${getCurrentMasterName()} gagne 1 pt bonus pour sa bonne réponse !`, 'success');
+      }
+    } else {
+      SoundManager.playNotification();
+      if (window.showNotification) {
+        window.showNotification('💭 Réflexion intéressante ! Continuez à apprendre.', 'info');
+      }
     }
 
     // Rotation du Maître et passage au tour suivant
@@ -94,9 +144,30 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     setCurrentTurn(currentTurn + 1);
     setGamePhase('intro');
     setPlayerParades({});
+    
+    SoundManager.playTransition();
+    if (window.showNotification) {
+      window.showNotification(`🔄 ${gameConfig.playerNames[nextMaster]} devient le nouveau Maître Gardien !`, 'info');
+    }
   };
 
   const handleEndGame = () => {
+    // Mettre à jour les statistiques
+    const gameData = {
+      gameConfig,
+      currentTurn,
+      currentMaster,
+      currentAttack,
+      currentChapter,
+      gamePhase,
+      playerScores,
+      playerParades,
+      gameHistory,
+      durationConfig
+    };
+    
+    GameStatsManager.updateStats(gameData);
+    
     onEndGame();
   };
 
@@ -122,6 +193,13 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      {/* Affichage des scores en temps réel */}
+      <LiveScoreDisplay 
+        playerNames={gameConfig.playerNames}
+        playerScores={playerScores}
+        currentMaster={currentMaster}
+      />
+      
       <div className="max-w-4xl mx-auto">
         {/* En-tête du jeu */}
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
