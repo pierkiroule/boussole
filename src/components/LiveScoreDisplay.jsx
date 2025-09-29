@@ -1,4 +1,4 @@
-import React from 'react';
+// React import not needed for JSX in React 17+
 
 export default function LiveScoreDisplay({ playerNames, playerScores, currentMaster }) {
   // Calculer le classement

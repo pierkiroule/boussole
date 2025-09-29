@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getRandomRiddle, checkRiddleAnswer } from '../data/riddles';
 
 export default function RiddleDisplay({ onRiddleComplete }) {

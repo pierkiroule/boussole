@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getAllShields } from '../data/shields';
 
 export default function Tutorial({ onComplete }) {

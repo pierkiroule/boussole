@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import GameContainer from './components/GameContainer';
 import WelcomeScreen from './components/WelcomeScreen';
 import NotificationSystem from './components/NotificationSystem';
 import SaveGamePrompt from './components/SaveGamePrompt';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-import { GAME_CONFIG } from './data/gameConfig';
 import { GameSaveManager } from './utils/gameSaveManager';
 
 export default function App() {
