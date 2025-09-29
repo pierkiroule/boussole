@@ -1,116 +1,54 @@
 import React, { useState } from 'react';
-import HomeScreen from './components/HomeScreen.jsx';
-import WiFouGame from './components/WiFouGame.jsx';
-import TeamDebateGame from './components/TeamDebateGame.jsx';
-import Tutorial from './components/Tutorial.jsx';
-import HelpSystem from './components/HelpSystem.jsx';
+import GameContainer from './components/GameContainer';
+import WelcomeScreen from './components/WelcomeScreen';
+import { GAME_CONFIG } from './data/gameConfig';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('home'); // 'home', 'original', 'debate', 'tutorial', 'rules'
+  const [gameState, setGameState] = useState('welcome'); // 'welcome', 'playing', 'ended'
   const [gameConfig, setGameConfig] = useState(null);
 
   const handleStartGame = (config) => {
     setGameConfig(config);
-    setCurrentScreen('original');
+    setGameState('playing');
   };
 
-  const handleStartWiFouGame = () => {
-    setCurrentScreen('debate');
+  const handleEndGame = () => {
+    setGameState('ended');
   };
 
-  const handleShowTutorial = () => {
-    setCurrentScreen('tutorial');
-  };
-
-  const handleShowRules = () => {
-    setCurrentScreen('rules');
-  };
-
-  const handleBackToHome = () => {
-    setCurrentScreen('home');
+  const handleBackToWelcome = () => {
+    setGameState('welcome');
     setGameConfig(null);
   };
 
-  const BackToHomeButton = () => (
-    <button
-      onClick={handleBackToHome}
-      style={{
-        position: 'fixed',
-        top: '20px',
-        left: '20px',
-        zIndex: 1000,
-        padding: '12px 20px',
-        background: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(10px)',
-        color: '#1e293b',
-        borderRadius: '12px',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '14px',
-        fontWeight: '600',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        transition: 'all 0.2s ease'
-      }}
-      onMouseOver={(e) => {
-        e.target.style.background = 'rgba(255, 255, 255, 1)';
-        e.target.style.transform = 'translateY(-2px)';
-      }}
-      onMouseOut={(e) => {
-        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
-        e.target.style.transform = 'translateY(0)';
-      }}
-    >
-      ← Retour à l'accueil
-    </button>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+      {gameState === 'welcome' && (
+        <WelcomeScreen onStartGame={handleStartGame} />
+      )}
+      
+      {gameState === 'playing' && gameConfig && (
+        <GameContainer 
+          gameConfig={gameConfig}
+          onEndGame={handleEndGame}
+          onBackToWelcome={handleBackToWelcome}
+        />
+      )}
+      
+      {gameState === 'ended' && (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-4xl font-bold mb-4">✨ Félicitations !</h1>
+            <p className="text-xl mb-8">Vous êtes maintenant de vrais Gardiens de l'Esprit Familial !</p>
+            <button
+              onClick={handleBackToWelcome}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
+              🛡️ Nouvelle Aventure
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
-
-  switch (currentScreen) {
-    case 'home':
-      return (
-        <HomeScreen
-          onStartGame={handleStartGame}
-          onShowTutorial={handleShowTutorial}
-          onShowRules={handleShowRules}
-          onStartWiFouGame={handleStartWiFouGame}
-        />
-      );
-    case 'original':
-      return (
-        <>
-          <BackToHomeButton />
-          <WiFouGame gameConfig={gameConfig} />
-        </>
-      );
-    case 'debate':
-      return (
-        <>
-          <BackToHomeButton />
-          <TeamDebateGame gameConfig={gameConfig} />
-        </>
-      );
-    case 'tutorial':
-      return (
-        <>
-          <BackToHomeButton />
-          <Tutorial />
-        </>
-      );
-    case 'rules':
-      return (
-        <>
-          <BackToHomeButton />
-          <HelpSystem />
-        </>
-      );
-    default:
-      return (
-        <HomeScreen
-          onStartGame={handleStartGame}
-          onShowTutorial={handleShowTutorial}
-          onShowRules={handleShowRules}
-          onStartWiFouGame={handleStartWiFouGame}
-        />
-      );
-  }
 }
-

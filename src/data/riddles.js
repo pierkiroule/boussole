@@ -1,384 +1,181 @@
-// Système d'énigmes pour La Famille Déboussolée
-// Énigmes organisées par catégorie et niveau de difficulté
+// Énigmes de réflexion sur les motivations du Wi-Fou
 
-export const RIDDLES_DATABASE = {
-  'Liberté': {
-    'easy': [
+export const RIDDLES = {
+  1: {
+    id: 1,
+    question: "D'après toi, pourquoi le Wi-Fou veut-il te rendre accro à ce jeu vidéo ?",
+    answers: [
       {
-        id: 'R1',
-        type: 'question',
-        question: "Je suis invisible mais je te contrôle. Plus tu me donnes, plus je grandis. Qui suis-je ?",
-        answer: "L'habitude",
-        explanation: "Les habitudes nous contrôlent souvent sans qu'on s'en rende compte. Plus on les nourrit, plus elles deviennent fortes.",
-        category: 'Liberté',
-        difficulty: 'easy'
+        text: "Pour que je dépense tout mon argent de poche",
+        explanation: "Partiellement correct, mais ce n'est pas la seule motivation..."
       },
       {
-        id: 'R2',
-        type: 'question',
-        question: "Je peux te rendre libre ou t'emprisonner. Je suis partout mais tu ne me vois pas. Qui suis-je ?",
-        answer: "Le choix",
-        explanation: "Chaque choix que nous faisons peut nous libérer ou nous enfermer dans des patterns.",
-        category: 'Liberté',
-        difficulty: 'easy'
+        text: "Pour que je néglige mes vraies relations",
+        explanation: "Exact ! Le Wi-Fou veut isoler pour mieux contrôler."
       },
       {
-        id: 'R3',
-        type: 'question',
-        question: "Plus tu me cherches, plus je me cache. Plus tu me lâches, plus je reviens. Qui suis-je ?",
-        answer: "Le bonheur",
-        explanation: "Le bonheur authentique vient souvent quand on arrête de le chercher désespérément.",
-        category: 'Liberté',
-        difficulty: 'easy'
+        text: "Pour que je devienne dépendant et vulnérable",
+        explanation: "Parfait ! La dépendance rend manipulable."
+      },
+      {
+        text: "Pour que je perde ma capacité de réflexion",
+        explanation: "Excellent ! Sans réflexion, on ne peut plus résister."
       }
     ],
-    'medium': [
-      {
-        id: 'R4',
-        type: 'question',
-        question: "Je suis ce que tu veux être, mais je ne suis pas ce que tu es. Je change selon tes rêves. Qui suis-je ?",
-        answer: "L'identité",
-        explanation: "Notre identité évolue avec nos aspirations et nos expériences de vie.",
-        category: 'Liberté',
-        difficulty: 'medium'
-      },
-      {
-        id: 'R5',
-        type: 'question',
-        question: "Je te donne des ailes mais je peux aussi te couper les ailes. Je suis ton meilleur ami et ton pire ennemi. Qui suis-je ?",
-        answer: "La technologie",
-        explanation: "La technologie peut nous libérer ou nous asservir selon comment nous l'utilisons.",
-        category: 'Liberté',
-        difficulty: 'medium'
-      }
-    ],
-    'hard': [
-      {
-        id: 'R6',
-        type: 'question',
-        question: "Je suis la prison que tu construis toi-même, mais je suis aussi la clé de ta libération. Qui suis-je ?",
-        answer: "La peur",
-        explanation: "La peur peut nous paralyser, mais la surmonter nous libère.",
-        category: 'Liberté',
-        difficulty: 'hard'
-      }
-    ]
+    correctAnswer: 2,
+    difficulty: 'medium'
   },
-  'Cœur': {
-    'easy': [
+
+  2: {
+    id: 2,
+    question: "Quelle est la vraie motivation derrière cette 'offre limitée' ?",
+    answers: [
       {
-        id: 'R7',
-        type: 'question',
-        question: "Je grandis quand tu me donnes, je diminue quand tu me gardes. Qui suis-je ?",
-        answer: "L'amour",
-        explanation: "L'amour se multiplie quand on le partage et s'étiole quand on le garde égoïstement.",
-        category: 'Cœur',
-        difficulty: 'easy'
+        text: "Vraiment nous faire une bonne affaire",
+        explanation: "Non, c'est pour créer l'urgence et nous faire acheter sans réfléchir."
       },
       {
-        id: 'R8',
-        type: 'question',
-        question: "Je suis invisible mais je peux briser les cœurs. Je suis partout mais personne ne me voit. Qui suis-je ?",
-        answer: "La tristesse",
-        explanation: "La tristesse peut être invisible mais avoir un impact profond sur les relations.",
-        category: 'Cœur',
-        difficulty: 'easy'
+        text: "Nous faire sentir qu'on va rater quelque chose",
+        explanation: "Exact ! C'est la 'peur de manquer' (FOMO)."
+      },
+      {
+        text: "Nous faire dépenser plus qu'on ne devrait",
+        explanation: "Correct ! L'objectif est de nous faire acheter compulsivement."
+      },
+      {
+        text: "Nous rendre dépendants des achats en ligne",
+        explanation: "Parfait ! L'objectif final est la dépendance."
       }
     ],
-    'medium': [
-      {
-        id: 'R9',
-        type: 'question',
-        question: "Je suis ce qui te relie aux autres, mais je peux aussi te séparer. Je suis fort et fragile à la fois. Qui suis-je ?",
-        answer: "Le lien",
-        explanation: "Les liens humains peuvent unir ou diviser selon comment ils sont entretenus.",
-        category: 'Cœur',
-        difficulty: 'medium'
-      }
-    ],
-    'hard': [
-      {
-        id: 'R10',
-        type: 'question',
-        question: "Je suis ce que tu ressens mais que tu ne peux pas toucher. Je peux te guérir ou te blesser. Qui suis-je ?",
-        answer: "L'émotion",
-        explanation: "Les émotions sont intangibles mais ont un pouvoir immense sur notre bien-être.",
-        category: 'Cœur',
-        difficulty: 'hard'
-      }
-    ]
+    correctAnswer: 3,
+    difficulty: 'easy'
   },
-  'Règles': {
-    'easy': [
+
+  3: {
+    id: 3,
+    question: "Comment cette technologie peut-elle nous diviser ?",
+    answers: [
       {
-        id: 'R11',
-        type: 'question',
-        question: "Je protège mais je peux aussi enfermer. Je guide mais je peux aussi limiter. Qui suis-je ?",
-        answer: "La règle",
-        explanation: "Les règles peuvent protéger ou contraindre selon leur application.",
-        category: 'Règles',
-        difficulty: 'easy'
+        text: "En créant des bulles d'informations différentes",
+        explanation: "Exact ! Chacun voit un monde différent."
       },
       {
-        id: 'R12',
-        type: 'question',
-        question: "Je suis ce qui te dit ce qui est bien ou mal, mais je peux changer selon les époques. Qui suis-je ?",
-        answer: "La morale",
-        explanation: "La morale évolue avec la société et les valeurs de chaque époque.",
-        category: 'Règles',
-        difficulty: 'easy'
+        text: "En nous rendant accros à des contenus différents",
+        explanation: "Correct ! On n'a plus les mêmes centres d'intérêt."
+      },
+      {
+        text: "En nous isolant chacun dans nos écrans",
+        explanation: "Parfait ! L'isolement brise l'unité familiale."
+      },
+      {
+        text: "En créant des conflits sur l'usage du temps",
+        explanation: "Très juste ! Les disputes sur les écrans divisent."
       }
     ],
-    'medium': [
-      {
-        id: 'R13',
-        type: 'question',
-        question: "Je suis ce qui maintient l'ordre, mais je peux aussi créer le chaos. Qui suis-je ?",
-        answer: "L'autorité",
-        explanation: "L'autorité peut maintenir l'ordre ou créer des désordres selon son usage.",
-        category: 'Règles',
-        difficulty: 'medium'
-      }
-    ],
-    'hard': [
-      {
-        id: 'R14',
-        type: 'question',
-        question: "Je suis ce qui te dit comment vivre, mais je peux aussi t'empêcher de vivre. Qui suis-je ?",
-        answer: "La tradition",
-        explanation: "Les traditions peuvent guider mais aussi contraindre l'évolution personnelle.",
-        category: 'Règles',
-        difficulty: 'hard'
-      }
-    ]
+    correctAnswer: 2,
+    difficulty: 'medium'
   },
-  'Sécurité': {
-    'easy': [
+
+  4: {
+    id: 4,
+    question: "Quel est le prix caché de cette 'gratuité' ?",
+    answers: [
       {
-        id: 'R15',
-        type: 'question',
-        question: "Je te protège mais je peux aussi te rendre vulnérable. Je suis ton bouclier et ta faiblesse. Qui suis-je ?",
-        answer: "La confiance",
-        explanation: "La confiance peut protéger mais aussi rendre vulnérable si elle est mal placée.",
-        category: 'Sécurité',
-        difficulty: 'easy'
+        text: "Nos données personnelles",
+        explanation: "Exact ! Nous sommes le produit, pas le client."
       },
       {
-        id: 'R16',
-        type: 'question',
-        question: "Je suis ce qui te rassure, mais je peux aussi te faire peur. Qui suis-je ?",
-        answer: "L'inconnu",
-        explanation: "L'inconnu peut être rassurant (nouveauté) ou effrayant (incertitude).",
-        category: 'Sécurité',
-        difficulty: 'easy'
+        text: "Notre attention et notre temps",
+        explanation: "Correct ! Notre attention est monétisée."
+      },
+      {
+        text: "Notre liberté de choix",
+        explanation: "Parfait ! On devient esclave de l'algorithme."
+      },
+      {
+        text: "Nos vraies relations humaines",
+        explanation: "Excellent ! On sacrifie le réel pour le virtuel."
       }
     ],
-    'medium': [
+    correctAnswer: 2,
+    difficulty: 'hard'
+  },
+
+  5: {
+    id: 5,
+    question: "Pourquoi le Wi-Fou nous montre-t-il des images 'parfaites' d'autres familles ?",
+    answers: [
       {
-        id: 'R17',
-        type: 'question',
-        question: "Je suis ce qui te protège, mais je peux aussi te trahir. Je suis partout mais invisible. Qui suis-je ?",
-        answer: "L'information",
-        explanation: "L'information peut protéger mais aussi trahir selon son usage et sa source.",
-        category: 'Sécurité',
-        difficulty: 'medium'
+        text: "Pour nous inspirer à devenir meilleurs",
+        explanation: "Non, c'est pour nous faire sentir inadéquats."
+      },
+      {
+        text: "Pour nous faire acheter plus de produits",
+        explanation: "Partiellement, mais ce n'est pas le but principal."
+      },
+      {
+        text: "Pour détruire notre estime de nous-mêmes",
+        explanation: "Exact ! Une personne avec une faible estime est plus manipulable."
+      },
+      {
+        text: "Pour nous faire comparer et être jaloux",
+        explanation: "Parfait ! La jalousie crée le malheur et la dépendance."
       }
     ],
-    'hard': [
+    correctAnswer: 3,
+    difficulty: 'hard'
+  },
+
+  6: {
+    id: 6,
+    question: "Que se passe-t-il quand on cherche constamment l'approbation des autres ?",
+    answers: [
       {
-        id: 'R18',
-        type: 'question',
-        question: "Je suis ce qui te sécurise, mais je peux aussi te mettre en danger. Je suis ton allié et ton ennemi. Qui suis-je ?",
-        answer: "Le secret",
-        explanation: "Les secrets peuvent protéger mais aussi mettre en danger selon leur nature.",
-        category: 'Sécurité',
-        difficulty: 'hard'
+        text: "On devient plus populaire",
+        explanation: "Non, on devient esclave de l'opinion des autres."
+      },
+      {
+        text: "On perd notre authenticité",
+        explanation: "Exact ! On joue un rôle au lieu d'être soi-même."
+      },
+      {
+        text: "On devient anxieux et stressé",
+        explanation: "Correct ! La peur du jugement crée de l'anxiété."
+      },
+      {
+        text: "On oublie ce qui est vraiment important",
+        explanation: "Parfait ! On perd de vue nos vraies valeurs."
       }
-    ]
+    ],
+    correctAnswer: 1,
+    difficulty: 'medium'
   }
 };
 
-// Énigmes de type "défi créatif"
-export const CREATIVE_RIDDLES = {
-  'Liberté': [
-    {
-      id: 'CR1',
-      type: 'creative',
-      challenge: "Invente un nouveau mot pour décrire la liberté dans le monde numérique",
-      category: 'Liberté',
-      difficulty: 'easy'
-    },
-    {
-      id: 'CR2',
-      type: 'creative',
-      challenge: "Crée une métaphore pour expliquer la liberté à un enfant de 5 ans",
-      category: 'Liberté',
-      difficulty: 'medium'
-    }
-  ],
-  'Cœur': [
-    {
-      id: 'CR3',
-      type: 'creative',
-      challenge: "Invente un geste pour exprimer l'amour sans utiliser de mots",
-      category: 'Cœur',
-      difficulty: 'easy'
-    },
-    {
-      id: 'CR4',
-      type: 'creative',
-      challenge: "Crée une chanson de 30 secondes sur la famille",
-      category: 'Cœur',
-      difficulty: 'medium'
-    }
-  ],
-  'Règles': [
-    {
-      id: 'CR5',
-      type: 'creative',
-      challenge: "Invente une règle familiale qui rend tout le monde heureux",
-      category: 'Règles',
-      difficulty: 'easy'
-    },
-    {
-      id: 'CR6',
-      type: 'creative',
-      challenge: "Crée un système de récompenses équitable pour toute la famille",
-      category: 'Règles',
-      difficulty: 'medium'
-    }
-  ],
-  'Sécurité': [
-    {
-      id: 'CR7',
-      type: 'creative',
-      challenge: "Invente un mot de passe créatif et sûr pour la famille",
-      category: 'Sécurité',
-      difficulty: 'easy'
-    },
-    {
-      id: 'CR8',
-      type: 'creative',
-      challenge: "Crée un plan de sécurité numérique pour la famille",
-      category: 'Sécurité',
-      difficulty: 'medium'
-    }
-  ]
-};
+// Fonction pour obtenir une énigme par ID
+export function getRiddleById(id) {
+  return RIDDLES[id];
+}
 
-// Énigmes de type "défi logique"
-export const LOGIC_RIDDLES = {
-  'Liberté': [
-    {
-      id: 'LR1',
-      type: 'logic',
-      problem: "Si la liberté c'est faire ce qu'on veut, et que faire ce qu'on veut c'est parfois se faire du mal, alors la liberté peut-elle être dangereuse ?",
-      category: 'Liberté',
-      difficulty: 'medium'
-    }
-  ],
-  'Cœur': [
-    {
-      id: 'LR2',
-      type: 'logic',
-      problem: "Si aimer quelqu'un c'est vouloir son bonheur, et que son bonheur c'est parfois être loin de nous, alors aimer c'est parfois laisser partir ?",
-      category: 'Cœur',
-      difficulty: 'medium'
-    }
-  ],
-  'Règles': [
-    {
-      id: 'LR3',
-      type: 'logic',
-      problem: "Si les règles protègent mais limitent, et que la liberté permet mais expose, alors comment trouver l'équilibre ?",
-      category: 'Règles',
-      difficulty: 'medium'
-    }
-  ],
-  'Sécurité': [
-    {
-      id: 'LR4',
-      type: 'logic',
-      problem: "Si être trop sécurisé c'est ne rien vivre, et que vivre c'est prendre des risques, alors la sécurité peut-elle être un piège ?",
-      category: 'Sécurité',
-      difficulty: 'medium'
-    }
-  ]
-};
-
-// Fonction pour obtenir une énigme aléatoire selon la catégorie et la difficulté
-export function getRandomRiddle(category, difficulty = 'medium', type = 'all') {
-  let riddles = [];
-  
-  if (type === 'all' || type === 'question') {
-    const categoryRiddles = RIDDLES_DATABASE[category]?.[difficulty] || [];
-    riddles = [...riddles, ...categoryRiddles];
-  }
-  
-  if (type === 'all' || type === 'creative') {
-    const creativeRiddles = CREATIVE_RIDDLES[category] || [];
-    riddles = [...riddles, ...creativeRiddles];
-  }
-  
-  if (type === 'all' || type === 'logic') {
-    const logicRiddles = LOGIC_RIDDLES[category] || [];
-    riddles = [...riddles, ...logicRiddles];
-  }
-  
-  if (riddles.length === 0) {
-    return null;
-  }
-  
+// Fonction pour obtenir une énigme aléatoire
+export function getRandomRiddle() {
+  const riddles = Object.values(RIDDLES);
   return riddles[Math.floor(Math.random() * riddles.length)];
 }
 
-// Fonction pour obtenir toutes les énigmes d'une catégorie
-export function getAllRiddles(category) {
-  const categoryRiddles = RIDDLES_DATABASE[category];
-  if (!categoryRiddles) return [];
-  
-  return [
-    ...categoryRiddles.easy,
-    ...categoryRiddles.medium,
-    ...categoryRiddles.hard
-  ];
+// Fonction pour obtenir toutes les énigmes d'un niveau de difficulté
+export function getRiddlesByDifficulty(difficulty) {
+  return Object.values(RIDDLES).filter(riddle => riddle.difficulty === difficulty);
 }
 
-// Fonction pour obtenir le nombre total d'énigmes
-export function getTotalRiddlesCount() {
-  let total = 0;
-  Object.values(RIDDLES_DATABASE).forEach(category => {
-    Object.values(category).forEach(difficulty => {
-      total += difficulty.length;
-    });
-  });
-  return total;
-}
-
-// Fonction pour vérifier une réponse d'énigme
-export function checkRiddleAnswer(riddle, answer) {
-  if (!riddle || !answer) return false;
+// Fonction pour vérifier une réponse
+export function checkRiddleAnswer(riddleId, answerIndex) {
+  const riddle = getRiddleById(riddleId);
+  if (!riddle) return false;
   
-  if (riddle.type === 'question') {
-    // Pour les énigmes à réponse, on accepte plusieurs variations
-    const correctAnswer = riddle.answer.toLowerCase().trim();
-    const userAnswer = answer.toLowerCase().trim();
-    
-    // Vérification exacte
-    if (userAnswer === correctAnswer) return true;
-    
-    // Vérification avec des mots-clés
-    const keywords = correctAnswer.split(' ').filter(word => word.length > 2);
-    const userKeywords = userAnswer.split(' ').filter(word => word.length > 2);
-    
-    // Si au moins 70% des mots-clés correspondent
-    const matchCount = keywords.filter(keyword => 
-      userKeywords.some(userKeyword => userKeyword.includes(keyword) || keyword.includes(userKeyword))
-    ).length;
-    
-    return matchCount >= Math.ceil(keywords.length * 0.7);
-  }
-  
-  // Pour les défis créatifs et logiques, on accepte toute réponse
-  return true;
+  return {
+    isCorrect: answerIndex === riddle.correctAnswer,
+    correctAnswer: riddle.correctAnswer,
+    explanation: riddle.answers[answerIndex]?.explanation || "Réponse invalide"
+  };
 }
