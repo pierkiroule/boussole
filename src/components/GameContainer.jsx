@@ -12,6 +12,7 @@ import { getChapterById } from '../data/chapters';
 import { GameSaveManager } from '../utils/gameSaveManager';
 import { GameStatsManager } from '../utils/gameStatsManager';
 import { SoundManager } from '../utils/soundManager';
+import { HapticManager } from '../utils/hapticManager';
 
 export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }) {
   const [currentTurn, setCurrentTurn] = useState(1);
@@ -72,6 +73,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
   const handleStartAttack = () => {
     setGamePhase('attack');
     SoundManager.playTransition();
+    HapticManager.vibrateSwipe();
     if (window.showNotification) {
       window.showNotification(`⚔️ ${getCurrentMasterName()} lance l'attaque !`, 'info');
     }
@@ -81,6 +83,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     setPlayerParades(parades);
     setGamePhase('voting');
     SoundManager.playSuccess();
+    HapticManager.vibrateSuccess();
     if (window.showNotification) {
       window.showNotification('🛡️ Toutes les parades sont soumises ! Votez maintenant.', 'success');
     }

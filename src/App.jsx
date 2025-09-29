@@ -3,6 +3,7 @@ import GameContainer from './components/GameContainer';
 import WelcomeScreen from './components/WelcomeScreen';
 import NotificationSystem from './components/NotificationSystem';
 import SaveGamePrompt from './components/SaveGamePrompt';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { GAME_CONFIG } from './data/gameConfig';
 import { GameSaveManager } from './utils/gameSaveManager';
 
@@ -41,12 +42,26 @@ export default function App() {
     if (GameSaveManager.hasSave()) {
       setShowSavePrompt(true);
     }
+    
+    // Enregistrer le service worker pour PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker enregistré:', registration);
+        })
+        .catch((error) => {
+          console.log('Erreur Service Worker:', error);
+        });
+    }
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Système de notifications */}
       <NotificationSystem />
+      
+      {/* Prompt d'installation PWA */}
+      <PWAInstallPrompt />
       
       {/* Prompt de reprise de partie */}
       {showSavePrompt && (

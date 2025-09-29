@@ -171,15 +171,119 @@
   }
 }
 
-/* Responsive design */
+/* Optimisations Mobile-First */
 @media (max-width: 768px) {
   .game-card {
     @apply mx-2;
   }
   
   .btn-primary, .btn-secondary, .btn-success, .btn-danger {
-    @apply py-2 px-4 text-sm;
+    @apply py-4 px-6 text-base min-h-[48px]; /* Taille minimale recommandée pour le tactile */
   }
+  
+  /* Boutons de boucliers optimisés pour mobile */
+  .shield-card {
+    @apply min-h-[80px] p-4;
+  }
+  
+  /* Zones de texte optimisées */
+  textarea, input {
+    @apply min-h-[48px] text-base;
+  }
+  
+  /* Espacement optimisé pour les doigts */
+  .space-y-4 > * + * {
+    @apply mt-4;
+  }
+  
+  /* Boutons de navigation avec zones tactiles plus grandes */
+  [data-previous], [data-next], [data-continue], [data-submit] {
+    @apply min-h-[48px] min-w-[48px];
+  }
+}
+
+/* Optimisations pour très petits écrans */
+@media (max-width: 480px) {
+  .btn-primary, .btn-secondary, .btn-success, .btn-danger {
+    @apply py-3 px-4 text-sm min-h-[44px];
+  }
+  
+  .shield-card {
+    @apply min-h-[70px] p-3;
+  }
+  
+  /* Réduction des marges sur très petits écrans */
+  .game-card {
+    @apply mx-1 p-4;
+  }
+}
+
+/* Mode paysage pour tablettes */
+@media (min-width: 768px) and (orientation: landscape) {
+  .game-card {
+    @apply max-w-6xl;
+  }
+  
+  /* Disposition en grille pour le mode paysage */
+  .landscape-grid {
+    @apply grid grid-cols-2 gap-6;
+  }
+  
+  /* Optimisation des boucliers en mode paysage */
+  .shield-card {
+    @apply min-h-[100px];
+  }
+}
+
+/* Animations optimisées pour mobile */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-pulse-custom,
+  .animate-shake,
+  .animate-glow {
+    animation: none;
+  }
+}
+
+/* Amélioration de la performance sur mobile */
+@media (max-width: 768px) {
+  .particle {
+    display: none; /* Désactiver les particules sur mobile pour les performances */
+  }
+  
+  /* Réduire les ombres complexes sur mobile */
+  .game-card {
+    @apply shadow-lg;
+  }
+  
+  .game-card:hover {
+    @apply shadow-lg transform-none; /* Pas de transform sur mobile */
+  }
+}
+
+/* Styles pour les gestes tactiles */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px]; /* Taille minimale recommandée par Apple */
+}
+
+.touch-feedback {
+  @apply active:scale-95 transition-transform duration-100;
+}
+
+/* Indicateurs visuels pour les gestes */
+.swipe-indicator {
+  @apply absolute inset-0 pointer-events-none;
+}
+
+.swipe-indicator::before {
+  content: '';
+  @apply absolute top-1/2 left-4 w-2 h-2 bg-blue-500 rounded-full transform -translate-y-1/2 opacity-50;
+}
+
+.swipe-indicator::after {
+  content: '';
+  @apply absolute top-1/2 right-4 w-2 h-2 bg-blue-500 rounded-full transform -translate-y-1/2 opacity-50;
 }
 
 :root {
