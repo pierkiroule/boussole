@@ -3,9 +3,10 @@ import HomeScreen from './components/HomeScreen.jsx';
 import CompassGame from './components/CompassGame.jsx';
 import Tutorial from './components/Tutorial.jsx';
 import HelpSystem from './components/HelpSystem.jsx';
+import WiFouGame from './components/WiFouGame.jsx';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('home'); // 'home', 'game', 'tutorial', 'help'
+  const [currentScreen, setCurrentScreen] = useState('home'); // 'home', 'game', 'tutorial', 'help', 'wifou'
   const [gameConfig, setGameConfig] = useState(null);
   const [helpSection, setHelpSection] = useState('rules');
 
@@ -35,6 +36,10 @@ export default function App() {
     setCurrentScreen('home');
   };
 
+  const handleStartWiFouGame = () => {
+    setCurrentScreen('wifou');
+  };
+
   return (
     <div className="flex min-h-screen items-start sm:items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
@@ -43,6 +48,7 @@ export default function App() {
             onStartGame={handleStartGame}
             onShowTutorial={handleShowTutorial}
             onShowRules={handleShowRules}
+            onStartWiFouGame={handleStartWiFouGame}
           />
         )}
         
@@ -63,6 +69,10 @@ export default function App() {
             onClose={handleHelpClose}
             section={helpSection}
           />
+        )}
+        
+        {currentScreen === 'wifou' && (
+          <WiFouGame />
         )}
       </div>
     </div>

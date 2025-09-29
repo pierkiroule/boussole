@@ -23,7 +23,7 @@ const DIFFICULTY_LEVELS = {
   'hard': { label: 'Difficile', description: 'Situations complexes, réflexion approfondie', icon: '🔴' }
 };
 
-export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules }) {
+export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules, onStartWiFouGame }) {
   const [selectedProfile, setSelectedProfile] = useState('family');
   // Plateau unique - plus de sélection nécessaire
   const [selectedMode, setSelectedMode] = useState('classic');
@@ -375,6 +375,21 @@ export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules })
         <div style={styles.buttonGroup}>
           <button style={styles.primaryButton} onClick={handleStartGame}>
             🚀 Commencer la partie
+          </button>
+        </div>
+
+        <div style={styles.buttonGroup}>
+          <button 
+            style={{
+              ...styles.secondaryButton,
+              background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+              color: 'white',
+              border: 'none',
+              marginTop: '16px'
+            }} 
+            onClick={onStartWiFouGame}
+          >
+            👻 Nouveau : Les Wi-Fou Déboussolés
           </button>
         </div>
 
