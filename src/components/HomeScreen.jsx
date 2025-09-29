@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 
-const FAMILY_PROFILES = {
-  'young': { label: 'Famille avec jeunes enfants (4-8 ans)', icon: '👶', color: '#fef3c7' },
-  'mixed': { label: 'Famille mixte (6-12 ans)', icon: '👨‍👩‍👧‍👦', color: '#dbeafe' },
-  'teen': { label: 'Famille avec ados (12-18 ans)', icon: '👨‍👩‍👦‍👦', color: '#fce7f3' },
-  'adult': { label: 'Famille adulte (18+ ans)', icon: '👨‍👩‍👧‍👧', color: '#ecfdf5' }
+const FAMILY_PROFILE = {
+  'family': { label: 'Famille', icon: '👨‍👩‍👧‍👦', color: '#dbeafe' }
 };
 
 const PLATEAU_OPTIONS = {
@@ -16,8 +13,7 @@ const PLATEAU_OPTIONS = {
 
 const GAME_MODES = {
   'quick': { label: 'Partie Rapide', description: '5 tours, idéal pour débuter', duration: '10-15 min', icon: '⚡' },
-  'classic': { label: 'Partie Classique', description: '10 tours, expérience complète', duration: '20-30 min', icon: '🎯' },
-  'expert': { label: 'Mode Expert', description: 'Défis avancés et situations complexes', duration: '30-45 min', icon: '🧠' }
+  'classic': { label: 'Partie Classique', description: '10 tours, expérience complète', duration: '20-30 min', icon: '🎯' }
 };
 
 const DIFFICULTY_LEVELS = {
@@ -27,7 +23,7 @@ const DIFFICULTY_LEVELS = {
 };
 
 export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules }) {
-  const [selectedProfile, setSelectedProfile] = useState('mixed');
+  const [selectedProfile, setSelectedProfile] = useState('family');
   const [selectedPlateau, setSelectedPlateau] = useState('classique');
   const [selectedMode, setSelectedMode] = useState('classic');
   const [selectedDifficulty, setSelectedDifficulty] = useState('medium');
@@ -268,17 +264,15 @@ export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules })
             <span>👨‍👩‍👧‍👦</span>
             Profil de votre famille
           </div>
-          <div style={styles.profileGrid}>
-            {Object.entries(FAMILY_PROFILES).map(([key, profile]) => (
-              <div
-                key={key}
-                style={styles.profileCard(selectedProfile === key, profile.color)}
-                onClick={() => setSelectedProfile(key)}
-              >
-                <div style={styles.profileIcon}>{profile.icon}</div>
-                <div style={styles.profileLabel}>{profile.label}</div>
-              </div>
-            ))}
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '16px', 
+            borderRadius: '12px', 
+            background: FAMILY_PROFILE.family.color,
+            border: '2px solid #3b82f6'
+          }}>
+            <div style={styles.profileIcon}>{FAMILY_PROFILE.family.icon}</div>
+            <div style={styles.profileLabel}>{FAMILY_PROFILE.family.label}</div>
           </div>
         </div>
 
