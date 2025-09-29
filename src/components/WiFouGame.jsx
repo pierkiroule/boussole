@@ -238,6 +238,9 @@ export default function WiFouGame() {
       setVotes({ ...votes, [playerIndex]: choiceIndex });
     };
 
+    // Vérifier si tous les autres joueurs ont voté
+    const otherPlayersVoted = Object.keys(votes).length === players.length - 1;
+
     const calculateResults = () => {
       const updatedPlayers = [...players];
       
@@ -378,6 +381,11 @@ export default function WiFouGame() {
             <p className="text-gray-600">
               <span className="font-semibold text-purple-600">{currentPlayer.name}</span> dirige ce tour
             </p>
+            <div className="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-blue-800 font-semibold">
+                📋 Instructions : Le Maître Wi-Fou choisit une solution, puis une valeur. Les autres joueurs devinent son choix !
+              </p>
+            </div>
           </div>
 
           <div className="mb-8">
@@ -436,25 +444,41 @@ export default function WiFouGame() {
           {masterValue !== null && (
             <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">Votes des autres joueurs :</h3>
+              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mb-4">
+                <p className="text-yellow-800 font-semibold">
+                  🎯 Les autres joueurs doivent maintenant deviner le choix du Maître Wi-Fou !
+                </p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {players.map((player, index) => {
                   if (index === currentPlayerIndex) return null;
                   
+                  const hasVoted = votes[index] !== undefined;
+                  
                   return (
-                    <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold mb-3">{player.name}</h4>
+                    <div key={index} className={`p-4 rounded-lg border-2 ${
+                      hasVoted ? 'bg-green-50 border-green-300' : 'bg-gray-50 border-gray-200'
+                    }`}>
+                      <h4 className="font-semibold mb-3 flex items-center gap-2">
+                        {player.name}
+                        {hasVoted && <span className="text-green-600">✓</span>}
+                      </h4>
                       <div className="space-y-2">
                         {currentSituation.options.map((option, optionIndex) => (
                           <button
                             key={optionIndex}
                             onClick={() => handleVote(index, optionIndex)}
-                            className={`w-full p-2 rounded border text-left text-sm transition-all ${
+                            disabled={hasVoted}
+                            className={`w-full p-3 rounded border text-left text-sm transition-all ${
                               votes[index] === optionIndex
-                                ? 'border-green-500 bg-green-50'
-                                : 'border-gray-200 bg-white hover:border-green-300'
+                                ? 'border-green-500 bg-green-100 text-green-800'
+                                : hasVoted
+                                ? 'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed'
+                                : 'border-gray-200 bg-white hover:border-green-300 hover:bg-green-50'
                             }`}
                           >
-                            {String.fromCharCode(65 + optionIndex)}. {option}
+                            <span className="font-bold mr-2">{String.fromCharCode(65 + optionIndex)}.</span>
+                            {option}
                           </button>
                         ))}
                       </div>
@@ -465,14 +489,29 @@ export default function WiFouGame() {
             </div>
           )}
 
-          {masterValue !== null && Object.keys(votes).length === players.length - 1 && (
+          {masterValue !== null && (
             <div className="text-center">
-              <button
-                onClick={calculateResults}
-                className="px-8 py-3 bg-green-600 text-white rounded-lg text-lg font-semibold hover:bg-green-700"
-              >
-                🎯 Calculer les résultats
-              </button>
+              {otherPlayersVoted ? (
+                <div className="space-y-4">
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <p className="text-green-800 font-semibold">
+                      ✅ Tous les joueurs ont voté ! Prêt pour les résultats.
+                    </p>
+                  </div>
+                  <button
+                    onClick={calculateResults}
+                    className="px-8 py-3 bg-green-600 text-white rounded-lg text-lg font-semibold hover:bg-green-700 shadow-lg transform hover:scale-105 transition-all"
+                  >
+                    🎯 Calculer les résultats
+                  </button>
+                </div>
+              ) : (
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <p className="text-yellow-800 font-semibold">
+                    ⏳ En attente des votes... ({Object.keys(votes).length}/{players.length - 1} joueurs ont voté)
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

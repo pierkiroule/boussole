@@ -231,6 +231,9 @@ export default function TeamDebateGame() {
       setGameState('voting');
     };
 
+    // Vérifier si tous les joueurs ont parlé
+    const allPlayersSpoken = Object.keys(arguments).length === players.length;
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-600 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full">
@@ -238,9 +241,14 @@ export default function TeamDebateGame() {
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
               💬 Phase de Débat
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 mb-4">
               Chaque rôle doit argumenter sa position sur cette situation
             </p>
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-blue-800 font-semibold">
+                📋 Instructions : Cliquez sur "Prendre la Parole" pour votre rôle, puis argumentez selon votre personnage !
+              </p>
+            </div>
           </div>
 
           <div className="mb-8">
@@ -293,13 +301,22 @@ export default function TeamDebateGame() {
                         <button
                           onClick={() => startSpeech(player.id)}
                           disabled={currentSpeaker !== null && currentSpeaker !== player.id}
-                          className="w-full px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                          className={`w-full px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                            currentSpeaker === null
+                              ? 'bg-white bg-opacity-20 text-white hover:bg-opacity-30'
+                              : currentSpeaker === player.id
+                              ? 'bg-yellow-400 text-gray-800 hover:bg-yellow-500'
+                              : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                          }`}
                         >
-                          🎤 Prendre la Parole
+                          {currentSpeaker === player.id ? '🎤 En cours...' : '🎤 Prendre la Parole'}
                         </button>
                       ) : (
                         <div className="text-center">
                           <span className="text-green-200 text-sm font-semibold">✅ A parlé</span>
+                          <div className="mt-2 text-xs text-green-200">
+                            {arguments[player.id]?.length > 0 ? `${arguments[player.id].length} caractères` : ''}
+                          </div>
                         </div>
                       )}
                     </div>
