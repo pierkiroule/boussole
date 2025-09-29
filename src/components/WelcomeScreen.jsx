@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAllGameDurations, validatePlayerCount } from '../data/gameConfig';
 import Tutorial from './Tutorial';
 import StatsDisplay from './StatsDisplay';
+import KeyboardShortcuts from './KeyboardShortcuts';
 import { GameStatsManager } from '../utils/gameStatsManager';
 import { SoundManager } from '../utils/soundManager';
+import { KeyboardManager } from '../utils/keyboardManager';
 
 export default function WelcomeScreen({ onStartGame }) {
   const [playerCount, setPlayerCount] = useState(4);
@@ -12,6 +14,7 @@ export default function WelcomeScreen({ onStartGame }) {
   const [currentStep, setCurrentStep] = useState(0); // 0: tutorial, 1: config, 2: names
   const [showTutorial, setShowTutorial] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const durations = getAllGameDurations();
 
