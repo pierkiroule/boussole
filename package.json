@@ -1,22 +1,51 @@
 {
-  "name": "les-wifou-deboussoles",
-  "private": true,
-  "version": "0.1.0",
+  "name": "les-gardiens-esprit-familial",
+  "version": "1.0.0",
+  "description": "Jeu éducatif coopératif pour protéger la famille contre les dangers numériques",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext js,jsx --fix"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "vite": "^5.4.10"
+  },
+  "keywords": [
+    "jeu",
+    "éducation",
+    "famille",
+    "numérique",
+    "addiction",
+    "écrans",
+    "prévention",
+    "coopératif"
+  ],
+  "author": "Game Designer",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/les-gardiens-esprit-familial.git"
+  },
+  "homepage": "https://username.github.io/les-gardiens-esprit-familial",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }

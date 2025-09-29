@@ -2,6 +2,290 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Animations personnalisées pour le jeu */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+.animate-pulse-custom {
+  animation: pulse 2s infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-glow {
+  animation: glow 2s infinite;
+}
+
+/* Styles pour les cartes de jeu */
+.game-card {
+  @apply bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20;
+  transition: all 0.3s ease;
+}
+
+.game-card:hover {
+  @apply shadow-2xl transform scale-105;
+}
+
+/* Styles pour les boutons */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+}
+
+.btn-secondary {
+  @apply bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+}
+
+.btn-success {
+  @apply bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+}
+
+.btn-danger {
+  @apply bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+}
+
+/* Styles pour les boucliers */
+.shield-card {
+  @apply border-2 rounded-lg p-4 transition-all duration-300 cursor-pointer;
+}
+
+.shield-card:hover {
+  @apply transform scale-105 shadow-lg;
+}
+
+.shield-card.selected {
+  @apply border-blue-500 bg-blue-50 shadow-lg;
+}
+
+/* Styles pour les phases du jeu */
+.game-phase-intro {
+  @apply animate-fade-in;
+}
+
+.game-phase-attack {
+  @apply animate-slide-in;
+}
+
+.game-phase-voting {
+  @apply animate-fade-in;
+}
+
+.game-phase-riddle {
+  @apply animate-fade-in;
+}
+
+/* Styles pour les scores */
+.score-display {
+  @apply bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-4 shadow-lg;
+}
+
+/* Styles pour les notifications */
+.notification {
+  @apply fixed top-4 right-4 bg-white rounded-lg shadow-xl border-l-4 p-4 z-50 animate-slide-in;
+}
+
+.notification.success {
+  @apply border-green-500;
+}
+
+.notification.error {
+  @apply border-red-500;
+}
+
+.notification.warning {
+  @apply border-yellow-500;
+}
+
+/* Styles pour les effets de particules */
+.particle {
+  @apply absolute w-2 h-2 bg-blue-400 rounded-full opacity-70;
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+/* Optimisations Mobile-First */
+@media (max-width: 768px) {
+  .game-card {
+    @apply mx-2;
+  }
+  
+  .btn-primary, .btn-secondary, .btn-success, .btn-danger {
+    @apply py-4 px-6 text-base min-h-[48px]; /* Taille minimale recommandée pour le tactile */
+  }
+  
+  /* Boutons de boucliers optimisés pour mobile */
+  .shield-card {
+    @apply min-h-[80px] p-4;
+  }
+  
+  /* Zones de texte optimisées */
+  textarea, input {
+    @apply min-h-[48px] text-base;
+  }
+  
+  /* Espacement optimisé pour les doigts */
+  .space-y-4 > * + * {
+    @apply mt-4;
+  }
+  
+  /* Boutons de navigation avec zones tactiles plus grandes */
+  [data-previous], [data-next], [data-continue], [data-submit] {
+    @apply min-h-[48px] min-w-[48px];
+  }
+}
+
+/* Optimisations pour très petits écrans */
+@media (max-width: 480px) {
+  .btn-primary, .btn-secondary, .btn-success, .btn-danger {
+    @apply py-3 px-4 text-sm min-h-[44px];
+  }
+  
+  .shield-card {
+    @apply min-h-[70px] p-3;
+  }
+  
+  /* Réduction des marges sur très petits écrans */
+  .game-card {
+    @apply mx-1 p-4;
+  }
+}
+
+/* Mode paysage pour tablettes */
+@media (min-width: 768px) and (orientation: landscape) {
+  .game-card {
+    @apply max-w-6xl;
+  }
+  
+  /* Disposition en grille pour le mode paysage */
+  .landscape-grid {
+    @apply grid grid-cols-2 gap-6;
+  }
+  
+  /* Optimisation des boucliers en mode paysage */
+  .shield-card {
+    @apply min-h-[100px];
+  }
+}
+
+/* Animations optimisées pour mobile */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-pulse-custom,
+  .animate-shake,
+  .animate-glow {
+    animation: none;
+  }
+}
+
+/* Amélioration de la performance sur mobile */
+@media (max-width: 768px) {
+  .particle {
+    display: none; /* Désactiver les particules sur mobile pour les performances */
+  }
+  
+  /* Réduire les ombres complexes sur mobile */
+  .game-card {
+    @apply shadow-lg;
+  }
+  
+  .game-card:hover {
+    @apply shadow-lg transform-none; /* Pas de transform sur mobile */
+  }
+}
+
+/* Styles pour les gestes tactiles */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px]; /* Taille minimale recommandée par Apple */
+}
+
+.touch-feedback {
+  @apply active:scale-95 transition-transform duration-100;
+}
+
+/* Indicateurs visuels pour les gestes */
+.swipe-indicator {
+  @apply absolute inset-0 pointer-events-none;
+}
+
+.swipe-indicator::before {
+  content: '';
+  @apply absolute top-1/2 left-4 w-2 h-2 bg-blue-500 rounded-full transform -translate-y-1/2 opacity-50;
+}
+
+.swipe-indicator::after {
+  content: '';
+  @apply absolute top-1/2 right-4 w-2 h-2 bg-blue-500 rounded-full transform -translate-y-1/2 opacity-50;
+}
+
 :root {
   color-scheme: light only;
 }

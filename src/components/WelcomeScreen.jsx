@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAllGameDurations, validatePlayerCount } from '../data/gameConfig';
+import Tutorial from './Tutorial';
+import StatsDisplay from './StatsDisplay';
+import TouchGestures from './TouchGestures';
+import { GameStatsManager } from '../utils/gameStatsManager';
+import { SoundManager } from '../utils/soundManager';
+import { TouchGestureManager } from '../utils/touchGestureManager';
+import { HapticManager } from '../utils/hapticManager';
 
 export default function WelcomeScreen({ onStartGame }) {
   const [playerCount, setPlayerCount] = useState(4);
   const [gameDuration, setGameDuration] = useState('normal');
   const [playerNames, setPlayerNames] = useState(['']);
-  const [currentStep, setCurrentStep] = useState(1); // 1: config, 2: names
+  const [currentStep, setCurrentStep] = useState(0); // 0: tutorial, 1: config, 2: names
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [showGestures, setShowGestures] = useState(false);
 
   const durations = getAllGameDurations();
 
@@ -34,6 +44,7 @@ export default function WelcomeScreen({ onStartGame }) {
   };
 
   const handleStartGame = () => {
+    SoundManager.playSuccess();
     const config = {
       playerCount,
       gameDuration,
@@ -44,9 +55,44 @@ export default function WelcomeScreen({ onStartGame }) {
 
   const canStartGame = playerNames.every(name => name.trim() !== '');
 
+  const handleTutorialComplete = () => {
+    setShowTutorial(false);
+    setCurrentStep(1);
+  };
+
+  const handleShowTutorial = () => {
+    SoundManager.playClick();
+    HapticManager.vibrateButton();
+    setShowTutorial(true);
+  };
+
+  const handleShowStats = () => {
+    SoundManager.playClick();
+    HapticManager.vibrateButton();
+    setShowStats(true);
+  };
+
+  const handleShowGestures = () => {
+    SoundManager.playClick();
+    HapticManager.vibrateButton();
+    setShowGestures(true);
+  };
+
+  if (showTutorial) {
+    return <Tutorial onComplete={handleTutorialComplete} />;
+  }
+
+  if (showStats) {
+    return <StatsDisplay onClose={() => setShowStats(false)} />;
+  }
+
+  if (showGestures) {
+    return <TouchGestures onClose={() => setShowGestures(false)} />;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
+      <div className="game-card p-8 max-w-2xl w-full animate-fade-in">
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
@@ -55,6 +101,30 @@ export default function WelcomeScreen({ onStartGame }) {
           <p className="text-lg text-gray-600">
             Protégez votre famille contre le Wi-Fou maléfique !
           </p>
+        </div>
+
+        {/* Boutons d'action */}
+        <div className="text-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button
+              onClick={handleShowTutorial}
+              className="btn-primary touch-target touch-feedback"
+            >
+              📚 Tutoriel
+            </button>
+            <button
+              onClick={handleShowStats}
+              className="btn-secondary touch-target touch-feedback"
+            >
+              📊 Statistiques
+            </button>
+            <button
+              onClick={handleShowGestures}
+              className="btn-success touch-target touch-feedback"
+            >
+              📱 Gestes
+            </button>
+          </div>
         </div>
 
         {/* Étapes */}
@@ -133,7 +203,8 @@ export default function WelcomeScreen({ onStartGame }) {
 
             <button
               onClick={() => setCurrentStep(2)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              className="w-full btn-primary touch-target touch-feedback"
+              data-continue
             >
               ➡️ Continuer
             </button>
@@ -167,14 +238,16 @@ export default function WelcomeScreen({ onStartGame }) {
             <div className="flex space-x-4">
               <button
                 onClick={() => setCurrentStep(1)}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 btn-secondary touch-target touch-feedback"
+                data-previous
               >
                 ← Retour
               </button>
               <button
                 onClick={handleStartGame}
                 disabled={!canStartGame}
-                className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                className={`flex-1 ${canStartGame ? 'btn-success' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} touch-target touch-feedback font-bold py-3 px-6 rounded-lg transition-colors`}
+                data-submit
               >
                 🚀 Commencer l'Aventure
               </button>

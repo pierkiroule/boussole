@@ -3,19 +3,28 @@ import ChapterIntro from './ChapterIntro';
 import AttackDisplay from './AttackDisplay';
 import MasterVoting from './MasterVoting';
 import ScoreDisplay from './ScoreDisplay';
+import RiddleDisplay from './RiddleDisplay';
+import LiveScoreDisplay from './LiveScoreDisplay';
+import PhaseTransition from './PhaseTransition';
 import { getGameDurationConfig } from '../data/gameConfig';
 import { getAttackById } from '../data/attacks';
 import { getChapterById } from '../data/chapters';
+import { GameSaveManager } from '../utils/gameSaveManager';
+import { GameStatsManager } from '../utils/gameStatsManager';
+import { SoundManager } from '../utils/soundManager';
+import { HapticManager } from '../utils/hapticManager';
 
 export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }) {
   const [currentTurn, setCurrentTurn] = useState(1);
   const [currentMaster, setCurrentMaster] = useState(0);
   const [currentAttack, setCurrentAttack] = useState(null);
   const [currentChapter, setCurrentChapter] = useState(null);
-  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack', 'voting', 'scoring'
+  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack', 'voting', 'riddle', 'scoring'
   const [playerScores, setPlayerScores] = useState({});
   const [playerParades, setPlayerParades] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
+  const [showTransition, setShowTransition] = useState(false);
+  const [transitionPhase, setTransitionPhase] = useState('');
 
   const durationConfig = getGameDurationConfig(gameConfig.gameDuration);
   const totalTurns = durationConfig.turns;
@@ -28,6 +37,24 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     });
     setPlayerScores(initialScores);
   }, [gameConfig.playerNames]);
+
+  // Sauvegarde automatique
+  useEffect(() => {
+    const gameData = {
+      gameConfig,
+      currentTurn,
+      currentMaster,
+      currentAttack,
+      currentChapter,
+      gamePhase,
+      playerScores,
+      playerParades,
+      gameHistory,
+      durationConfig
+    };
+    
+    GameSaveManager.saveGame(gameData);
+  }, [currentTurn, currentMaster, gamePhase, playerScores, gameHistory]);
 
   // Déterminer l'attaque actuelle
   useEffect(() => {
@@ -45,11 +72,21 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
 
   const handleStartAttack = () => {
     setGamePhase('attack');
+    SoundManager.playTransition();
+    HapticManager.vibrateSwipe();
+    if (window.showNotification) {
+      window.showNotification(`⚔️ ${getCurrentMasterName()} lance l'attaque !`, 'info');
+    }
   };
 
   const handleParadesSubmitted = (parades) => {
     setPlayerParades(parades);
     setGamePhase('voting');
+    SoundManager.playSuccess();
+    HapticManager.vibrateSuccess();
+    if (window.showNotification) {
+      window.showNotification('🛡️ Toutes les parades sont soumises ! Votez maintenant.', 'success');
+    }
   };
 
   const handleMasterVote = (scores) => {
@@ -70,20 +107,70 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     };
     setGameHistory([...gameHistory, historyEntry]);
 
-    // Passer au tour suivant ou terminer
+    // Passer à la phase d'énigme ou au tour suivant
     if (currentTurn >= totalTurns) {
       setGamePhase('ended');
+      SoundManager.playVictory();
+      if (window.showNotification) {
+        window.showNotification('🎉 Partie terminée ! Vérifiez les résultats finaux.', 'success');
+      }
     } else {
-      // Rotation du Maître
-      const nextMaster = (currentMaster + 1) % gameConfig.playerNames.length;
-      setCurrentMaster(nextMaster);
-      setCurrentTurn(currentTurn + 1);
-      setGamePhase('intro');
-      setPlayerParades({});
+      // Ajouter une phase d'énigme après chaque vote
+      setGamePhase('riddle');
+      SoundManager.playTransition();
+      if (window.showNotification) {
+        window.showNotification('🤔 Réfléchissez à cette énigme pour approfondir votre compréhension.', 'info');
+      }
+    }
+  };
+
+  const handleRiddleComplete = (isCorrect) => {
+    // Bonus de points pour une bonne réponse à l'énigme
+    if (isCorrect) {
+      const bonusScores = { ...playerScores };
+      bonusScores[currentMaster] = (bonusScores[currentMaster] || 0) + 1;
+      setPlayerScores(bonusScores);
+      SoundManager.playSuccess();
+      if (window.showNotification) {
+        window.showNotification(`🎉 ${getCurrentMasterName()} gagne 1 pt bonus pour sa bonne réponse !`, 'success');
+      }
+    } else {
+      SoundManager.playNotification();
+      if (window.showNotification) {
+        window.showNotification('💭 Réflexion intéressante ! Continuez à apprendre.', 'info');
+      }
+    }
+
+    // Rotation du Maître et passage au tour suivant
+    const nextMaster = (currentMaster + 1) % gameConfig.playerNames.length;
+    setCurrentMaster(nextMaster);
+    setCurrentTurn(currentTurn + 1);
+    setGamePhase('intro');
+    setPlayerParades({});
+    
+    SoundManager.playTransition();
+    if (window.showNotification) {
+      window.showNotification(`🔄 ${gameConfig.playerNames[nextMaster]} devient le nouveau Maître Gardien !`, 'info');
     }
   };
 
   const handleEndGame = () => {
+    // Mettre à jour les statistiques
+    const gameData = {
+      gameConfig,
+      currentTurn,
+      currentMaster,
+      currentAttack,
+      currentChapter,
+      gamePhase,
+      playerScores,
+      playerParades,
+      gameHistory,
+      durationConfig
+    };
+    
+    GameStatsManager.updateStats(gameData);
+    
     onEndGame();
   };
 
@@ -109,6 +196,13 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      {/* Affichage des scores en temps réel */}
+      <LiveScoreDisplay 
+        playerNames={gameConfig.playerNames}
+        playerScores={playerScores}
+        currentMaster={currentMaster}
+      />
+      
       <div className="max-w-4xl mx-auto">
         {/* En-tête du jeu */}
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
@@ -130,28 +224,42 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
 
         {/* Contenu selon la phase */}
         {gamePhase === 'intro' && currentChapter && (
-          <ChapterIntro
-            chapter={currentChapter}
-            onStartAttack={handleStartAttack}
-          />
+          <div className="game-phase-intro">
+            <ChapterIntro
+              chapter={currentChapter}
+              onStartAttack={handleStartAttack}
+            />
+          </div>
         )}
 
         {gamePhase === 'attack' && currentAttack && (
-          <AttackDisplay
-            attack={currentAttack}
-            masterName={getCurrentMasterName()}
-            players={getPlayersExceptMaster()}
-            onParadesSubmitted={handleParadesSubmitted}
-          />
+          <div className="game-phase-attack">
+            <AttackDisplay
+              attack={currentAttack}
+              masterName={getCurrentMasterName()}
+              players={getPlayersExceptMaster()}
+              onParadesSubmitted={handleParadesSubmitted}
+            />
+          </div>
         )}
 
         {gamePhase === 'voting' && (
-          <MasterVoting
-            attack={currentAttack}
-            parades={playerParades}
-            masterName={getCurrentMasterName()}
-            onVote={handleMasterVote}
-          />
+          <div className="game-phase-voting">
+            <MasterVoting
+              attack={currentAttack}
+              parades={playerParades}
+              masterName={getCurrentMasterName()}
+              onVote={handleMasterVote}
+            />
+          </div>
+        )}
+
+        {gamePhase === 'riddle' && (
+          <div className="game-phase-riddle">
+            <RiddleDisplay
+              onRiddleComplete={handleRiddleComplete}
+            />
+          </div>
         )}
       </div>
     </div>
