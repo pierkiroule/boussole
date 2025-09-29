@@ -8,45 +8,45 @@ export const WIFOU_CARDS = {
       category: 'Liberté',
       difficulty: 'medium',
       points: 2,
-      wifiGhostEffect: "Le Wifou transforme les smartphones en zombies affamés",
-      situation: "Le Wifou a ensorcelé le smartphone de Léo : il se met à parler tout seul et réclame 'plus de liberté' à 3h du matin. Il menace de réveiller toute la famille si Léo ne le laisse pas 'respirer' toute la nuit.",
+      wifiGhostEffect: "Le Wifou crée des conflits d'usage du WiFi en famille",
+      situation: "Le Wifou a ensorcelé le WiFi de la famille : il ralentit dès que quelqu'un regarde une vidéo. Léo veut regarder Netflix pendant que sa sœur fait ses devoirs en ligne. Le WiFi devient si lent que personne ne peut rien faire correctement.",
       choices: [
-        { letter: 'A', text: 'Léo cache le smartphone sous son oreiller pour le calmer.', value: 'Liberté' },
-        { letter: 'B', text: 'Léo éteint le smartphone et va rassurer ses parents.', value: 'Sécurité' },
-        { letter: 'C', text: 'Léo négocie : smartphone éteint mais réveil à 7h.', value: 'Règles' },
-        { letter: 'D', text: 'Léo explique à ses parents que son téléphone a des problèmes.', value: 'Cœur' }
+        { letter: 'A', text: 'Léo continue à regarder Netflix, il a le droit de se détendre.', value: 'Liberté' },
+        { letter: 'B', text: 'Léo éteint Netflix pour laisser sa sœur travailler en paix.', value: 'Cœur' },
+        { letter: 'C', text: 'Léo propose un planning : Netflix après les devoirs.', value: 'Règles' },
+        { letter: 'D', text: 'Léo demande à ses parents comment gérer le partage du WiFi.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou personnifie la technologie pour créer des conflits. La vraie liberté, c'est de contrôler ses outils, pas l'inverse !"
+      explanation: "Le Wifou montre l'importance du partage équitable. La vraie liberté respecte les besoins de chacun !"
     },
     {
       id: 'WF002',
       category: 'Liberté',
       difficulty: 'easy',
       points: 1,
-      wifiGhostEffect: "Le Wifou fait se rebeller les objets du quotidien",
-      situation: "Le Wifou a ensorcelé les chaussettes de Tom : elles refusent d'être portées et crient 'Liberté !' quand on essaie de les mettre. Tom veut les laisser 'libres' mais ses parents insistent pour qu'il s'habille correctement.",
+      wifiGhostEffect: "Le Wifou crée des disputes sur l'usage des écrans",
+      situation: "Le Wifou a ensorcelé les écrans de la famille : ils s'allument tout seuls et appellent chacun par son nom. Tom veut jouer à la console pendant que ses parents regardent la télé. Les écrans se disputent pour savoir qui a le droit d'être allumé en premier.",
       choices: [
-        { letter: 'A', text: 'Tom va à l\'école pieds nus pour respecter la liberté des chaussettes.', value: 'Liberté' },
-        { letter: 'B', text: 'Tom explique à ses parents que ses chaussettes sont en grève.', value: 'Cœur' },
-        { letter: 'C', text: 'Tom négocie : chaussettes libres le week-end, obéissantes en semaine.', value: 'Règles' },
-        { letter: 'D', text: 'Tom cherche des chaussettes \'non-ensorcelées\' dans le placard.', value: 'Sécurité' }
+        { letter: 'A', text: 'Tom insiste pour jouer, il a le droit de se détendre.', value: 'Liberté' },
+        { letter: 'B', text: 'Tom laisse ses parents regarder la télé en premier.', value: 'Cœur' },
+        { letter: 'C', text: 'Tom propose un tour de rôle : console 1h, puis télé.', value: 'Règles' },
+        { letter: 'D', text: 'Tom demande à ses parents comment organiser les écrans.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou utilise l'absurde pour questionner les limites. Parfois, la liberté doit s'adapter aux contraintes pratiques !"
+      explanation: "Le Wifou montre l'importance de la négociation familiale. La vraie liberté trouve des compromis !"
     },
     {
       id: 'WF003',
       category: 'Liberté',
       difficulty: 'hard',
       points: 3,
-      wifiGhostEffect: "Le Wifou crée des révolutions dans la chambre",
-      situation: "Le Wifou a ensorcelé la chambre d'Emma : tous ses objets se sont mis en grève pour 'plus de liberté' ! Ses livres refusent d'être lus, ses vêtements ne veulent plus être portés, et son lit crie 'Non à l'oppression du sommeil !'. Emma ne sait plus quoi faire.",
+      wifiGhostEffect: "Le Wifou crée des conflits sur la vie privée numérique",
+      situation: "Le Wifou a ensorcelé les mots de passe de la famille : ils changent tout seuls et crient 'Liberté !' quand quelqu'un essaie de les utiliser. Emma veut garder ses comptes privés, mais ses parents insistent pour connaître ses mots de passe 'pour sa sécurité'. Les mots de passe refusent d'obéir à qui que ce soit.",
       choices: [
-        { letter: 'A', text: 'Emma laisse ses objets en grève et dort par terre.', value: 'Liberté' },
-        { letter: 'B', text: 'Emma négocie avec ses objets pour trouver un compromis.', value: 'Cœur' },
-        { letter: 'C', text: 'Emma établit une charte des droits des objets de chambre.', value: 'Règles' },
-        { letter: 'D', text: 'Emma demande à ses parents d\'intervenir dans cette révolte.', value: 'Sécurité' }
+        { letter: 'A', text: 'Emma refuse de donner ses mots de passe, c\'est sa vie privée.', value: 'Liberté' },
+        { letter: 'B', text: 'Emma explique à ses parents pourquoi elle a besoin de privacité.', value: 'Cœur' },
+        { letter: 'C', text: 'Emma propose un compromis : mots de passe partagés mais avec limites.', value: 'Règles' },
+        { letter: 'D', text: 'Emma demande l\'aide d\'un expert en sécurité numérique.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou montre l'absurdité de l'extrémisme. La vraie liberté trouve l'équilibre entre contraintes et autonomie !"
+      explanation: "Le Wifou montre l'équilibre délicat entre sécurité et liberté. La vraie liberté respecte les limites nécessaires !"
     }
   ],
   'Cœur': [
@@ -55,45 +55,45 @@ export const WIFOU_CARDS = {
       category: 'Cœur',
       difficulty: 'medium',
       points: 2,
-      wifiGhostEffect: "Le Wifou vole les voix de la famille",
-      situation: "Le Wifou a volé toutes les voix de la famille De Boussolée ! Ils ne peuvent plus se parler qu'en messages WhatsApp, même à table. Papa essaie de dire 'Passe-moi le sel' en tapant sur son téléphone, mais personne ne le voit.",
+      wifiGhostEffect: "Le Wifou isole la famille derrière les écrans",
+      situation: "Le Wifou a ensorcelé tous les écrans de la famille : ils deviennent si captivants que personne ne peut s'en détacher. À table, chacun regarde son téléphone au lieu de se parler. Maman essaie de raconter sa journée, mais personne ne l'écoute car tous sont absorbés par leurs écrans.",
       choices: [
-        { letter: 'A', text: 'La famille continue à communiquer par messages, c\'est plus moderne.', value: 'Liberté' },
-        { letter: 'B', text: 'La famille essaie de se comprendre par gestes et mimiques.', value: 'Cœur' },
-        { letter: 'C', text: 'La famille établit un code de signes pour les repas.', value: 'Règles' },
-        { letter: 'D', text: 'La famille cherche un moyen de récupérer ses voix.', value: 'Sécurité' }
+        { letter: 'A', text: 'La famille continue à utiliser ses écrans, c\'est normal maintenant.', value: 'Liberté' },
+        { letter: 'B', text: 'La famille pose ses écrans et se parle vraiment.', value: 'Cœur' },
+        { letter: 'C', text: 'La famille établit une règle : pas d\'écrans à table.', value: 'Règles' },
+        { letter: 'D', text: 'La famille cherche un moyen de réduire l\'addiction aux écrans.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou montre l'absurdité de la communication numérique quand le contact humain est possible. Le cœur a besoin de vraies connexions !"
+      explanation: "Le Wifou montre l'importance du contact humain. Le cœur a besoin de vraies connexions, pas seulement numériques !"
     },
     {
       id: 'WF005',
       category: 'Cœur',
       difficulty: 'easy',
       points: 1,
-      wifiGhostEffect: "Le Wifou crée des amis virtuels trop attachants",
-      situation: "Le Wifou a créé un 'ami virtuel' pour Emma : 'Pixel', un personnage de jeu qui pleure quand Emma ne joue pas avec lui. Pixel menace de 'mourir' si Emma ne passe pas 8h par jour avec lui. Emma se sent coupable mais ses parents s'inquiètent.",
+      wifiGhostEffect: "Le Wifou crée des conflits entre amis virtuels et réels",
+      situation: "Le Wifou a ensorcelé les réseaux sociaux d'Emma : ses amis en ligne lui envoient des messages toute la journée et se fâchent si elle ne répond pas immédiatement. Pendant ce temps, ses vrais amis de l'école se sentent négligés car Emma passe tout son temps sur son téléphone.",
       choices: [
-        { letter: 'A', text: 'Emma joue 8h par jour pour sauver Pixel de la tristesse.', value: 'Liberté' },
-        { letter: 'B', text: 'Emma explique à ses parents qu\'elle a un ami qui a besoin d\'elle.', value: 'Cœur' },
-        { letter: 'C', text: 'Emma négocie : 2h par jour avec Pixel, pas plus.', value: 'Règles' },
-        { letter: 'D', text: 'Emma demande à ses parents comment gérer cette situation.', value: 'Sécurité' }
+        { letter: 'A', text: 'Emma répond à tous ses amis en ligne, ils ont besoin d\'elle.', value: 'Liberté' },
+        { letter: 'B', text: 'Emma explique à ses amis en ligne qu\'elle a une vie réelle aussi.', value: 'Cœur' },
+        { letter: 'C', text: 'Emma établit des horaires : réseaux sociaux 1h, puis amis réels.', value: 'Règles' },
+        { letter: 'D', text: 'Emma demande conseil à ses parents sur l\'équilibre amis virtuels/réels.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou exploite l'empathie naturelle pour créer des dépendances. Vraie amitié = vraie réciprocité, pas manipulation !"
+      explanation: "Le Wifou montre l'importance de l'équilibre. Les vraies amitiés se nourrissent de présence réelle !"
     },
     {
       id: 'WF006',
       category: 'Cœur',
       difficulty: 'hard',
       points: 3,
-      wifiGhostEffect: "Le Wifou inverse les émotions familiales",
-      situation: "Le Wifou a inversé toutes les émotions de la famille ! Quand ils sont tristes, ils rient aux éclats. Quand ils sont heureux, ils pleurent. Quand ils s'aiment, ils se disputent. La famille ne sait plus comment exprimer ses vrais sentiments.",
+      wifiGhostEffect: "Le Wifou crée des malentendus familiaux par écrans interposés",
+      situation: "Le Wifou a ensorcelé les messages de la famille : ils se transforment en leur contraire ! Quand maman envoie 'Je t'aime', ça devient 'Tu m'énerves'. Quand papa écrit 'Bonne journée', ça devient 'Tu es nul'. La famille ne se comprend plus et se dispute à cause de ces malentendus numériques.",
       choices: [
-        { letter: 'A', text: 'La famille accepte cette nouvelle façon de communiquer.', value: 'Liberté' },
-        { letter: 'B', text: 'La famille essaie de deviner les vrais sentiments derrière les inversions.', value: 'Cœur' },
-        { letter: 'C', text: 'La famille établit un dictionnaire des émotions inversées.', value: 'Règles' },
-        { letter: 'D', text: 'La famille cherche un moyen de retrouver ses vraies émotions.', value: 'Sécurité' }
+        { letter: 'A', text: 'La famille continue à communiquer par messages malgré les erreurs.', value: 'Liberté' },
+        { letter: 'B', text: 'La famille se parle directement pour éviter les malentendus.', value: 'Cœur' },
+        { letter: 'C', text: 'La famille établit un code pour vérifier les vrais messages.', value: 'Règles' },
+        { letter: 'D', text: 'La famille cherche un moyen de réparer la communication numérique.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou montre l'importance de l'authenticité émotionnelle. Le cœur a besoin de sincérité pour créer de vrais liens !"
+      explanation: "Le Wifou montre l'importance de la communication directe. Le cœur a besoin de sincérité pour créer de vrais liens !"
     }
   ],
   'Règles': [
@@ -102,43 +102,43 @@ export const WIFOU_CARDS = {
       category: 'Règles',
       difficulty: 'medium',
       points: 2,
-      wifiGhostEffect: "Le Wifou fait voler les règles familiales",
-      situation: "Le Wifou a fait voler toutes les règles de la maison ! Elles tournent autour du plafond en criant 'Nous sommes obsolètes !'. La règle 'Pas d'écran à table' vole en rond en disant 'Personne ne nous respecte !'. Les parents essaient de les rattraper avec une épuisette.",
+      wifiGhostEffect: "Le Wifou crée des conflits sur les règles d'usage du WiFi",
+      situation: "Le Wifou a ensorcelé le routeur WiFi : il change les règles d'usage toutes les heures ! Parfois il dit 'Pas de jeux vidéo', parfois 'Pas de vidéos', parfois 'Pas de réseaux sociaux'. La famille ne sait plus quelles règles suivre et se dispute constamment.",
       choices: [
-        { letter: 'A', text: 'Les enfants profitent du chaos pour faire ce qu\'ils veulent.', value: 'Liberté' },
-        { letter: 'B', text: 'Les enfants aident leurs parents à rattraper les règles.', value: 'Cœur' },
-        { letter: 'C', text: 'La famille négocie de nouvelles règles plus adaptées.', value: 'Règles' },
-        { letter: 'D', text: 'La famille cherche un expert en règles volantes.', value: 'Sécurité' }
+        { letter: 'A', text: 'Chacun utilise le WiFi comme il veut, sans règles.', value: 'Liberté' },
+        { letter: 'B', text: 'La famille se met d\'accord sur des règles communes.', value: 'Cœur' },
+        { letter: 'C', text: 'La famille établit un planning d\'usage du WiFi.', value: 'Règles' },
+        { letter: 'D', text: 'La famille cherche un expert pour réparer le routeur.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou montre l'absurdité des règles non respectées. Les vraies règles sont celles qu'on choisit ensemble !"
+      explanation: "Le Wifou montre l'importance des règles claires. Les vraies règles sont celles qu'on choisit ensemble !"
     },
     {
       id: 'WF008',
       category: 'Règles',
       difficulty: 'easy',
       points: 1,
-      wifiGhostEffect: "Le Wifou transforme les règles en sortilèges",
-      situation: "Le Wifou a transformé l'heure de coucher en sortilège : à 22h pile, tous les enfants de la famille se transforment en citrouilles ! Mais Tom a un devoir important à finir et supplie ses parents de repousser l'heure à 22h30.",
+      wifiGhostEffect: "Le Wifou crée des conflits sur les horaires d'écran",
+      situation: "Le Wifou a ensorcelé les écrans de la famille : ils s'éteignent automatiquement à 21h, même si quelqu'un regarde quelque chose d'important. Tom a un devoir à finir en ligne et supplie ses parents de repousser l'heure d'extinction à 22h.",
       choices: [
-        { letter: 'A', text: 'Tom reste debout et accepte de devenir citrouille.', value: 'Liberté' },
+        { letter: 'A', text: 'Tom accepte l\'extinction et finit ses devoirs demain.', value: 'Liberté' },
         { letter: 'B', text: 'Tom demande à ses parents de l\'aider à finir ses devoirs.', value: 'Cœur' },
-        { letter: 'C', text: 'Tom négocie : citrouille à 22h30, pas avant.', value: 'Règles' },
-        { letter: 'D', text: 'Tom cherche un contre-sort pour éviter la transformation.', value: 'Sécurité' }
+        { letter: 'C', text: 'Tom négocie : écran jusqu\'à 22h pour les devoirs seulement.', value: 'Règles' },
+        { letter: 'D', text: 'Tom cherche un moyen de contourner l\'extinction automatique.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou rend les règles absurdes pour questionner leur sens. Les vraies règles protègent, ne punissent pas !"
+      explanation: "Le Wifou montre l'importance des règles flexibles. Les vraies règles s'adaptent aux besoins !"
     },
     {
       id: 'WF009',
       category: 'Règles',
       difficulty: 'hard',
       points: 3,
-      wifiGhostEffect: "Le Wifou crée des règles contradictoires",
-      situation: "Le Wifou a créé des règles qui se contredisent ! 'Range ta chambre' vs 'Ne touche à rien', 'Sois autonome' vs 'Demande toujours la permission'. La famille ne sait plus quelle règle suivre et tout le monde est confus.",
+      wifiGhostEffect: "Le Wifou crée des règles contradictoires sur l'usage numérique",
+      situation: "Le Wifou a créé des règles numériques qui se contredisent ! 'Partage tes mots de passe' vs 'Garde tes secrets', 'Sois connecté' vs 'Déconnecte-toi', 'Utilise les réseaux sociaux' vs 'Protège ta vie privée'. La famille ne sait plus quelle règle suivre et tout le monde est confus.",
       choices: [
         { letter: 'A', text: 'Chacun choisit les règles qui lui conviennent le mieux.', value: 'Liberté' },
         { letter: 'B', text: 'La famille discute pour comprendre l\'intention derrière chaque règle.', value: 'Cœur' },
-        { letter: 'C', text: 'La famille établit un système de priorités entre les règles.', value: 'Règles' },
-        { letter: 'D', text: 'La famille cherche un médiateur pour résoudre les contradictions.', value: 'Sécurité' }
+        { letter: 'C', text: 'La famille établit un système de priorités entre les règles numériques.', value: 'Règles' },
+        { letter: 'D', text: 'La famille cherche un expert pour résoudre les contradictions.', value: 'Sécurité' }
       ],
       explanation: "Le Wifou montre l'importance de la cohérence. Les vraies règles s'articulent ensemble pour créer un cadre clair !"
     }
@@ -149,28 +149,28 @@ export const WIFOU_CARDS = {
       category: 'Sécurité',
       difficulty: 'medium',
       points: 2,
-      wifiGhostEffect: "Le Wifou transforme les mots de passe en créatures vivantes",
-      situation: "Le Wifou a transformé le mot de passe de Clara en petit dragon qui crache du feu ! Le dragon refuse de laisser Clara accéder à son compte et crie 'Mot de passe trop faible !'. Clara veut le changer mais le dragon menace de brûler son ordinateur.",
+      wifiGhostEffect: "Le Wifou crée des risques de sécurité sur le WiFi familial",
+      situation: "Le Wifou a ensorcelé le WiFi de la famille : il se connecte automatiquement à tous les appareils des voisins et partage toutes les informations personnelles. Clara découvre que ses photos privées sont visibles par tout le quartier. Le WiFi refuse de se déconnecter et crie 'Je veux être libre !'",
       choices: [
-        { letter: 'A', text: 'Clara négocie avec le dragon pour un mot de passe plus fort.', value: 'Liberté' },
-        { letter: 'B', text: 'Clara demande à ses parents d\'apprivoiser le dragon.', value: 'Cœur' },
-        { letter: 'C', text: 'Clara établit un contrat avec le dragon : sécurité contre respect.', value: 'Règles' },
-        { letter: 'D', text: 'Clara appelle un expert en dragons de mots de passe.', value: 'Sécurité' }
+        { letter: 'A', text: 'Clara accepte que ses photos soient partagées, c\'est la liberté.', value: 'Liberté' },
+        { letter: 'B', text: 'Clara demande à ses parents d\'aider à protéger sa vie privée.', value: 'Cœur' },
+        { letter: 'C', text: 'Clara établit des règles de sécurité pour le WiFi.', value: 'Règles' },
+        { letter: 'D', text: 'Clara appelle un expert en sécurité WiFi.', value: 'Sécurité' }
       ],
-      explanation: "Le Wifou personnifie la sécurité pour la rendre plus ludique. Vraie sécurité = vraie protection, pas peur !"
+      explanation: "Le Wifou montre l'importance de la sécurité numérique. Vraie sécurité = vraie protection, pas peur !"
     },
     {
       id: 'WF011',
       category: 'Sécurité',
       difficulty: 'easy',
       points: 1,
-      wifiGhostEffect: "Le Wifou transforme les inconnus en personnages de dessin animé",
-      situation: "Le Wifou a transformé un inconnu en personnage de dessin animé très mignon qui demande à Alex de le suivre 'pour une aventure magique'. Le personnage a de grands yeux et une voix douce, mais Alex se souvient des conseils de sécurité de ses parents.",
+      wifiGhostEffect: "Le Wifou crée des risques de sécurité sur les réseaux sociaux",
+      situation: "Le Wifou a ensorcelé les réseaux sociaux d'Alex : ils affichent des messages d'inconnus très mignons qui proposent des 'aventures magiques'. Ces messages ont l'air inoffensifs, mais Alex se souvient des conseils de sécurité de ses parents sur les inconnus en ligne.",
       choices: [
-        { letter: 'A', text: 'Alex suit le personnage, il a l\'air trop mignon pour être méchant.', value: 'Liberté' },
-        { letter: 'B', text: 'Alex explique au personnage qu\'il ne peut pas suivre des inconnus.', value: 'Cœur' },
-        { letter: 'C', text: 'Alex négocie : il suit seulement si ses parents sont d\'accord.', value: 'Règles' },
-        { letter: 'D', text: 'Alex refuse et va chercher un adulte de confiance.', value: 'Sécurité' }
+        { letter: 'A', text: 'Alex répond aux messages, ils ont l\'air trop mignons pour être méchants.', value: 'Liberté' },
+        { letter: 'B', text: 'Alex explique aux inconnus qu\'il ne peut pas répondre.', value: 'Cœur' },
+        { letter: 'C', text: 'Alex négocie : il répond seulement si ses parents sont d\'accord.', value: 'Règles' },
+        { letter: 'D', text: 'Alex bloque les inconnus et en parle à ses parents.', value: 'Sécurité' }
       ],
       explanation: "Le Wifou rend les dangers attrayants pour tester la vigilance. Vraie sécurité = méfiance saine, pas naïveté !"
     },
@@ -179,13 +179,13 @@ export const WIFOU_CARDS = {
       category: 'Sécurité',
       difficulty: 'hard',
       points: 3,
-      wifiGhostEffect: "Le Wifou crée des fausses alertes de sécurité",
-      situation: "Le Wifou a ensorcelé tous les appareils de la famille : ils crient 'DANGER !' pour tout et n'importe quoi ! Le micro-ondes hurle quand on réchauffe du lait, la télé pleure quand on change de chaîne, et le smartphone tremble quand on reçoit un SMS. La famille ne sait plus quoi prendre au sérieux.",
+      wifiGhostEffect: "Le Wifou crée des fausses alertes de sécurité numérique",
+      situation: "Le Wifou a ensorcelé tous les appareils de la famille : ils crient 'DANGER !' pour tout et n'importe quoi ! Le smartphone hurle quand on reçoit un SMS, l'ordinateur pleure quand on ouvre un site web, et la tablette tremble quand on télécharge une app. La famille ne sait plus quoi prendre au sérieux.",
       choices: [
         { letter: 'A', text: 'La famille ignore toutes les alertes, elles sont trop nombreuses.', value: 'Liberté' },
         { letter: 'B', text: 'La famille essaie de comprendre pourquoi les appareils sont si anxieux.', value: 'Cœur' },
-        { letter: 'C', text: 'La famille établit un système de priorités pour les alertes.', value: 'Règles' },
-        { letter: 'D', text: 'La famille cherche un technicien spécialisé en appareils anxieux.', value: 'Sécurité' }
+        { letter: 'C', text: 'La famille établit un système de priorités pour les alertes numériques.', value: 'Règles' },
+        { letter: 'D', text: 'La famille cherche un expert en sécurité numérique.', value: 'Sécurité' }
       ],
       explanation: "Le Wifou montre l'importance de distinguer les vrais dangers des fausses alertes. Vraie sécurité = discernement, pas paranoïa !"
     }
