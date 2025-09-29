@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getRandomDebateScenario, getRandomRole, getRole } from '../data/dynamicRoles';
 
-export default function TeamDebateGame() {
+export default function TeamDebateGame({ gameConfig }) {
   // États principaux
   const [gameState, setGameState] = useState('setup'); // 'setup', 'roleAssignment', 'debate', 'voting', 'results'
   const [players, setPlayers] = useState([]);
   const [currentScenario, setCurrentScenario] = useState(null);
   const [playerRoles, setPlayerRoles] = useState({});
-  const [arguments, setArguments] = useState({});
+  const [playerArguments, setPlayerArguments] = useState({});
   const [votes, setVotes] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [round, setRound] = useState(1);
@@ -232,7 +232,7 @@ export default function TeamDebateGame() {
     };
 
     // Vérifier si tous les joueurs ont parlé
-    const allPlayersSpoken = Object.keys(arguments).length === players.length;
+    const allPlayersSpoken = Object.keys(playerArguments).length === players.length;
     const debatePhase = currentSpeaker === null ? 'waiting' : 'speaking';
 
     return (
@@ -285,7 +285,7 @@ export default function TeamDebateGame() {
               {players.map((player) => {
                 const role = getRole(playerRoles[player.id]);
                 const isSpeaking = currentSpeaker === player.id;
-                const hasSpoken = arguments[player.id];
+                const hasSpoken = playerArguments[player.id];
                 
                 return (
                   <div 
@@ -347,12 +347,12 @@ export default function TeamDebateGame() {
                     placeholder="Exprimez votre argument selon votre rôle..."
                     className="w-full h-40 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none text-lg"
                     onChange={(e) => {
-                      setArguments(prev => ({
+                      setPlayerArguments(prev => ({
                         ...prev,
                         [currentSpeaker]: e.target.value
                       }));
                     }}
-                    value={arguments[currentSpeaker] || ''}
+                    value={playerArguments[currentSpeaker] || ''}
                   />
                 </div>
                 
@@ -454,7 +454,7 @@ export default function TeamDebateGame() {
                     <div className="space-y-3">
                       {players.filter(p => p.id !== voter.id).map((candidate) => {
                         const candidateRole = getRole(playerRoles[candidate.id]);
-                        const candidateArgument = arguments[candidate.id];
+                        const candidateArgument = playerArguments[candidate.id];
                         
                         return (
                           <button
