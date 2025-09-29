@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { getAllGameDurations, validatePlayerCount } from '../data/gameConfig';
+import Tutorial from './Tutorial';
 
 export default function WelcomeScreen({ onStartGame }) {
   const [playerCount, setPlayerCount] = useState(4);
   const [gameDuration, setGameDuration] = useState('normal');
   const [playerNames, setPlayerNames] = useState(['']);
-  const [currentStep, setCurrentStep] = useState(1); // 1: config, 2: names
+  const [currentStep, setCurrentStep] = useState(0); // 0: tutorial, 1: config, 2: names
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const durations = getAllGameDurations();
 
@@ -44,9 +46,22 @@ export default function WelcomeScreen({ onStartGame }) {
 
   const canStartGame = playerNames.every(name => name.trim() !== '');
 
+  const handleTutorialComplete = () => {
+    setShowTutorial(false);
+    setCurrentStep(1);
+  };
+
+  const handleShowTutorial = () => {
+    setShowTutorial(true);
+  };
+
+  if (showTutorial) {
+    return <Tutorial onComplete={handleTutorialComplete} />;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
+      <div className="game-card p-8 max-w-2xl w-full animate-fade-in">
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
@@ -55,6 +70,16 @@ export default function WelcomeScreen({ onStartGame }) {
           <p className="text-lg text-gray-600">
             Protégez votre famille contre le Wi-Fou maléfique !
           </p>
+        </div>
+
+        {/* Bouton Tutoriel */}
+        <div className="text-center mb-8">
+          <button
+            onClick={handleShowTutorial}
+            className="btn-primary mb-4"
+          >
+            📚 Voir le Tutoriel
+          </button>
         </div>
 
         {/* Étapes */}
@@ -133,7 +158,7 @@ export default function WelcomeScreen({ onStartGame }) {
 
             <button
               onClick={() => setCurrentStep(2)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              className="w-full btn-primary"
             >
               ➡️ Continuer
             </button>
@@ -167,14 +192,14 @@ export default function WelcomeScreen({ onStartGame }) {
             <div className="flex space-x-4">
               <button
                 onClick={() => setCurrentStep(1)}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 btn-secondary"
               >
                 ← Retour
               </button>
               <button
                 onClick={handleStartGame}
                 disabled={!canStartGame}
-                className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                className={`flex-1 ${canStartGame ? 'btn-success' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-bold py-3 px-6 rounded-lg transition-colors`}
               >
                 🚀 Commencer l'Aventure
               </button>

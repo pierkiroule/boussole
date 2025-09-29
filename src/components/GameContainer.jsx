@@ -3,6 +3,7 @@ import ChapterIntro from './ChapterIntro';
 import AttackDisplay from './AttackDisplay';
 import MasterVoting from './MasterVoting';
 import ScoreDisplay from './ScoreDisplay';
+import RiddleDisplay from './RiddleDisplay';
 import { getGameDurationConfig } from '../data/gameConfig';
 import { getAttackById } from '../data/attacks';
 import { getChapterById } from '../data/chapters';
@@ -12,7 +13,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
   const [currentMaster, setCurrentMaster] = useState(0);
   const [currentAttack, setCurrentAttack] = useState(null);
   const [currentChapter, setCurrentChapter] = useState(null);
-  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack', 'voting', 'scoring'
+  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack', 'voting', 'riddle', 'scoring'
   const [playerScores, setPlayerScores] = useState({});
   const [playerParades, setPlayerParades] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
@@ -70,17 +71,29 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     };
     setGameHistory([...gameHistory, historyEntry]);
 
-    // Passer au tour suivant ou terminer
+    // Passer à la phase d'énigme ou au tour suivant
     if (currentTurn >= totalTurns) {
       setGamePhase('ended');
     } else {
-      // Rotation du Maître
-      const nextMaster = (currentMaster + 1) % gameConfig.playerNames.length;
-      setCurrentMaster(nextMaster);
-      setCurrentTurn(currentTurn + 1);
-      setGamePhase('intro');
-      setPlayerParades({});
+      // Ajouter une phase d'énigme après chaque vote
+      setGamePhase('riddle');
     }
+  };
+
+  const handleRiddleComplete = (isCorrect) => {
+    // Bonus de points pour une bonne réponse à l'énigme
+    if (isCorrect) {
+      const bonusScores = { ...playerScores };
+      bonusScores[currentMaster] = (bonusScores[currentMaster] || 0) + 1;
+      setPlayerScores(bonusScores);
+    }
+
+    // Rotation du Maître et passage au tour suivant
+    const nextMaster = (currentMaster + 1) % gameConfig.playerNames.length;
+    setCurrentMaster(nextMaster);
+    setCurrentTurn(currentTurn + 1);
+    setGamePhase('intro');
+    setPlayerParades({});
   };
 
   const handleEndGame = () => {
@@ -130,28 +143,42 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
 
         {/* Contenu selon la phase */}
         {gamePhase === 'intro' && currentChapter && (
-          <ChapterIntro
-            chapter={currentChapter}
-            onStartAttack={handleStartAttack}
-          />
+          <div className="game-phase-intro">
+            <ChapterIntro
+              chapter={currentChapter}
+              onStartAttack={handleStartAttack}
+            />
+          </div>
         )}
 
         {gamePhase === 'attack' && currentAttack && (
-          <AttackDisplay
-            attack={currentAttack}
-            masterName={getCurrentMasterName()}
-            players={getPlayersExceptMaster()}
-            onParadesSubmitted={handleParadesSubmitted}
-          />
+          <div className="game-phase-attack">
+            <AttackDisplay
+              attack={currentAttack}
+              masterName={getCurrentMasterName()}
+              players={getPlayersExceptMaster()}
+              onParadesSubmitted={handleParadesSubmitted}
+            />
+          </div>
         )}
 
         {gamePhase === 'voting' && (
-          <MasterVoting
-            attack={currentAttack}
-            parades={playerParades}
-            masterName={getCurrentMasterName()}
-            onVote={handleMasterVote}
-          />
+          <div className="game-phase-voting">
+            <MasterVoting
+              attack={currentAttack}
+              parades={playerParades}
+              masterName={getCurrentMasterName()}
+              onVote={handleMasterVote}
+            />
+          </div>
+        )}
+
+        {gamePhase === 'riddle' && (
+          <div className="game-phase-riddle">
+            <RiddleDisplay
+              onRiddleComplete={handleRiddleComplete}
+            />
+          </div>
         )}
       </div>
     </div>
