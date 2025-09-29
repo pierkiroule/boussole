@@ -1,104 +1,116 @@
 import React, { useState } from 'react';
+import HomeScreen from './components/HomeScreen.jsx';
 import WiFouGame from './components/WiFouGame.jsx';
 import TeamDebateGame from './components/TeamDebateGame.jsx';
+import Tutorial from './components/Tutorial.jsx';
+import HelpSystem from './components/HelpSystem.jsx';
 
 export default function App() {
-  const [gameMode, setGameMode] = useState('selection'); // 'selection', 'original', 'debate'
+  const [currentScreen, setCurrentScreen] = useState('home'); // 'home', 'original', 'debate', 'tutorial', 'rules'
+  const [gameConfig, setGameConfig] = useState(null);
 
-  const GameSelection = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-green-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full">
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-gray-800 mb-6">
-            👻 Les Wi-Fou Déboussolés
-          </h1>
-          <p className="text-2xl text-gray-600 mb-4">
-            Choisissez votre mode de jeu
-          </p>
-          <p className="text-lg text-gray-500">
-            Un jeu familial pour débattre de nos usages numériques
-          </p>
-        </div>
+  const handleStartGame = (config) => {
+    setGameConfig(config);
+    setCurrentScreen('original');
+  };
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Mode original */}
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-2xl border-2 border-blue-200 hover:border-blue-400 transition-all cursor-pointer" onClick={() => setGameMode('original')}>
-            <div className="text-center">
-              <div className="text-6xl mb-4">🎮</div>
-              <h2 className="text-3xl font-bold text-blue-800 mb-4">Mode Original</h2>
-              <p className="text-gray-700 text-lg mb-6">
-                Le jeu classique où un joueur incarne le Wi-Fou et les autres devinent ses choix
-              </p>
-              <div className="bg-white p-4 rounded-lg">
-                <h3 className="font-semibold text-blue-800 mb-2">Comment ça marche :</h3>
-                <ul className="text-sm text-gray-600 space-y-1 text-left">
-                  <li>• Un joueur devient le Maître Wi-Fou</li>
-                  <li>• Il choisit une solution à une situation</li>
-                  <li>• Les autres joueurs devinent son choix</li>
-                  <li>• Points pour ceux qui devinent bien</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+  const handleStartWiFouGame = () => {
+    setCurrentScreen('debate');
+  };
 
-          {/* Mode débat */}
-          <div className="bg-gradient-to-br from-green-50 to-blue-50 p-8 rounded-2xl border-2 border-green-200 hover:border-green-400 transition-all cursor-pointer" onClick={() => setGameMode('debate')}>
-            <div className="text-center">
-              <div className="text-6xl mb-4">💬</div>
-              <h2 className="text-3xl font-bold text-green-800 mb-4">Mode Débat</h2>
-              <p className="text-gray-700 text-lg mb-6">
-                NOUVEAU ! Tous les joueurs débattent en incarnant différents rôles
-              </p>
-              <div className="bg-white p-4 rounded-lg">
-                <h3 className="font-semibold text-green-800 mb-2">Comment ça marche :</h3>
-                <ul className="text-sm text-gray-600 space-y-1 text-left">
-                  <li>• Chaque joueur tire un rôle au hasard</li>
-                  <li>• Débat sur une situation numérique</li>
-                  <li>• Vote pour le meilleur argument</li>
-                  <li>• Débat éducatif et fun !</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+  const handleShowTutorial = () => {
+    setCurrentScreen('tutorial');
+  };
 
-        <div className="text-center mt-8">
-          <p className="text-gray-500 text-sm">
-            💡 Le mode débat est parfait pour créer des discussions éducatives sur nos usages numériques !
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+  const handleShowRules = () => {
+    setCurrentScreen('rules');
+  };
 
-  const BackToSelection = () => (
+  const handleBackToHome = () => {
+    setCurrentScreen('home');
+    setGameConfig(null);
+  };
+
+  const BackToHomeButton = () => (
     <button
-      onClick={() => setGameMode('selection')}
-      className="fixed top-4 left-4 z-50 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-all font-semibold"
+      onClick={handleBackToHome}
+      style={{
+        position: 'fixed',
+        top: '20px',
+        left: '20px',
+        zIndex: 1000,
+        padding: '12px 20px',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(10px)',
+        color: '#1e293b',
+        borderRadius: '12px',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: '14px',
+        fontWeight: '600',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        transition: 'all 0.2s ease'
+      }}
+      onMouseOver={(e) => {
+        e.target.style.background = 'rgba(255, 255, 255, 1)';
+        e.target.style.transform = 'translateY(-2px)';
+      }}
+      onMouseOut={(e) => {
+        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+        e.target.style.transform = 'translateY(0)';
+      }}
     >
-      ← Retour au menu
+      ← Retour à l'accueil
     </button>
   );
 
-  switch (gameMode) {
-    case 'selection':
-      return <GameSelection />;
+  switch (currentScreen) {
+    case 'home':
+      return (
+        <HomeScreen
+          onStartGame={handleStartGame}
+          onShowTutorial={handleShowTutorial}
+          onShowRules={handleShowRules}
+          onStartWiFouGame={handleStartWiFouGame}
+        />
+      );
     case 'original':
       return (
         <>
-          <BackToSelection />
-          <WiFouGame />
+          <BackToHomeButton />
+          <WiFouGame gameConfig={gameConfig} />
         </>
       );
     case 'debate':
       return (
         <>
-          <BackToSelection />
-          <TeamDebateGame />
+          <BackToHomeButton />
+          <TeamDebateGame gameConfig={gameConfig} />
+        </>
+      );
+    case 'tutorial':
+      return (
+        <>
+          <BackToHomeButton />
+          <Tutorial />
+        </>
+      );
+    case 'rules':
+      return (
+        <>
+          <BackToHomeButton />
+          <HelpSystem />
         </>
       );
     default:
-      return <GameSelection />;
+      return (
+        <HomeScreen
+          onStartGame={handleStartGame}
+          onShowTutorial={handleShowTutorial}
+          onShowRules={handleShowRules}
+          onStartWiFouGame={handleStartWiFouGame}
+        />
+      );
   }
 }
 

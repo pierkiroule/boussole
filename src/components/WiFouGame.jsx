@@ -106,7 +106,7 @@ const SITUATIONS = [
 
 const VALUES = ["Liberté", "Cœur", "Règles", "Sécurité"];
 
-export default function WiFouGame() {
+export default function WiFouGame({ gameConfig }) {
   // États principaux
   const [gameState, setGameState] = useState('setup'); // 'setup', 'playing', 'results'
   const [players, setPlayers] = useState([]);
