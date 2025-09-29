@@ -1,19 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Les Wi-Fou Déboussolés – un jeu familial pour retrouver l'équilibre numérique. De 2 à 30 joueurs, chaque joueur devient tour à tour le Maître Wi-Fou." />
-    <title>Les Wi-Fou Déboussolés</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body class="min-h-screen antialiased">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-  
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Manoir de la Tech - Sauvez la famille Déboussolée!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Écran d'accueil -->
+        <div id="welcome-screen" class="screen active">
+            <div class="game-header">
+                <h1>🏰 Le Manoir de la Tech</h1>
+                <h2>👻 Sauvez la famille Déboussolée du Wifou!</h2>
+            </div>
+            
+            <div class="story-intro">
+                <p>Dans le Manoir de la Tech, tout est high-tech... mais un fantôme esprit farceur s'est infiltré dans le réseau wifi et prend le contrôle du Manoir!</p>
+                <p>Ce Wifou cherche à rendre toute la famille accro en utilisant des stratégies diaboliques pour les pousser à consommer et prendre la place de leur esprit de famille.</p>
+                <p><strong>Saurez-vous résoudre ces énigmes posées par le Wifou?</strong></p>
+            </div>
 
+            <div class="player-setup">
+                <h3>👥 Enregistrement des joueurs</h3>
+                <div id="players-list"></div>
+                <div class="add-player">
+                    <input type="text" id="player-name" placeholder="Entrez votre nom..." maxlength="20">
+                    <button id="add-player-btn">Ajouter</button>
+                </div>
+                <button id="start-game-btn" class="start-btn" disabled>🚀 Commencer l'aventure!</button>
+            </div>
+        </div>
+
+        <!-- Écran de jeu -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <h1>🏰 Le Manoir de la Tech</h1>
+                <div class="game-info">
+                    <span id="current-player">Joueur: </span>
+                    <span id="puzzle-number">Énigme: 1/5</span>
+                    <span id="score">Score: 0</span>
+                </div>
+            </div>
+
+            <div class="puzzle-container">
+                <div id="puzzle-content"></div>
+                <div class="puzzle-actions">
+                    <input type="text" id="answer-input" placeholder="Votre réponse...">
+                    <button id="submit-answer">Répondre</button>
+                </div>
+            </div>
+
+            <div class="family-status">
+                <h3>👨‍👩‍👧‍👦 État de la famille Déboussolée</h3>
+                <div id="family-members"></div>
+            </div>
+        </div>
+
+        <!-- Écran de victoire -->
+        <div id="victory-screen" class="screen">
+            <div class="victory-content">
+                <h1>🎉 Victoire!</h1>
+                <h2>Vous avez sauvé la famille Déboussolée!</h2>
+                <div id="final-score"></div>
+                <div id="victory-message"></div>
+                <button id="play-again-btn">🔄 Rejouer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
