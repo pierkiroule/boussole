@@ -4,11 +4,12 @@ const FAMILY_PROFILE = {
   'family': { label: 'Famille', icon: '👨‍👩‍👧‍👦', color: '#dbeafe' }
 };
 
-const PLATEAU_OPTIONS = {
-  'rapide': { label: 'Plateau Rapide', description: '20 cases, idéal pour débuter', duration: '10-15 min', icon: '⚡' },
-  'classique': { label: 'Plateau Classique', description: '63 cases, jeu de l\'Oie traditionnel', duration: '30-45 min', icon: '🎯' },
-  'expert': { label: 'Plateau Expert', description: '100 cases, défis avancés', duration: '1h+', icon: '🧠' },
-  'personnalise': { label: 'Plateau Personnalisé', description: 'Nombre de cases au choix', duration: 'variable', icon: '⚙️' }
+// Plateau unique simplifié
+const PLATEAU_CONFIG = {
+  label: 'Plateau de Jeu',
+  description: 'Jeu de l\'Oie avec boussole magique',
+  duration: '20-30 min',
+  icon: '🎯'
 };
 
 const GAME_MODES = {
@@ -24,18 +25,17 @@ const DIFFICULTY_LEVELS = {
 
 export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules }) {
   const [selectedProfile, setSelectedProfile] = useState('family');
-  const [selectedPlateau, setSelectedPlateau] = useState('classique');
+  // Plateau unique - plus de sélection nécessaire
   const [selectedMode, setSelectedMode] = useState('classic');
   const [selectedDifficulty, setSelectedDifficulty] = useState('medium');
   const [playerCount, setPlayerCount] = useState(4);
   const [familyName, setFamilyName] = useState('');
-  const [customCases, setCustomCases] = useState(63);
+  // Plus besoin de customCases avec le plateau unique
 
   const handleStartGame = () => {
     const gameConfig = {
       profile: selectedProfile,
-      plateauType: selectedPlateau,
-      customCases: customCases,
+      plateauType: 'unique', // Plateau unique simplifié
       mode: selectedMode,
       difficulty: selectedDifficulty,
       playerCount,
@@ -281,42 +281,18 @@ export default function HomeScreen({ onStartGame, onShowTutorial, onShowRules })
             <span>🎯</span>
             Plateau de jeu
           </div>
-          <div style={styles.modeGrid}>
-            {Object.entries(PLATEAU_OPTIONS).map(([key, plateau]) => (
-              <div
-                key={key}
-                style={styles.modeCard(selectedPlateau === key)}
-                onClick={() => setSelectedPlateau(key)}
-              >
-                <div style={styles.modeIcon}>{plateau.icon}</div>
-                <div style={styles.modeTitle}>{plateau.label}</div>
-                <div style={styles.modeDescription}>{plateau.description}</div>
-                <div style={styles.modeDuration}>{plateau.duration}</div>
-              </div>
-            ))}
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '16px', 
+            borderRadius: '12px', 
+            background: '#eff6ff',
+            border: '2px solid #3b82f6'
+          }}>
+            <div style={styles.modeIcon}>{PLATEAU_CONFIG.icon}</div>
+            <div style={styles.modeTitle}>{PLATEAU_CONFIG.label}</div>
+            <div style={styles.modeDescription}>{PLATEAU_CONFIG.description}</div>
+            <div style={styles.modeDuration}>{PLATEAU_CONFIG.duration}</div>
           </div>
-          {selectedPlateau === 'personnalise' && (
-            <div style={{ marginTop: '16px', textAlign: 'center' }}>
-              <input
-                type="number"
-                value={customCases}
-                onChange={(e) => setCustomCases(Math.max(10, Math.min(200, parseInt(e.target.value) || 63)))}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  border: '2px solid #e2e8f0',
-                  fontSize: '14px',
-                  width: '100px',
-                  textAlign: 'center'
-                }}
-                min="10"
-                max="200"
-              />
-              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                Nombre de cases (10-200)
-              </div>
-            </div>
-          )}
         </div>
 
         <div style={styles.section}>
