@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { GameStatsManager } from '../utils/gameStatsManager';
 
 export default function StatsDisplay({ onClose }) {
@@ -146,7 +146,7 @@ export default function StatsDisplay({ onClose }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {stats.achievements.map((achievement, index) => (
+              {stats.achievements.map((achievement) => (
                 <div key={achievement} className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4">
                   <div className="flex items-center">
                     <div className="text-2xl mr-3">🏆</div>

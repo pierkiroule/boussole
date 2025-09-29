@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ChapterIntro from './ChapterIntro';
 import AttackDisplay from './AttackDisplay';
 import MasterVoting from './MasterVoting';
@@ -23,8 +23,6 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
   const [playerScores, setPlayerScores] = useState({});
   const [playerParades, setPlayerParades] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
-  const [showTransition, setShowTransition] = useState(false);
-  const [transitionPhase, setTransitionPhase] = useState('');
 
   const durationConfig = getGameDurationConfig(gameConfig.gameDuration);
   const totalTurns = durationConfig.turns;
@@ -54,7 +52,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     };
     
     GameSaveManager.saveGame(gameData);
-  }, [currentTurn, currentMaster, gamePhase, playerScores, gameHistory]);
+  }, [currentTurn, currentMaster, gamePhase, playerScores, gameHistory, gameConfig, currentAttack, currentChapter, playerParades, durationConfig]);
 
   // Déterminer l'attaque actuelle
   useEffect(() => {

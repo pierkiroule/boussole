@@ -1,4 +1,4 @@
-import React from 'react';
+// React import not needed for JSX in React 17+
 import { GameSaveManager } from '../utils/gameSaveManager';
 
 export default function SaveGamePrompt({ onLoadGame, onDismiss }) {

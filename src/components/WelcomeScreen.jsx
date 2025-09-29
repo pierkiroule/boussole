@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getAllGameDurations, validatePlayerCount } from '../data/gameConfig';
 import Tutorial from './Tutorial';
 import StatsDisplay from './StatsDisplay';
 import TouchGestures from './TouchGestures';
-import { GameStatsManager } from '../utils/gameStatsManager';
 import { SoundManager } from '../utils/soundManager';
-import { TouchGestureManager } from '../utils/touchGestureManager';
 import { HapticManager } from '../utils/hapticManager';
 
 export default function WelcomeScreen({ onStartGame }) {

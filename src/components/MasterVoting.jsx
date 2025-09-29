@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getShieldById } from '../data/shields';
 import { GAME_CONFIG } from '../data/gameConfig';
 
-export default function MasterVoting({ attack, parades, masterName, onVote }) {
+export default function MasterVoting({ attack, parades, onVote }) {
   const [scores, setScores] = useState({});
   const [totalDistributed, setTotalDistributed] = useState(0);
   const [canSubmit, setCanSubmit] = useState(false);

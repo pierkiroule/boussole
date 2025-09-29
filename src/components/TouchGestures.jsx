@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { TouchGestureManager } from '../utils/touchGestureManager';
 import { HapticManager } from '../utils/hapticManager';
 

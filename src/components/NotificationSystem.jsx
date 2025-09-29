@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function NotificationSystem() {
   const [notifications, setNotifications] = useState([]);
 
-  const addNotification = (message, type = 'info', duration = 3000) => {
+  const addNotification = useCallback((message, type = 'info', duration = 3000) => {
     const id = Date.now();
     const notification = { id, message, type, duration };
     
@@ -12,7 +12,7 @@ export default function NotificationSystem() {
     setTimeout(() => {
       removeNotification(id);
     }, duration);
-  };
+  }, []);
 
   const removeNotification = (id) => {
     setNotifications(prev => prev.filter(notif => notif.id !== id));
@@ -24,7 +24,7 @@ export default function NotificationSystem() {
     return () => {
       delete window.showNotification;
     };
-  }, []);
+  }, [addNotification]);
 
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2">
