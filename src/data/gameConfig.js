@@ -16,7 +16,7 @@ export const GAME_CONFIG = {
       turns: 5,
       estimatedTime: '15 min',
       description: 'Idéal pour jouer en famille sans complexité',
-      attacks: [1, 2, 3, 4, 5] // 5 attaques réalistes pour la version familiale
+      attacks: [1, 2, 3, 4, 5] // 5 attaques du Pack 1
     },
     NORMAL: {
       id: 'normal',
@@ -24,23 +24,39 @@ export const GAME_CONFIG = {
       turns: 8,
       estimatedTime: '25 min',
       description: 'Expérience équilibrée',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 8 attaques réalistes
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 8 attaques du Pack 1
     },
     LONG: {
       id: 'long',
       label: 'Partie longue',
       turns: 12,
       estimatedTime: '35 min',
-      description: 'Aventure complète avec toutes les situations',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // Toutes les 12 attaques réalistes
+      description: 'Aventure complète avec le Pack 1',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // Toutes les attaques du Pack 1
+    },
+    EXTENDED: {
+      id: 'extended',
+      label: 'Partie étendue',
+      turns: 16,
+      estimatedTime: '45 min',
+      description: 'Pack 1 + début du Pack 2',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] // Pack 1 + 4 du Pack 2
+    },
+    COMPLETE: {
+      id: 'complete',
+      label: 'Partie complète',
+      turns: 24,
+      estimatedTime: '60 min',
+      description: 'Toutes les situations des 2 packs',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] // Toutes les 24 attaques
     },
     MARATHON: {
       id: 'marathon',
       label: 'Partie marathon',
-      turns: 20,
-      estimatedTime: '50 min',
-      description: 'Épopée légendaire',
-      attacks: 'random' // Attaques aléatoires parmi les 12 situations réalistes
+      turns: 30,
+      estimatedTime: '75 min',
+      description: 'Épopée légendaire avec situations aléatoires',
+      attacks: 'random' // Attaques aléatoires parmi les 24 situations réalistes
     }
   },
 
