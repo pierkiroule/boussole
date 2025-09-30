@@ -1,15 +1,15 @@
-// Chapitres de l'épopée "Les Gardiens de l'Esprit Familial"
+// Chapitres de l'épopée "Le Wifou"
 
 export const CHAPTERS = {
   CHAPTER_1: {
     id: 'chapter_1',
     title: 'La Première Invasion',
     subtitle: 'L\'éveil des Gardiens',
-    description: 'Le Wi-Fou maléfique a découvert votre connexion internet et commence par des attaques sournoises, testant la résistance de chaque membre de la famille.',
-    objective: 'Apprendre les bases des boucliers de défense et découvrir les premiers pièges du Wi-Fou',
-    intro: `Il était une fois une famille paisible... jusqu'au jour où le Wi-Fou maléfique a découvert leur connexion internet. 
+    description: 'Le Wifou, cyber-fantôme maléfique, a découvert la connexion internet de la famille Déboussolée et commence par des attaques sournoises.',
+    objective: 'Apprendre les bases des boucliers de défense et découvrir les premiers pièges du Wifou',
+    intro: `Il était une fois la paisible famille Déboussolée... jusqu'au jour où le Wifou, cyber-fantôme maléfique, a découvert leur connexion internet. 
 
-Ce fantôme numérique a commencé par des attaques sournoises, testant la résistance de chaque membre de la famille. Les Gardiens doivent apprendre à se protéger et à s'unir contre cette menace naissante.
+Ce cyber-fantôme a commencé par des attaques sournoises, testant la résistance de chaque membre de la famille Déboussolée. Les Gardiens doivent apprendre à se protéger et à s'unir contre cette menace naissante.
 
 🌅 Premier objectif : Comprendre les pouvoirs de vos boucliers magiques et résister aux premières tentations numériques.`,
     attacks: [1, 2, 3, 4], // IDs des attaques de ce chapitre
@@ -20,12 +20,12 @@ Ce fantôme numérique a commencé par des attaques sournoises, testant la rési
   CHAPTER_2: {
     id: 'chapter_2',
     title: 'L\'Escalade',
-    subtitle: 'Le Wi-Fou se renforce',
-    description: 'Les Gardiens ont résisté aux premières attaques, mais le Wi-Fou n\'a pas dit son dernier mot. Il a étudié leurs défenses et développé de nouvelles stratégies plus sophistiquées.',
-    objective: 'Comprendre les motivations du Wi-Fou et développer des stratégies avancées',
-    intro: `Les Gardiens ont résisté aux premières attaques, mais le Wi-Fou n'a pas dit son dernier mot. 
+    subtitle: 'Le Wifou se renforce',
+    description: 'Les Gardiens ont résisté aux premières attaques, mais le Wifou n\'a pas dit son dernier mot. Il a étudié leurs défenses et développé de nouvelles stratégies plus sophistiquées.',
+    objective: 'Comprendre les motivations du Wifou et développer des stratégies avancées',
+    intro: `Les Gardiens ont résisté aux premières attaques, mais le Wifou n'a pas dit son dernier mot. 
 
-Il a étudié leurs défenses et développé de nouvelles stratégies plus sophistiquées. La bataille s'intensifie... Le Wi-Fou révèle progressivement ses vraies motivations et teste la résistance familiale avec des pièges plus subtils.
+Il a étudié leurs défenses et développé de nouvelles stratégies plus sophistiquées. La bataille s'intensifie... Le Wifou révèle progressivement ses vraies motivations : posséder la famille Déboussolée.
 
 ⚔️ Deuxième objectif : Renforcer l'immunité familiale et comprendre les mécanismes de manipulation numérique.`,
     attacks: [5, 6, 7, 8],
@@ -36,14 +36,14 @@ Il a étudié leurs défenses et développé de nouvelles stratégies plus sophi
   CHAPTER_3: {
     id: 'chapter_3',
     title: 'Le Combat Final',
-    subtitle: 'Face à face avec le Wi-Fou',
-    description: 'Le Wi-Fou révèle sa vraie nature : il veut posséder l\'esprit familial entier pour le transformer en esclaves numériques. Mais les Gardiens sont maintenant prêts.',
+    subtitle: 'Face à face avec le Wifou',
+    description: 'Le Wifou révèle sa vraie nature : il veut posséder complètement la famille Déboussolée pour la transformer en esclaves numériques. Mais les Gardiens sont maintenant prêts.',
     objective: 'Affronter le boss final et utiliser toutes les compétences acquises',
-    intro: `Le Wi-Fou révèle sa vraie nature : il veut posséder l'esprit familial entier pour le transformer en esclaves numériques. 
+    intro: `Le Wifou révèle sa vraie nature : il veut posséder complètement la famille Déboussolée pour la transformer en esclaves numériques. 
 
 Mais les Gardiens sont maintenant prêts. Ils ont appris, ils ont grandi, ils ont découvert leurs véritables pouvoirs. Le combat final commence...
 
-👑 Objectif final : Libérer définitivement la famille et devenir de vrais Gardiens de l'Esprit Familial.`,
+👑 Objectif final : Chasser le Wifou, libérer la famille Déboussolée et restaurer l'harmonie entre technologie et famille.`,
     attacks: [9, 10, 11, 12],
     color: '#7C3AED',
     emoji: '👑'
@@ -53,13 +53,13 @@ Mais les Gardiens sont maintenant prêts. Ils ont appris, ils ont grandi, ils on
     id: 'epilogue',
     title: 'La Famille Immunisée',
     subtitle: 'Victoire et sagesse acquise',
-    description: 'Grâce à leur courage et à leur sagesse, les Gardiens ont vaincu le Wi-Fou. Ils sont maintenant immunisés, sages, et prêts à protéger leur esprit familial pour toujours.',
+    description: 'Grâce à leur courage et à leur sagesse, les Gardiens ont chassé le Wifou. La famille Déboussolée est libérée et l\'harmonie est restaurée.',
     objective: 'Célébrer la victoire et récapituler les leçons apprises',
-    intro: `Grâce à leur courage et à leur sagesse, les Gardiens ont vaincu le Wi-Fou. 
+    intro: `Grâce à leur courage et à leur sagesse, les Gardiens ont chassé le Wifou. 
 
-Mais ils savent que d'autres menaces numériques peuvent apparaître. Ils sont maintenant immunisés, sages, et prêts à protéger leur esprit familial pour toujours.
+La famille Déboussolée a restauré l'harmonie entre technologie et famille. Ils sont maintenant immunisés, sages, et prêts à protéger leur esprit familial pour toujours.
 
-✨ L'histoire continue... Vous êtes maintenant de vrais Gardiens de l'Esprit Familial !`,
+✨ L'histoire continue... Vous avez libéré la famille Déboussolée !`,
     attacks: [],
     color: '#10B981',
     emoji: '✨'

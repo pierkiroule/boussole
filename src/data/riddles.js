@@ -1,9 +1,9 @@
-// Énigmes de réflexion sur les motivations du Wi-Fou
+// Énigmes de réflexion sur les motivations du Wifou
 
 export const RIDDLES = {
   1: {
     id: 1,
-    question: "D'après toi, pourquoi le Wi-Fou veut-il te rendre accro à ce jeu vidéo ?",
+    question: "D'après toi, pourquoi le Wifou veut-il te rendre accro à ce jeu vidéo ?",
     answers: [
       {
         text: "Pour que je dépense tout mon argent de poche",
@@ -11,7 +11,7 @@ export const RIDDLES = {
       },
       {
         text: "Pour que je néglige mes vraies relations",
-        explanation: "Exact ! Le Wi-Fou veut isoler pour mieux contrôler."
+        explanation: "Exact ! Le Wifou veut isoler pour mieux contrôler."
       },
       {
         text: "Pour que je devienne dépendant et vulnérable",
@@ -103,7 +103,7 @@ export const RIDDLES = {
 
   5: {
     id: 5,
-    question: "Pourquoi le Wi-Fou nous montre-t-il des images 'parfaites' d'autres familles ?",
+    question: "Pourquoi le Wifou nous montre-t-il des images 'parfaites' d'autres familles ?",
     answers: [
       {
         text: "Pour nous inspirer à devenir meilleurs",

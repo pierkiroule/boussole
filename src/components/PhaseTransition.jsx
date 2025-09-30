@@ -6,12 +6,12 @@ export default function PhaseTransition({ phase, onComplete }) {
   const phaseMessages = {
     intro: {
       title: '🌅 Nouveau Chapitre',
-      message: 'Préparez-vous à découvrir une nouvelle menace du Wi-Fou...',
+      message: 'Préparez-vous à découvrir une nouvelle menace du Wifou...',
       color: 'blue'
     },
     attack: {
       title: '⚔️ Attaque en Cours',
-      message: 'Le Wi-Fou lance son attaque ! Choisissez vos boucliers...',
+      message: 'Le Wifou lance son attaque ! Choisissez vos boucliers...',
       color: 'red'
     },
     voting: {
@@ -21,7 +21,7 @@ export default function PhaseTransition({ phase, onComplete }) {
     },
     riddle: {
       title: '🤔 Réflexion',
-      message: 'Réfléchissez aux motivations du Wi-Fou...',
+      message: 'Réfléchissez aux motivations du Wifou...',
       color: 'purple'
     }
   };

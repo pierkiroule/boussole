@@ -93,11 +93,13 @@ export default function WelcomeScreen({ onStartGame }) {
       <div className="game-card p-8 max-w-2xl w-full animate-fade-in">
         {/* En-tête */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🛡️ Les Gardiens de l'Esprit Familial
+          <h1 className="text-4xl font-bold text-gray-800 mb-3">
+            👻 Le Wifou
           </h1>
-          <p className="text-lg text-gray-600">
-            Protégez votre famille contre le Wi-Fou maléfique !
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Le Wifou est un cyber-fantôme qui cherche à posséder la famille Déboussolée.<br />
+            Vous, gardiens de l'esprit de famille, réussirez-vous à chasser le Wifou<br />
+            et restaurer l'harmonie entre technologie et famille ?
           </p>
         </div>
 

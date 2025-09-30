@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import ChapterIntro from './ChapterIntro';
 import AttackDisplay from './AttackDisplay';
-import MasterVoting from './MasterVoting';
 import ScoreDisplay from './ScoreDisplay';
-import RiddleDisplay from './RiddleDisplay';
 import LiveScoreDisplay from './LiveScoreDisplay';
-import PhaseTransition from './PhaseTransition';
 import { getGameDurationConfig } from '../data/gameConfig';
 import { getAttackById } from '../data/attacks';
 import { getChapterById } from '../data/chapters';
@@ -19,7 +16,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
   const [currentMaster, setCurrentMaster] = useState(0);
   const [currentAttack, setCurrentAttack] = useState(null);
   const [currentChapter, setCurrentChapter] = useState(null);
-  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack', 'voting', 'riddle', 'scoring'
+  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack'
   const [playerScores, setPlayerScores] = useState({});
   const [playerParades, setPlayerParades] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
@@ -77,78 +74,50 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
     }
   };
 
-  const handleParadesSubmitted = (parades) => {
-    setPlayerParades(parades);
-    setGamePhase('voting');
-    SoundManager.playSuccess();
-    HapticManager.vibrateSuccess();
-    if (window.showNotification) {
-      window.showNotification('🛡️ Toutes les parades sont soumises ! Votez maintenant.', 'success');
-    }
-  };
-
-  const handleMasterVote = (scores) => {
-    // Mettre à jour les scores
+  const handleVotingComplete = (votingData) => {
+    const { masterChoice, masterExplanation, playerVotes, scores } = votingData;
+    
+    // Mettre à jour les scores (seulement les autres joueurs gagnent des points)
     const newScores = { ...playerScores };
     Object.keys(scores).forEach(playerIndex => {
-      newScores[playerIndex] += scores[playerIndex];
+      newScores[playerIndex] = (newScores[playerIndex] || 0) + scores[playerIndex];
     });
     setPlayerScores(newScores);
 
-    // Enregistrer l'historique
+    // Enregistrer l'historique avec les choix de valeurs
     const historyEntry = {
       turn: currentTurn,
       attack: currentAttack,
-      master: gameConfig.playerNames[currentMaster],
-      parades: playerParades,
+      master: {
+        name: gameConfig.playerNames[currentMaster],
+        index: currentMaster,
+        choice: masterChoice,
+        explanation: masterExplanation
+      },
+      playerVotes: playerVotes,
       scores: scores
     };
     setGameHistory([...gameHistory, historyEntry]);
 
-    // Passer à la phase d'énigme ou au tour suivant
+    // Passer au tour suivant ou terminer
     if (currentTurn >= totalTurns) {
       setGamePhase('ended');
       SoundManager.playVictory();
       if (window.showNotification) {
-        window.showNotification('🎉 Partie terminée ! Vérifiez les résultats finaux.', 'success');
+        window.showNotification('🎉 Partie terminée ! Découvrez les résultats et vos valeurs !', 'success');
       }
     } else {
-      // Ajouter une phase d'énigme après chaque vote
-      setGamePhase('riddle');
+      // Rotation du Maître et passage au tour suivant
+      const nextMaster = (currentMaster + 1) % gameConfig.playerNames.length;
+      setCurrentMaster(nextMaster);
+      setCurrentTurn(currentTurn + 1);
+      setGamePhase('intro');
+      setPlayerParades({});
+      
       SoundManager.playTransition();
       if (window.showNotification) {
-        window.showNotification('🤔 Réfléchissez à cette énigme pour approfondir votre compréhension.', 'info');
+        window.showNotification(`🔄 ${gameConfig.playerNames[nextMaster]} devient le nouveau Maître du Jeu !`, 'info');
       }
-    }
-  };
-
-  const handleRiddleComplete = (isCorrect) => {
-    // Bonus de points pour une bonne réponse à l'énigme
-    if (isCorrect) {
-      const bonusScores = { ...playerScores };
-      bonusScores[currentMaster] = (bonusScores[currentMaster] || 0) + 1;
-      setPlayerScores(bonusScores);
-      SoundManager.playSuccess();
-      if (window.showNotification) {
-        window.showNotification(`🎉 ${getCurrentMasterName()} gagne 1 pt bonus pour sa bonne réponse !`, 'success');
-      }
-    } else {
-      SoundManager.playNotification();
-      if (window.showNotification) {
-        window.showNotification('💭 Réflexion intéressante ! Continuez à apprendre.', 'info');
-      }
-    }
-
-    // Rotation du Maître et passage au tour suivant
-    const nextMaster = (currentMaster + 1) % gameConfig.playerNames.length;
-    setCurrentMaster(nextMaster);
-    setCurrentTurn(currentTurn + 1);
-    setGamePhase('intro');
-    setPlayerParades({});
-    
-    SoundManager.playTransition();
-    if (window.showNotification) {
-      window.showNotification(`🔄 ${gameConfig.playerNames[nextMaster]} devient le nouveau Maître Gardien !`, 'info');
     }
   };
 
@@ -206,7 +175,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
           <div className="flex justify-between items-center text-white">
             <div>
-              <h1 className="text-2xl font-bold">🛡️ Gardiens de l'Esprit Familial</h1>
+              <h1 className="text-2xl font-bold">👻 Le Wifou</h1>
               <p className="text-sm opacity-80">
                 Tour {currentTurn}/{totalTurns} • Maître: {getCurrentMasterName()}
               </p>
@@ -235,27 +204,10 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
             <AttackDisplay
               attack={currentAttack}
               masterName={getCurrentMasterName()}
+              masterIndex={currentMaster}
               players={getPlayersExceptMaster()}
-              onParadesSubmitted={handleParadesSubmitted}
-            />
-          </div>
-        )}
-
-        {gamePhase === 'voting' && (
-          <div className="game-phase-voting">
-            <MasterVoting
-              attack={currentAttack}
-              parades={playerParades}
-              masterName={getCurrentMasterName()}
-              onVote={handleMasterVote}
-            />
-          </div>
-        )}
-
-        {gamePhase === 'riddle' && (
-          <div className="game-phase-riddle">
-            <RiddleDisplay
-              onRiddleComplete={handleRiddleComplete}
+              playerNames={gameConfig.playerNames}
+              onVotingComplete={handleVotingComplete}
             />
           </div>
         )}
