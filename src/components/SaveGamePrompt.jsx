@@ -29,31 +29,31 @@ export default function SaveGamePrompt({ onLoadGame, onDismiss }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-6 max-w-md mx-4 animate-fade-in">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div className="bg-gray-900 rounded-2xl p-6 max-w-md mx-4 animate-fade-in border-2 border-red-600">
         <div className="text-center mb-6">
-          <div className="text-4xl mb-4">💾</div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Partie Sauvegardée</h2>
-          <p className="text-gray-600">Une partie précédente a été détectée</p>
+          <div className="text-4xl mb-4 animate-flicker">💀</div>
+          <h2 className="text-xl font-bold text-red-400 mb-2" style={{fontFamily: 'Creepster'}}>Rituel Sauvegardé</h2>
+          <p className="text-gray-300">Un rituel précédent a été détecté dans les archives</p>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="bg-gray-800 rounded-lg p-4 mb-6 border border-red-600">
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Sauvegardée le :</span>
-              <span className="font-medium">{formatDate(saveInfo.timestamp)}</span>
+              <span className="text-gray-400">Sauvegardé le :</span>
+              <span className="font-medium text-gray-200">{formatDate(saveInfo.timestamp)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Joueurs :</span>
-              <span className="font-medium">{saveInfo.playerCount}</span>
+              <span className="text-gray-400">Gardiens :</span>
+              <span className="font-medium text-gray-200">{saveInfo.playerCount}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Progression :</span>
-              <span className="font-medium">{saveInfo.currentTurn}/{saveInfo.totalTurns}</span>
+              <span className="text-gray-400">Progression :</span>
+              <span className="font-medium text-gray-200">{saveInfo.currentTurn}/{saveInfo.totalTurns}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Durée :</span>
-              <span className="font-medium capitalize">{saveInfo.gameDuration}</span>
+              <span className="text-gray-400">Rituel :</span>
+              <span className="font-medium text-red-400">Rituel Court (15 min)</span>
             </div>
           </div>
         </div>
@@ -63,21 +63,21 @@ export default function SaveGamePrompt({ onLoadGame, onDismiss }) {
             onClick={handleLoadGame}
             className="w-full btn-success"
           >
-            🔄 Reprendre la Partie
+            🔄 Reprendre le Rituel
           </button>
           
           <button
             onClick={handleDeleteSave}
             className="w-full btn-danger"
           >
-            🗑️ Supprimer la Sauvegarde
+            🗑️ Effacer les Archives
           </button>
           
           <button
             onClick={onDismiss}
             className="w-full btn-secondary"
           >
-            ✨ Nouvelle Partie
+            ✨ Nouveau Rituel
           </button>
         </div>
       </div>

@@ -55,7 +55,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
       {/* Système de notifications */}
       <NotificationSystem />
       
@@ -85,13 +85,14 @@ export default function App() {
       {gameState === 'ended' && (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center text-white">
-            <h1 className="text-4xl font-bold mb-4">✨ Félicitations !</h1>
-            <p className="text-xl mb-8">Vous avez chassé le Wifou et restauré l'harmonie familiale !</p>
+            <h1 className="text-4xl font-bold mb-4 animate-flicker" style={{fontFamily: 'Nosifer', textShadow: '0 0 15px #DC143C'}}>🦇 Victoire ! 🦇</h1>
+            <p className="text-xl mb-8 text-gray-300">Le Wifou a été banni dans les ténèbres éternelles !<br />L'équilibre mystique est restauré !</p>
             <button
               onClick={handleBackToWelcome}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors animate-glow"
+              style={{fontFamily: 'Creepster'}}
             >
-              🛡️ Nouvelle Aventure
+              🛡️ Nouveau Rituel
             </button>
           </div>
         </div>

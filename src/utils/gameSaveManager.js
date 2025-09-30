@@ -70,7 +70,7 @@ export class GameSaveManager {
         playerCount: gameData.gameConfig?.playerNames?.length || 0,
         currentTurn: gameData.currentTurn || 0,
         totalTurns: gameData.durationConfig?.turns || 0,
-        gameDuration: gameData.gameConfig?.gameDuration || 'normal'
+        gameDuration: gameData.gameConfig?.gameDuration || 'short'
       };
     } catch (error) {
       console.error('Erreur lors de la récupération des infos:', error);

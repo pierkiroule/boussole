@@ -1,5 +1,7 @@
 // Service Worker pour le jeu "Les Gardiens de l'Esprit Familial"
-const CACHE_NAME = 'gardiens-esprit-familial-v1';
+// Version dynamique basée sur la date de build
+const BUILD_VERSION = '1.0.0-' + new Date().toISOString().split('T')[0];
+const CACHE_NAME = `gardiens-esprit-familial-${BUILD_VERSION}`;
 const urlsToCache = [
   '/',
   '/index.html',
@@ -75,6 +77,21 @@ self.addEventListener('message', (event) => {
 // Notification de mise à jour
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'GET_VERSION') {
-    event.ports[0].postMessage({ version: CACHE_NAME });
+    event.ports[0].postMessage({ version: BUILD_VERSION });
+  }
+  
+  // Message pour forcer la mise à jour
+  if (event.data && event.data.type === 'FORCE_UPDATE') {
+    self.skipWaiting();
+  }
+  
+  // Message pour vider le localStorage
+  if (event.data && event.data.type === 'CLEAR_STORAGE') {
+    // Notifier le client pour vider le localStorage
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        client.postMessage({ type: 'CLEAR_STORAGE' });
+      });
+    });
   }
 });

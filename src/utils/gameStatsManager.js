@@ -25,7 +25,7 @@ export class GameStatsManager {
       },
       riddlesAnswered: 0,
       riddlesCorrect: 0,
-      favoriteGameDuration: 'normal',
+      favoriteGameDuration: 'short',
       longestGame: 0,
       achievements: []
     };
@@ -42,7 +42,7 @@ export class GameStatsManager {
       stats.totalTurnsPlayed += gameData.currentTurn || 0;
       
       // Mettre à jour la durée préférée
-      const duration = gameData.gameConfig?.gameDuration || 'normal';
+      const duration = gameData.gameConfig?.gameDuration || 'short';
       stats.favoriteGameDuration = duration;
       
       // Mettre à jour le jeu le plus long
