@@ -93,13 +93,13 @@ export default function WelcomeScreen({ onStartGame }) {
       <div className="game-card p-8 max-w-2xl w-full animate-fade-in">
         {/* En-tête */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">
-            👻 Le Wifou
+          <h1 className="text-4xl font-bold text-red-400 mb-3 animate-flicker" style={{fontFamily: 'Nosifer', textShadow: '0 0 10px #DC143C'}}>
+            🦇 Le Wifou 🦇
           </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            Le Wifou est un cyber-fantôme qui cherche à posséder la famille Déboussolée.<br />
-            Vous, gardiens de l'esprit de famille, réussirez-vous à chasser le Wifou<br />
-            et restaurer l'harmonie entre technologie et famille ?
+          <p className="text-lg text-gray-300 leading-relaxed">
+            Le Wifou est un cyber-démon qui rôde dans les ombres digitales, cherchant à posséder la famille Déboussolée.<br />
+            Vous, Gardiens des Ténèbres Familiales, réussirez-vous à bannir cette entité maléfique<br />
+            et restaurer l'équilibre entre technologie et traditions ancestrales ?
           </p>
         </div>
 
@@ -110,19 +110,19 @@ export default function WelcomeScreen({ onStartGame }) {
               onClick={handleShowTutorial}
               className="btn-primary touch-target touch-feedback"
             >
-              📚 Tutoriel
+              🕷️ Grimoire
             </button>
             <button
               onClick={handleShowStats}
               className="btn-secondary touch-target touch-feedback"
             >
-              📊 Statistiques
+              🔮 Oracle
             </button>
             <button
               onClick={handleShowGestures}
               className="btn-success touch-target touch-feedback"
             >
-              📱 Gestes
+              ✋ Rituels
             </button>
           </div>
         </div>
@@ -147,39 +147,39 @@ export default function WelcomeScreen({ onStartGame }) {
         {/* Configuration de base */}
         {currentStep === 1 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              ⚙️ Configuration de la partie
+            <h2 className="text-2xl font-semibold text-red-400 mb-4" style={{fontFamily: 'Creepster', textShadow: '0 0 5px #DC143C'}}>
+              ⚰️ Configuration du Rituel
             </h2>
 
             {/* Durée fixe affichée */}
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+            <div className="bg-gray-800 border-2 border-red-600 rounded-lg p-4 animate-glow">
               <div className="text-center">
-                <div className="font-semibold text-blue-800 text-lg">⏱️ Partie courte</div>
-                <div className="text-blue-600">15 minutes</div>
-                <div className="text-sm text-blue-500">Idéal pour jouer en famille sans complexité</div>
+                <div className="font-semibold text-red-400 text-lg" style={{fontFamily: 'Creepster'}}>⏰ Rituel Court</div>
+                <div className="text-red-300">15 minutes d'horreur</div>
+                <div className="text-sm text-gray-400">Parfait pour une séance de terreur familiale</div>
               </div>
             </div>
 
             {/* Nombre de joueurs */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                👥 Nombre de Gardiens (2-6)
+              <label className="block text-sm font-medium text-gray-300 mb-2" style={{fontFamily: 'Creepster'}}>
+                👥 Nombre de Gardiens des Ténèbres (2-6)
               </label>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => handlePlayerCountChange(playerCount - 1)}
                   disabled={playerCount <= 2}
-                  className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center border-2 border-red-600 text-red-400"
                 >
                   −
                 </button>
-                <span className="text-2xl font-bold text-gray-800 min-w-[60px] text-center">
+                <span className="text-2xl font-bold text-red-400 min-w-[60px] text-center" style={{fontFamily: 'Nosifer'}}>
                   {playerCount}
                 </span>
                 <button
                   onClick={() => handlePlayerCountChange(playerCount + 1)}
                   disabled={playerCount >= 6}
-                  className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center border-2 border-red-600 text-red-400"
                 >
                   +
                 </button>
@@ -191,7 +191,7 @@ export default function WelcomeScreen({ onStartGame }) {
               className="w-full btn-primary touch-target touch-feedback"
               data-continue
             >
-              ➡️ Continuer
+              ➡️ Continuer le Rituel
             </button>
           </div>
         )}
@@ -199,22 +199,23 @@ export default function WelcomeScreen({ onStartGame }) {
         {/* Noms des joueurs */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              ✏️ Noms des Gardiens
+            <h2 className="text-2xl font-semibold text-red-400 mb-4" style={{fontFamily: 'Creepster', textShadow: '0 0 5px #DC143C'}}>
+              ✍️ Noms des Gardiens des Ténèbres
             </h2>
 
             <div className="space-y-4">
               {playerNames.map((name, index) => (
                 <div key={index}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Gardien {index + 1}
+                  <label className="block text-sm font-medium text-gray-300 mb-1" style={{fontFamily: 'Creepster'}}>
+                    Gardien des Ténèbres {index + 1}
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => handlePlayerNameChange(index, e.target.value)}
                     placeholder={`Nom du Gardien ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border-2 border-red-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-gray-800 text-gray-200 placeholder-gray-400"
+                    style={{fontFamily: 'Creepster'}}
                   />
                 </div>
               ))}
@@ -226,15 +227,15 @@ export default function WelcomeScreen({ onStartGame }) {
                 className="flex-1 btn-secondary touch-target touch-feedback"
                 data-previous
               >
-                ← Retour
+                ← Retour aux Ténèbres
               </button>
               <button
                 onClick={handleStartGame}
                 disabled={!canStartGame}
-                className={`flex-1 ${canStartGame ? 'btn-success' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} touch-target touch-feedback font-bold py-3 px-6 rounded-lg transition-colors`}
+                className={`flex-1 ${canStartGame ? 'btn-success' : 'bg-gray-600 text-gray-400 cursor-not-allowed'} touch-target touch-feedback font-bold py-3 px-6 rounded-lg transition-colors`}
                 data-submit
               >
-                🚀 Commencer l'Aventure
+                🚀 Commencer l'Horreur
               </button>
             </div>
           </div>

@@ -27,15 +27,15 @@ export const GAME_CONFIG = {
     MIN_POINTS_PER_PLAYER_PER_TURN: 0
   },
 
-  // Messages du jeu
+  // Messages du jeu - Thème Gothique
   MESSAGES: {
-    WELCOME: "🛡️ Bienvenue, Gardiens !",
-    GAME_START: "🌅 L'aventure commence...",
-    GAME_END: "✨ Le Wifou est chassé ! L'harmonie est restaurée !",
-    MASTER_ROTATION: "🔄 Le Maître Gardien change...",
-    PHARMAKON_DISTRIBUTION: "💊 Distribution des points Pharmakon...",
-    SHIELD_ACTIVATION: "🛡️ Bouclier activé !",
-    ATTACK_REVEAL: "👻 Le Wifou lance son attaque !"
+    WELCOME: "🦇 Bienvenue, Gardiens des Ténèbres !",
+    GAME_START: "🌙 Le rituel commence...",
+    GAME_END: "🦇 Le Wifou est banni ! L'équilibre mystique est restauré !",
+    MASTER_ROTATION: "🔄 Le Maître des Ténèbres change...",
+    PHARMAKON_DISTRIBUTION: "⚗️ Distribution des élixirs mystiques...",
+    SHIELD_ACTIVATION: "🛡️ Bouclier des anciens activé !",
+    ATTACK_REVEAL: "👻 Le Wifou lance son sort maléfique !"
   },
 
   // Configuration de l'interface
@@ -46,12 +46,12 @@ export const GAME_CONFIG = {
     BUTTON_HOVER_SCALE: 1.05
   },
 
-  // Configuration des boucliers
+  // Configuration des boucliers - Thème Gothique
   SHIELD_CONFIG: {
-    SECURITY: { color: '#F59E0B', bgColor: '#FFFBEB', borderColor: '#F59E0B' },
-    HEART: { color: '#EF4444', bgColor: '#FEF2F2', borderColor: '#EF4444' },
-    LIBERTY: { color: '#3B82F6', bgColor: '#EFF6FF', borderColor: '#3B82F6' },
-    RESPECT: { color: '#10B981', bgColor: '#F0FDF4', borderColor: '#10B981' }
+    SECURITY: { color: '#8B4513', bgColor: '#2D1B00', borderColor: '#8B4513' },
+    HEART: { color: '#DC143C', bgColor: '#2D0000', borderColor: '#DC143C' },
+    LIBERTY: { color: '#9370DB', bgColor: '#1A0033', borderColor: '#9370DB' },
+    RESPECT: { color: '#228B22', bgColor: '#002D00', borderColor: '#228B22' }
   }
 };
 
