@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Butcherman&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Vampiro+One&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -134,7 +134,7 @@
   background: linear-gradient(135deg, #8B4513, #A0522D);
   border: 2px solid #8B4513;
   box-shadow: 0 0 15px rgba(139, 69, 19, 0.4);
-  font-family: 'Creepster', cursive;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 }
 
 .btn-primary:hover {
@@ -147,7 +147,7 @@
   background: linear-gradient(135deg, #4A4A4A, #6B6B6B);
   border: 2px solid #4A4A4A;
   box-shadow: 0 0 15px rgba(74, 74, 74, 0.4);
-  font-family: 'Creepster', cursive;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 }
 
 .btn-secondary:hover {
@@ -160,7 +160,7 @@
   background: linear-gradient(135deg, #228B22, #32CD32);
   border: 2px solid #228B22;
   box-shadow: 0 0 15px rgba(34, 139, 34, 0.4);
-  font-family: 'Creepster', cursive;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 }
 
 .btn-success:hover {
@@ -173,7 +173,7 @@
   background: linear-gradient(135deg, #8B0000, #DC143C);
   border: 2px solid #8B0000;
   box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
-  font-family: 'Creepster', cursive;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 }
 
 .btn-danger:hover {
@@ -397,8 +397,12 @@ html, body, #root {
 body {
   background: linear-gradient(135deg, #0F0F0F, #1A1A1A, #2D1B69);
   color: #E5E7EB;
-  font-family: 'Creepster', cursive;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
   min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: 'Vampiro One', cursive;
 }
 
 .glass {
@@ -410,7 +414,7 @@ body {
 
 .btn {
   @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-  font-family: 'Creepster', cursive;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
 }
 
 .textarea {

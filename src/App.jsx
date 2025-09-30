@@ -85,12 +85,11 @@ export default function App() {
       {gameState === 'ended' && (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center text-white">
-            <h1 className="text-4xl font-bold mb-4 animate-flicker" style={{fontFamily: 'Nosifer', textShadow: '0 0 15px #DC143C'}}>🦇 Victoire ! 🦇</h1>
+            <h1 className="text-4xl font-bold mb-4 animate-flicker" style={{textShadow: '0 0 15px #DC143C'}}>🦇 Victoire ! 🦇</h1>
             <p className="text-xl mb-8 text-gray-300">Le Wifou a été banni dans les ténèbres éternelles !<br />L'équilibre mystique est restauré !</p>
             <button
               onClick={handleBackToWelcome}
               className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors animate-glow"
-              style={{fontFamily: 'Creepster'}}
             >
               🛡️ Nouveau Rituel
             </button>
