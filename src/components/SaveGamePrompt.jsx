@@ -53,7 +53,7 @@ export default function SaveGamePrompt({ onLoadGame, onDismiss }) {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Durée :</span>
-              <span className="font-medium capitalize">{saveInfo.gameDuration}</span>
+              <span className="font-medium">Partie courte (15 min)</span>
             </div>
           </div>
         </div>

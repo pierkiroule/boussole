@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getAllGameDurations, validatePlayerCount } from '../data/gameConfig';
+import { validatePlayerCount } from '../data/gameConfig';
 import Tutorial from './Tutorial';
 import StatsDisplay from './StatsDisplay';
 import TouchGestures from './TouchGestures';
@@ -8,14 +8,14 @@ import { HapticManager } from '../utils/hapticManager';
 
 export default function WelcomeScreen({ onStartGame }) {
   const [playerCount, setPlayerCount] = useState(4);
-  const [gameDuration, setGameDuration] = useState('normal');
   const [playerNames, setPlayerNames] = useState(['']);
   const [currentStep, setCurrentStep] = useState(0); // 0: tutorial, 1: config, 2: names
   const [showTutorial, setShowTutorial] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [showGestures, setShowGestures] = useState(false);
 
-  const durations = getAllGameDurations();
+  // Durée fixe : partie courte de 15 minutes
+  const gameDuration = 'short';
 
   const handlePlayerCountChange = (count) => {
     if (validatePlayerCount(count)) {
@@ -151,6 +151,15 @@ export default function WelcomeScreen({ onStartGame }) {
               ⚙️ Configuration de la partie
             </h2>
 
+            {/* Durée fixe affichée */}
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+              <div className="text-center">
+                <div className="font-semibold text-blue-800 text-lg">⏱️ Partie courte</div>
+                <div className="text-blue-600">15 minutes</div>
+                <div className="text-sm text-blue-500">Idéal pour jouer en famille sans complexité</div>
+              </div>
+            </div>
+
             {/* Nombre de joueurs */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -174,30 +183,6 @@ export default function WelcomeScreen({ onStartGame }) {
                 >
                   +
                 </button>
-              </div>
-            </div>
-
-            {/* Durée de la partie */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                ⏱️ Durée de la partie
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {durations.map((duration) => (
-                  <button
-                    key={duration.id}
-                    onClick={() => setGameDuration(duration.id)}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      gameDuration === duration.id
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="font-semibold text-gray-800">{duration.label}</div>
-                    <div className="text-sm text-gray-600">{duration.estimatedTime}</div>
-                    <div className="text-xs text-gray-500">{duration.description}</div>
-                  </button>
-                ))}
               </div>
             </div>
 

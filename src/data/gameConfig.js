@@ -8,16 +8,8 @@ export const GAME_CONFIG = {
     DEFAULT_PLAYERS: 4
   },
 
-  // Configuration des parties - Base de 100 situations réalistes
+  // Configuration des parties - Partie courte fixe de 15 minutes
   GAME_DURATIONS: {
-    QUICK: {
-      id: 'quick',
-      label: 'Partie rapide',
-      turns: 3,
-      estimatedTime: '10 min',
-      description: 'Idéal pour une pause familiale',
-      attacks: [1, 2, 3] // 3 situations essentielles
-    },
     SHORT: {
       id: 'short',
       label: 'Partie courte',
@@ -25,54 +17,6 @@ export const GAME_CONFIG = {
       estimatedTime: '15 min',
       description: 'Idéal pour jouer en famille sans complexité',
       attacks: [1, 2, 3, 4, 5] // 5 situations fondamentales
-    },
-    NORMAL: {
-      id: 'normal',
-      label: 'Partie normale',
-      turns: 8,
-      estimatedTime: '25 min',
-      description: 'Expérience équilibrée',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 8 situations variées
-    },
-    LONG: {
-      id: 'long',
-      label: 'Partie longue',
-      turns: 12,
-      estimatedTime: '35 min',
-      description: 'Aventure complète',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // 12 situations complètes
-    },
-    EXTENDED: {
-      id: 'extended',
-      label: 'Partie étendue',
-      turns: 20,
-      estimatedTime: '50 min',
-      description: 'Découverte approfondie des situations',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] // 20 situations
-    },
-    COMPLETE: {
-      id: 'complete',
-      label: 'Partie complète',
-      turns: 30,
-      estimatedTime: '75 min',
-      description: 'Exploration de nombreuses situations',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] // 30 situations
-    },
-    ULTIMATE: {
-      id: 'ultimate',
-      label: 'Partie ultime',
-      turns: 50,
-      estimatedTime: '120 min',
-      description: 'Découverte de la moitié des situations',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50] // 50 situations
-    },
-    MARATHON: {
-      id: 'marathon',
-      label: 'Partie marathon',
-      turns: 100,
-      estimatedTime: '240 min',
-      description: 'Toutes les situations de la famille Déboussolée',
-      attacks: 'random' // Attaques aléatoires parmi les 100 situations réalistes
     }
   },
 
