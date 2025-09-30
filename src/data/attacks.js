@@ -411,6 +411,212 @@ export const ATTACKS = {
       liberty: "Je garde mon téléphone, c'est ma façon de profiter.",
       respect: "On décide ensemble de moments sans écran."
     }
+  },
+
+  // Pack 3 - 12 nouvelles situations réalistes
+  
+  25: {
+    id: 25,
+    title: 'Achat caché en ligne',
+    chapter: 13,
+    category: 'argent',
+    description: `Un ado commande discrètement des skins ou options dans un jeu sans prévenir.`,
+    target: 'Toute la famille',
+    effect: 'Dépenses cachées et perte de confiance',
+    educational: 'Transparence financière et responsabilité',
+    shieldResponses: {
+      security: "Je bloque les achats automatiques.",
+      heart: "J'en parle en famille avant d'acheter.",
+      liberty: "Je dépense comme je veux, c'est mon argent.",
+      respect: "On fixe ensemble un budget numérique."
+    }
+  },
+
+  26: {
+    id: 26,
+    title: 'Téléphone dans le salon partagé',
+    chapter: 13,
+    category: 'partage',
+    description: `Un membre regarde des vidéos avec le son fort pendant que d'autres veulent discuter.`,
+    target: 'Toute la famille',
+    effect: 'Conflits d\'usage et perturbation',
+    educational: 'Respect des espaces partagés',
+    shieldResponses: {
+      security: "Je mets un casque pour ne pas déranger.",
+      heart: "Je propose qu'on regarde ensemble.",
+      liberty: "Je continue avec le son, c'est mon choix.",
+      respect: "On décide : casque obligatoire si on partage la pièce."
+    }
+  },
+
+  27: {
+    id: 27,
+    title: 'Comparaison scolaire',
+    chapter: 14,
+    category: 'estime',
+    description: `Un ado voit ses amis poster leurs bonnes notes → il se sent nul.`,
+    target: 'Toute la famille',
+    effect: 'Baisse de l\'estime de soi et pression scolaire',
+    educational: 'Gestion de la pression sociale et estime de soi',
+    shieldResponses: {
+      security: "Je coupe les réseaux pour protéger mon moral.",
+      heart: "J'en parle avec quelqu'un de confiance.",
+      liberty: "Je choisis de regarder quand même, ça me motive.",
+      respect: "On discute ensemble de la pression scolaire."
+    }
+  },
+
+  28: {
+    id: 28,
+    title: 'Appels vidéo permanents',
+    chapter: 14,
+    category: 'usage',
+    description: `Un ado passe des heures en visio avec un ami, micro ouvert non-stop.`,
+    target: 'Toute la famille',
+    effect: 'Invasion de la vie privée familiale',
+    educational: 'Limites et respect de l\'intimité familiale',
+    shieldResponses: {
+      security: "Je coupe après un certain temps pour me reposer.",
+      heart: "J'invite mon ami à se voir en vrai.",
+      liberty: "Je continue la visio, ça me rassure.",
+      respect: "On établit une règle : pas de visio pendant les repas ou le soir."
+    }
+  },
+
+  29: {
+    id: 29,
+    title: 'Vie privée exposée',
+    chapter: 15,
+    category: 'privacy',
+    description: `Un parent filme ses enfants pour publier une story familiale.`,
+    target: 'Toute la famille',
+    effect: 'Violation du consentement et de la vie privée',
+    educational: 'Consentement et respect de l\'image des enfants',
+    shieldResponses: {
+      security: "Je refuse d'apparaître sans mon accord.",
+      heart: "On choisit une photo à partager ensemble.",
+      liberty: "J'accepte d'être filmé, c'est ok pour moi.",
+      respect: "Règle commune : on demande toujours avant de poster."
+    }
+  },
+
+  30: {
+    id: 30,
+    title: 'Notifications pendant le sport',
+    chapter: 15,
+    category: 'concentration',
+    description: `Un ado garde sa montre connectée et s'arrête toutes les 2 minutes pour lire ses messages.`,
+    target: 'Toute la famille',
+    effect: 'Perturbation de l\'activité physique',
+    educational: 'Présence et concentration dans les activités',
+    shieldResponses: {
+      security: "Je coupe les notifs pour me concentrer sur l'activité.",
+      heart: "Je propose de partager mes résultats avec les autres après.",
+      liberty: "Je garde mes notifs actives, c'est mon choix.",
+      respect: "On fixe une règle : pas de messages pendant le sport collectif."
+    }
+  },
+
+  31: {
+    id: 31,
+    title: 'Téléphone en voiture',
+    chapter: 16,
+    category: 'securite',
+    description: `Un ado utilise son téléphone pendant que son parent conduit et lui demande de regarder.`,
+    target: 'Toute la famille',
+    effect: 'Risque d\'accident et distraction du conducteur',
+    educational: 'Sécurité routière et responsabilité',
+    shieldResponses: {
+      security: "Je refuse, ça peut distraire le conducteur.",
+      heart: "On discute ensemble pendant le trajet.",
+      liberty: "Je continue de montrer des vidéos, c'est mon choix.",
+      respect: "On décide : pas de vidéos quand quelqu'un conduit."
+    }
+  },
+
+  32: {
+    id: 32,
+    title: 'Filtres et retouches',
+    chapter: 16,
+    category: 'estime',
+    description: `Un ado ne veut plus poster de photo sans filtre.`,
+    target: 'Toute la famille',
+    effect: 'Dépendance aux filtres et perte d\'authenticité',
+    educational: 'Image de soi authentique et acceptation',
+    shieldResponses: {
+      security: "Je garde une photo naturelle pour éviter la dépendance au filtre.",
+      heart: "Je partage une photo drôle avec filtre pour rigoler ensemble.",
+      liberty: "Je garde mes filtres, c'est mon image.",
+      respect: "On se met d'accord : pas de retouche trompeuse entre nous."
+    }
+  },
+
+  33: {
+    id: 33,
+    title: 'Multitâche impossible',
+    chapter: 17,
+    category: 'education',
+    description: `Un ado fait ses devoirs tout en répondant aux messages d'un groupe.`,
+    target: 'Toute la famille',
+    effect: 'Baisse de performance scolaire et stress',
+    educational: 'Concentration et efficacité dans le travail',
+    shieldResponses: {
+      security: "Je coupe les messages pour protéger ma concentration.",
+      heart: "Je demande à quelqu'un de m'aider à rester focus.",
+      liberty: "Je continue à jongler entre devoirs et messages.",
+      respect: "On établit une règle : pas de tel pendant les devoirs."
+    }
+  },
+
+  34: {
+    id: 34,
+    title: 'Sortie en famille',
+    chapter: 17,
+    category: 'moments',
+    description: `Pendant une balade, un ado reste le nez sur son écran au lieu de profiter du paysage.`,
+    target: 'Toute la famille',
+    effect: 'Gaspillage des moments précieux en famille',
+    educational: 'Présence et profiter du moment présent',
+    shieldResponses: {
+      security: "Je range mon tel pour éviter de trébucher.",
+      heart: "Je prends une photo et je la partage avec la famille.",
+      liberty: "Je continue de regarder mon écran, c'est mon choix.",
+      respect: "On se met d'accord : pas de téléphone pendant les balades."
+    }
+  },
+
+  35: {
+    id: 35,
+    title: 'Console bloquée',
+    chapter: 18,
+    category: 'partage',
+    description: `Un ado refuse de prêter la console à son frère.`,
+    target: 'Toute la famille',
+    effect: 'Conflits fraternels et exclusion',
+    educational: 'Partage et respect des autres',
+    shieldResponses: {
+      security: "Je propose une pause pour éviter la dispute.",
+      heart: "Je propose une partie en duo.",
+      liberty: "Je garde la console pour moi, c'est mon choix.",
+      respect: "On établit des tours de jeu équitables."
+    }
+  },
+
+  36: {
+    id: 36,
+    title: 'Réunions familiales perturbées',
+    chapter: 18,
+    category: 'communication',
+    description: `Pendant une réunion familiale, un ado scrolle sous la table.`,
+    target: 'Toute la famille',
+    effect: 'Rupture de communication et manque de respect',
+    educational: 'Écoute active et respect des moments familiaux',
+    shieldResponses: {
+      security: "Je range mon tel pour rester concentré.",
+      heart: "Je participe activement à la discussion.",
+      liberty: "Je garde mon tel, c'est mon choix.",
+      respect: "On fixe une règle : pas de téléphone pendant les discussions familiales."
+    }
   }
 };
 

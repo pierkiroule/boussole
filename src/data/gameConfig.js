@@ -37,26 +37,34 @@ export const GAME_CONFIG = {
     EXTENDED: {
       id: 'extended',
       label: 'Partie étendue',
-      turns: 16,
-      estimatedTime: '45 min',
-      description: 'Pack 1 + début du Pack 2',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] // Pack 1 + 4 du Pack 2
+      turns: 18,
+      estimatedTime: '50 min',
+      description: 'Pack 1 + Pack 2',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] // Pack 1 + Pack 2
     },
     COMPLETE: {
       id: 'complete',
       label: 'Partie complète',
       turns: 24,
-      estimatedTime: '60 min',
-      description: 'Toutes les situations des 2 packs',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] // Toutes les 24 attaques
+      estimatedTime: '65 min',
+      description: 'Pack 1 + Pack 2 + début Pack 3',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] // Pack 1 + Pack 2 + 6 du Pack 3
+    },
+    ULTIMATE: {
+      id: 'ultimate',
+      label: 'Partie ultime',
+      turns: 36,
+      estimatedTime: '90 min',
+      description: 'Toutes les situations des 3 packs',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36] // Toutes les 36 attaques
     },
     MARATHON: {
       id: 'marathon',
       label: 'Partie marathon',
-      turns: 30,
-      estimatedTime: '75 min',
+      turns: 45,
+      estimatedTime: '120 min',
       description: 'Épopée légendaire avec situations aléatoires',
-      attacks: 'random' // Attaques aléatoires parmi les 24 situations réalistes
+      attacks: 'random' // Attaques aléatoires parmi les 36 situations réalistes
     }
   },
 
