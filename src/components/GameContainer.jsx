@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import ChapterIntro from './ChapterIntro';
 import AttackDisplay from './AttackDisplay';
-import MasterVoting from './MasterVoting';
 import ScoreDisplay from './ScoreDisplay';
-import RiddleDisplay from './RiddleDisplay';
 import LiveScoreDisplay from './LiveScoreDisplay';
-import PhaseTransition from './PhaseTransition';
 import { getGameDurationConfig } from '../data/gameConfig';
 import { getAttackById } from '../data/attacks';
 import { getChapterById } from '../data/chapters';
@@ -19,7 +16,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
   const [currentMaster, setCurrentMaster] = useState(0);
   const [currentAttack, setCurrentAttack] = useState(null);
   const [currentChapter, setCurrentChapter] = useState(null);
-  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack', 'voting', 'riddle', 'scoring'
+  const [gamePhase, setGamePhase] = useState('intro'); // 'intro', 'attack'
   const [playerScores, setPlayerScores] = useState({});
   const [playerParades, setPlayerParades] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
@@ -207,27 +204,10 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
             <AttackDisplay
               attack={currentAttack}
               masterName={getCurrentMasterName()}
+              masterIndex={currentMaster}
               players={getPlayersExceptMaster()}
-              onParadesSubmitted={handleParadesSubmitted}
-            />
-          </div>
-        )}
-
-        {gamePhase === 'voting' && (
-          <div className="game-phase-voting">
-            <MasterVoting
-              attack={currentAttack}
-              parades={playerParades}
-              masterName={getCurrentMasterName()}
-              onVote={handleMasterVote}
-            />
-          </div>
-        )}
-
-        {gamePhase === 'riddle' && (
-          <div className="game-phase-riddle">
-            <RiddleDisplay
-              onRiddleComplete={handleRiddleComplete}
+              playerNames={gameConfig.playerNames}
+              onVotingComplete={handleVotingComplete}
             />
           </div>
         )}
