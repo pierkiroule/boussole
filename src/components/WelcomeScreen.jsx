@@ -93,7 +93,7 @@ export default function WelcomeScreen({ onStartGame }) {
       <div className="game-card p-8 max-w-2xl w-full animate-fade-in">
         {/* En-tête */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-red-400 mb-3 animate-flicker" style={{fontFamily: 'Nosifer', textShadow: '0 0 10px #DC143C'}}>
+          <h1 className="text-4xl font-bold text-red-400 mb-3 animate-flicker" style={{textShadow: '0 0 10px #DC143C'}}>
             🦇 Le Wifou 🦇
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed">
@@ -147,14 +147,14 @@ export default function WelcomeScreen({ onStartGame }) {
         {/* Configuration de base */}
         {currentStep === 1 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-red-400 mb-4" style={{fontFamily: 'Creepster', textShadow: '0 0 5px #DC143C'}}>
+            <h2 className="text-2xl font-semibold text-red-400 mb-4" style={{textShadow: '0 0 5px #DC143C'}}>
               ⚰️ Configuration du Rituel
             </h2>
 
             {/* Durée fixe affichée */}
             <div className="bg-gray-800 border-2 border-red-600 rounded-lg p-4 animate-glow">
               <div className="text-center">
-                <div className="font-semibold text-red-400 text-lg" style={{fontFamily: 'Creepster'}}>⏰ Rituel Court</div>
+                <div className="font-semibold text-red-400 text-lg">⏰ Rituel Court</div>
                 <div className="text-red-300">15 minutes d'horreur</div>
                 <div className="text-sm text-gray-400">Parfait pour une séance de terreur familiale</div>
               </div>
@@ -162,7 +162,7 @@ export default function WelcomeScreen({ onStartGame }) {
 
             {/* Nombre de joueurs */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2" style={{fontFamily: 'Creepster'}}>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 👥 Nombre de Gardiens des Ténèbres (2-6)
               </label>
               <div className="flex items-center space-x-4">
@@ -173,7 +173,7 @@ export default function WelcomeScreen({ onStartGame }) {
                 >
                   −
                 </button>
-                <span className="text-2xl font-bold text-red-400 min-w-[60px] text-center" style={{fontFamily: 'Nosifer'}}>
+                <span className="text-2xl font-bold text-red-400 min-w-[60px] text-center">
                   {playerCount}
                 </span>
                 <button
@@ -199,14 +199,14 @@ export default function WelcomeScreen({ onStartGame }) {
         {/* Noms des joueurs */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-red-400 mb-4" style={{fontFamily: 'Creepster', textShadow: '0 0 5px #DC143C'}}>
+            <h2 className="text-2xl font-semibold text-red-400 mb-4" style={{textShadow: '0 0 5px #DC143C'}}>
               ✍️ Noms des Gardiens des Ténèbres
             </h2>
 
             <div className="space-y-4">
               {playerNames.map((name, index) => (
                 <div key={index}>
-                  <label className="block text-sm font-medium text-gray-300 mb-1" style={{fontFamily: 'Creepster'}}>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Gardien des Ténèbres {index + 1}
                   </label>
                   <input
@@ -215,7 +215,6 @@ export default function WelcomeScreen({ onStartGame }) {
                     onChange={(e) => handlePlayerNameChange(index, e.target.value)}
                     placeholder={`Nom du Gardien ${index + 1}`}
                     className="w-full px-4 py-2 border-2 border-red-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-gray-800 text-gray-200 placeholder-gray-400"
-                    style={{fontFamily: 'Creepster'}}
                   />
                 </div>
               ))}

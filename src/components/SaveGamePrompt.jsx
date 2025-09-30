@@ -33,7 +33,7 @@ export default function SaveGamePrompt({ onLoadGame, onDismiss }) {
       <div className="bg-gray-900 rounded-2xl p-6 max-w-md mx-4 animate-fade-in border-2 border-red-600">
         <div className="text-center mb-6">
           <div className="text-4xl mb-4 animate-flicker">💀</div>
-          <h2 className="text-xl font-bold text-red-400 mb-2" style={{fontFamily: 'Creepster'}}>Rituel Sauvegardé</h2>
+          <h2 className="text-xl font-bold text-red-400 mb-2">Rituel Sauvegardé</h2>
           <p className="text-gray-300">Un rituel précédent a été détecté dans les archives</p>
         </div>
 
