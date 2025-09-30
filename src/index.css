@@ -401,7 +401,15 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
+  font-family: 'Vampiro One', cursive;
+}
+
+.game-card h1,
+.game-card h2,
+.game-card h3,
+.game-card h4,
+.game-card h5 {
   font-family: 'Vampiro One', cursive;
 }
 
