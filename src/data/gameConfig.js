@@ -16,7 +16,7 @@ export const GAME_CONFIG = {
       turns: 5,
       estimatedTime: '15 min',
       description: 'Idéal pour jouer en famille sans complexité',
-      attacks: [1, 2, 3, 4, 5] // 5 attaques simples pour la version familiale
+      attacks: [1, 2, 3, 4, 5] // 5 attaques réalistes pour la version familiale
     },
     NORMAL: {
       id: 'normal',
@@ -24,15 +24,15 @@ export const GAME_CONFIG = {
       turns: 8,
       estimatedTime: '25 min',
       description: 'Expérience équilibrée',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 2 chapitres complets
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 8 attaques réalistes
     },
     LONG: {
       id: 'long',
       label: 'Partie longue',
       turns: 12,
       estimatedTime: '35 min',
-      description: 'Aventure complète',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // 3 chapitres complets
+      description: 'Aventure complète avec toutes les situations',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // Toutes les 12 attaques réalistes
     },
     MARATHON: {
       id: 'marathon',
@@ -40,7 +40,7 @@ export const GAME_CONFIG = {
       turns: 20,
       estimatedTime: '50 min',
       description: 'Épopée légendaire',
-      attacks: 'random' // Attaques aléatoires de tous les chapitres
+      attacks: 'random' // Attaques aléatoires parmi les 12 situations réalistes
     }
   },
 
