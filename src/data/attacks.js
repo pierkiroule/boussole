@@ -1,4 +1,4 @@
-// Attaques du Wifou - Pack de 12 situations réalistes pour famille
+// Attaques du Wifou - Base complète de 100 situations réalistes pour la famille Déboussolée
 
 export const ATTACKS = {
   // Pack de 12 situations réalistes de conflits familiaux autour du numérique

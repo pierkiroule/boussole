@@ -8,15 +8,23 @@ export const GAME_CONFIG = {
     DEFAULT_PLAYERS: 4
   },
 
-  // Configuration des parties
+  // Configuration des parties - Base de 100 situations réalistes
   GAME_DURATIONS: {
+    QUICK: {
+      id: 'quick',
+      label: 'Partie rapide',
+      turns: 3,
+      estimatedTime: '10 min',
+      description: 'Idéal pour une pause familiale',
+      attacks: [1, 2, 3] // 3 situations essentielles
+    },
     SHORT: {
       id: 'short',
       label: 'Partie courte',
       turns: 5,
       estimatedTime: '15 min',
       description: 'Idéal pour jouer en famille sans complexité',
-      attacks: [1, 2, 3, 4, 5] // 5 attaques du Pack 1
+      attacks: [1, 2, 3, 4, 5] // 5 situations fondamentales
     },
     NORMAL: {
       id: 'normal',
@@ -24,47 +32,47 @@ export const GAME_CONFIG = {
       turns: 8,
       estimatedTime: '25 min',
       description: 'Expérience équilibrée',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 8 attaques du Pack 1
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8] // 8 situations variées
     },
     LONG: {
       id: 'long',
       label: 'Partie longue',
       turns: 12,
       estimatedTime: '35 min',
-      description: 'Aventure complète avec le Pack 1',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // Toutes les attaques du Pack 1
+      description: 'Aventure complète',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] // 12 situations complètes
     },
     EXTENDED: {
       id: 'extended',
       label: 'Partie étendue',
-      turns: 18,
+      turns: 20,
       estimatedTime: '50 min',
-      description: 'Pack 1 + Pack 2',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] // Pack 1 + Pack 2
+      description: 'Découverte approfondie des situations',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] // 20 situations
     },
     COMPLETE: {
       id: 'complete',
       label: 'Partie complète',
-      turns: 24,
-      estimatedTime: '65 min',
-      description: 'Pack 1 + Pack 2 + début Pack 3',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] // Pack 1 + Pack 2 + 6 du Pack 3
+      turns: 30,
+      estimatedTime: '75 min',
+      description: 'Exploration de nombreuses situations',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] // 30 situations
     },
     ULTIMATE: {
       id: 'ultimate',
       label: 'Partie ultime',
-      turns: 36,
-      estimatedTime: '90 min',
-      description: 'Toutes les situations des 3 packs',
-      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36] // Toutes les 36 attaques
+      turns: 50,
+      estimatedTime: '120 min',
+      description: 'Découverte de la moitié des situations',
+      attacks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50] // 50 situations
     },
     MARATHON: {
       id: 'marathon',
       label: 'Partie marathon',
-      turns: 45,
-      estimatedTime: '120 min',
-      description: 'Épopée légendaire avec situations aléatoires',
-      attacks: 'random' // Attaques aléatoires parmi les 36 situations réalistes
+      turns: 100,
+      estimatedTime: '240 min',
+      description: 'Toutes les situations de la famille Déboussolée',
+      attacks: 'random' // Attaques aléatoires parmi les 100 situations réalistes
     }
   },
 
@@ -121,4 +129,27 @@ export function validatePlayerCount(count) {
 // Fonction pour obtenir la configuration d'un bouclier
 export function getShieldConfig(shieldId) {
   return GAME_CONFIG.SHIELD_CONFIG[shieldId.toUpperCase()];
+}
+
+// Fonction pour obtenir une attaque aléatoire pour les parties marathon
+export function getRandomAttackId() {
+  // Génère un ID aléatoire entre 1 et 100 pour les situations de la famille Déboussolée
+  return Math.floor(Math.random() * 100) + 1;
+}
+
+// Fonction pour obtenir les attaques d'une durée de jeu (gère les attaques aléatoires)
+export function getAttacksForDuration(durationId) {
+  const duration = GAME_CONFIG.GAME_DURATIONS[durationId.toUpperCase()];
+  if (!duration) return [];
+  
+  if (duration.attacks === 'random') {
+    // Pour les parties marathon, génère des attaques aléatoires
+    const randomAttacks = [];
+    for (let i = 0; i < duration.turns; i++) {
+      randomAttacks.push(getRandomAttackId());
+    }
+    return randomAttacks;
+  }
+  
+  return duration.attacks;
 }
