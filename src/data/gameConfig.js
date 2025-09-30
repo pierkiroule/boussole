@@ -1,4 +1,4 @@
-// Configuration générale du jeu "Les Gardiens de l'Esprit Familial"
+// Configuration générale du jeu "Le Wifou"
 
 export const GAME_CONFIG = {
   // Configuration des joueurs
@@ -53,13 +53,13 @@ export const GAME_CONFIG = {
 
   // Messages du jeu
   MESSAGES: {
-    WELCOME: "🛡️ Bienvenue, Gardiens de l'Esprit Familial !",
+    WELCOME: "🛡️ Bienvenue, Gardiens !",
     GAME_START: "🌅 L'aventure commence...",
-    GAME_END: "✨ L'esprit familial est sauvé !",
+    GAME_END: "✨ Le Wifou est chassé ! L'harmonie est restaurée !",
     MASTER_ROTATION: "🔄 Le Maître Gardien change...",
     PHARMAKON_DISTRIBUTION: "💊 Distribution des points Pharmakon...",
     SHIELD_ACTIVATION: "🛡️ Bouclier activé !",
-    ATTACK_REVEAL: "👻 Le Wi-Fou lance son attaque !"
+    ATTACK_REVEAL: "👻 Le Wifou lance son attaque !"
   },
 
   // Configuration de l'interface

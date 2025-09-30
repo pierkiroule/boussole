@@ -8,17 +8,17 @@ export default function Tutorial({ onComplete }) {
   const steps = [
     {
       title: "🛡️ Bienvenue, Gardiens !",
-      content: `Vous êtes les Gardiens de l'Esprit Familial, chargés de protéger votre famille contre le Wi-Fou maléfique.
+      content: `Le Wifou est un cyber-fantôme qui cherche à posséder la famille De Boussolée.
 
-Le Wi-Fou est un fantôme numérique qui veut posséder l'esprit de votre famille pour la transformer en esclaves des écrans.
+Ce fantôme numérique veut prendre le contrôle de l'esprit familial pour transformer tous les membres en esclaves des écrans.
 
-Votre mission : Résister à ses attaques en utilisant vos boucliers magiques et votre sagesse collective.`
+Votre mission : Résister à ses attaques en utilisant vos boucliers magiques et votre sagesse collective pour restaurer l'harmonie entre technologie et famille.`
     },
     {
       title: "🎮 Comment jouer",
       content: `Le jeu se déroule en tours. À chaque tour :
 
-1. Le Maître Gardien (qui change à chaque tour) lit l'attaque du Wi-Fou
+1. Le Maître Gardien (qui change à chaque tour) lit l'attaque du Wifou
 2. Les autres Gardiens choisissent un bouclier et expliquent leur parade
 3. Le Maître Gardien distribue 3 pts Pharmakon selon la qualité des parades
 4. Une énigme de réflexion est proposée pour approfondir la compréhension
@@ -31,17 +31,17 @@ Votre mission : Résister à ses attaques en utilisant vos boucliers magiques et
     },
     {
       title: "💊 Les Points Pharmakon",
-      content: `Les points Pharmakon représentent votre sagesse acquise contre le Wi-Fou.
+      content: `Les points Pharmakon représentent votre sagesse acquise contre le Wifou.
 
 • Le Maître Gardien distribue 3 pts par tour
 • Bonus de 1 pt pour une bonne réponse à l'énigme
 • Plus vous avez de points, plus vous êtes sage et résistant
 
-Le Gardien avec le plus de points à la fin devient le Grand Gardien de l'Esprit Familial !`
+Le Gardien avec le plus de points à la fin devient le Champion contre le Wifou !`
     },
     {
       title: "🤔 Les Énigmes",
-      content: `Après chaque vote, une énigme vous aide à réfléchir aux motivations du Wi-Fou.
+      content: `Après chaque vote, une énigme vous aide à réfléchir aux motivations du Wifou.
 
 Ces questions vous permettent de :
 • Comprendre les mécanismes de manipulation numérique
@@ -54,12 +54,12 @@ Réfléchissez bien : une bonne réponse vous donne un bonus !`
       title: "🏆 Objectif Final",
       content: `Votre objectif est de :
 
-• Résister à toutes les attaques du Wi-Fou
+• Résister à toutes les attaques du Wifou
 • Comprendre ses mécanismes de manipulation
 • Renforcer l'unité familiale
 • Développer une immunité numérique durable
 
-Prêt à devenir de vrais Gardiens de l'Esprit Familial ?`
+Prêts à chasser le Wifou et sauver la famille De Boussolée ?`
     }
   ];
 

@@ -206,7 +206,7 @@ export default function GameContainer({ gameConfig, onEndGame, onBackToWelcome }
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
           <div className="flex justify-between items-center text-white">
             <div>
-              <h1 className="text-2xl font-bold">🛡️ Gardiens de l'Esprit Familial</h1>
+              <h1 className="text-2xl font-bold">👻 Le Wifou</h1>
               <p className="text-sm opacity-80">
                 Tour {currentTurn}/{totalTurns} • Maître: {getCurrentMasterName()}
               </p>

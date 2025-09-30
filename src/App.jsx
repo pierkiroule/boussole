@@ -86,7 +86,7 @@ export default function App() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center text-white">
             <h1 className="text-4xl font-bold mb-4">✨ Félicitations !</h1>
-            <p className="text-xl mb-8">Vous êtes maintenant de vrais Gardiens de l'Esprit Familial !</p>
+            <p className="text-xl mb-8">Vous avez chassé le Wifou et restauré l'harmonie familiale !</p>
             <button
               onClick={handleBackToWelcome}
               className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"

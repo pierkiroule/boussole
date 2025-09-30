@@ -1,7 +1,7 @@
 {
-  "name": "les-gardiens-esprit-familial",
+  "name": "le-wifou",
   "version": "1.0.0",
-  "description": "Jeu éducatif coopératif pour protéger la famille contre les dangers numériques",
+  "description": "Chassez le cyber-fantôme Wifou et restaurez l'harmonie entre technologie et famille",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -42,9 +42,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/les-gardiens-esprit-familial.git"
+    "url": "https://github.com/username/le-wifou.git"
   },
-  "homepage": "https://username.github.io/les-gardiens-esprit-familial",
+  "homepage": "https://username.github.io/le-wifou",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"

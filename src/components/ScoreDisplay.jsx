@@ -16,7 +16,7 @@ export default function ScoreDisplay({ playerNames, playerScores, gameHistory, o
     <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">🏆 Résultats Finaux</h1>
-        <p className="text-xl text-gray-600">La bataille contre le Wi-Fou est terminée !</p>
+        <p className="text-xl text-gray-600">La bataille contre le Wifou est terminée !</p>
       </div>
 
       {/* Gagnant */}

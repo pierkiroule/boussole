@@ -62,7 +62,7 @@ export default function AttackDisplay({ attack, masterName, players, onParadesSu
       {/* Affichage de l'attaque */}
       <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6">
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold text-red-800 mb-2">👻 Attaque du Wi-Fou</h2>
+          <h2 className="text-2xl font-bold text-red-800 mb-2">👻 Attaque du Wifou</h2>
           <h3 className="text-xl text-red-700">{attack.title}</h3>
         </div>
         

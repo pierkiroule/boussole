@@ -36,7 +36,7 @@ export default function RiddleDisplay({ onRiddleComplete }) {
     <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">🤔 Énigme de Réflexion</h2>
-        <p className="text-gray-600">Réfléchissez aux motivations du Wi-Fou...</p>
+        <p className="text-gray-600">Réfléchissez aux motivations du Wifou...</p>
       </div>
 
       {/* Question */}

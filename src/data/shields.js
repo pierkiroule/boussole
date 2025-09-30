@@ -1,4 +1,4 @@
-// Les 4 Boucliers de Défense des Gardiens de l'Esprit Familial
+// Les 4 Boucliers de Défense contre le Wifou
 
 export const SHIELDS = {
   LIBERTY: {
