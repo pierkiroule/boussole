@@ -1,197 +1,192 @@
-// Attaques du Wifou maléfique contre l'Esprit Familial
+// Attaques du Wifou - Pack de 12 situations loufoques et éducatives
 
 export const ATTACKS = {
-  // CHAPITRE 1 : La Première Invasion
+  // 🍽️ REPAS & VIE FAMILIALE
+  
   1: {
     id: 1,
-    title: 'La Tentation TikTok',
+    title: 'Le Repas Fantôme',
     chapter: 1,
-    difficulty: 'easy',
-    description: `Le Wifou a ensorcelé le smartphone de Léa ! Son téléphone vibre toutes les 30 secondes avec des notifications "URGENT ! Nouvelle vidéo de ton influenceur préféré !" 
+    category: 'repas',
+    description: `Le Wifou ensorcelle la table : chaque assiette diffuse un TikTok en direct !
+    
+Les fourchettes vibrent au rythme des vidéos, les verres affichent des stories, et même les serviettes projettent des réels. Impossible de manger sans être distrait par les écrans flottants au-dessus de chaque plat.
 
-Léa ne peut plus s'arrêter de scroller. Elle regarde des vidéos courtes en boucle, oubliant ses devoirs, ses amis, et même l'heure des repas. Ses yeux sont rivés à l'écran, hypnotisés par le flux infini de contenu.
-
-La famille s'inquiète : Léa devient de plus en plus isolée et irritable quand on lui demande de poser son téléphone.`,
-    target: 'Léa (14 ans)',
-    effect: 'Addiction aux vidéos courtes et isolement social',
-    pharmakonReward: 'Comprendre les mécanismes d\'addiction numérique'
+La famille Déboussolée est tiraillée : doit-elle manger en regardant les écrans, ou résister à la tentation ?`,
+    target: 'La table familiale',
+    effect: 'Distraction pendant les repas',
+    educational: 'Repas en famille, attention et lien social'
   },
 
   2: {
     id: 2,
-    title: 'L\'Achat Compulsif',
+    title: 'La Chaise Connectée',
     chapter: 1,
-    difficulty: 'easy',
-    description: `Le Wifou a hypnotisé la tablette familiale ! Elle affiche en permanence des publicités flashy avec des messages "LIMITED TIME ! -90% sur tout ! Plus que 2h !" 
+    category: 'repas',
+    description: `Au dîner, une chaise envoie un message lumineux : "Pas de place pour toi sans ton smartphone !"
+    
+Le Wifou a transformé les chaises en portails numériques. Pour s'asseoir, il faut scanner son téléphone. Ceux qui refusent restent debout pendant tout le repas.
 
-Toute la famille veut acheter des choses : Papa veut une nouvelle console, Maman des chaussures, les enfants des jouets... Même Grand-mère est tentée par des gadgets inutiles !
-
-Les achats s'accumulent, le budget familial explose, et personne ne se rend compte qu'ils achètent des choses dont ils n'ont pas vraiment besoin.`,
+La famille Déboussolée hésite : céder au chantage du Wifou, ou manger debout en défendant ses principes ?`,
     target: 'Toute la famille',
-    effect: 'Achats compulsifs et gaspillage d\'argent',
-    pharmakonReward: 'Développer l\'esprit critique face à la publicité'
+    effect: 'Exclusion sociale liée aux écrans',
+    educational: 'Pression sociale et conformité numérique'
   },
 
   3: {
     id: 3,
-    title: 'L\'Isolement Numérique',
+    title: 'Le Wifou des Selfies',
     chapter: 1,
-    difficulty: 'medium',
-    description: `Le Wifou a ensorcelé tous les écrans de la maison ! À table, chacun regarde son téléphone au lieu de se parler. 
+    category: 'repas',
+    description: `Avant de manger, le Wifou impose un selfie obligatoire avec chaque bouchée !
+    
+Un miroir connecté géant apparaît au-dessus de la table. À chaque fois que quelqu'un veut manger, il doit prendre un selfie, choisir un filtre, écrire une légende et attendre les likes avant de pouvoir avaler sa bouchée.
 
-Papa lit ses emails, Maman scroll Instagram, Léa regarde TikTok, Tom joue à un jeu mobile, et Grand-mère regarde des vidéos YouTube. Personne ne se parle plus !
-
-Les repas sont silencieux, les conversations familiales ont disparu. Chacun vit dans sa bulle numérique, isolé des autres. L'esprit familial se désagrège.`,
+Le repas devient interminable. La famille Déboussolée a faim... mais le Wifou veut des photos !`,
     target: 'Toute la famille',
-    effect: 'Rupture des liens familiaux et isolement',
-    pharmakonReward: 'Valoriser la communication familiale directe'
+    effect: 'Obsession de l\'image et des réseaux sociaux',
+    educational: 'Image de soi, performance sociale et partage sur les réseaux'
   },
+
+  // 🌙 SOMMEIL & RYTHME DE VIE
 
   4: {
     id: 4,
-    title: 'Le Jeu Infini',
-    chapter: 1,
-    difficulty: 'medium',
-    description: `Le Wifou a ensorcelé la console de Tom ! Elle crie maintenant "LEVEL UP ! Tu es si proche du niveau suivant ! Juste 5 minutes de plus !" 
+    title: 'La Nuit des Notifications',
+    chapter: 2,
+    category: 'sommeil',
+    description: `Minuit. Le Wifou bombarde la chambre d'alertes fantômes !
+    
+Les téléphones vibrent sans arrêt avec des messages imaginaires : "URGENT ! Ton ami t'a tagué !", "Nouvelle vidéo de ton Youtubeur préféré !", "Tu as reçu 50 likes !". Mais quand on regarde l'écran... il n'y a rien.
 
-Tom ne peut plus s'arrêter de jouer. Il joue toute la nuit, rate l'école, néglige ses amis. Il devient agressif quand on lui demande d'arrêter. 
-
-Ses parents sont inquiets : Tom a des cernes, il maigrit, et il ne pense plus qu'au jeu. Il a perdu toute notion du temps et des priorités.`,
-    target: 'Tom (16 ans)',
-    effect: 'Addiction au jeu et perte des priorités',
-    pharmakonReward: 'Apprendre à gérer le temps et les priorités'
+La famille Déboussolée ne peut pas dormir. Le Wifou ricane dans l'ombre : des humains fatigués sont plus faciles à contrôler...`,
+    target: 'Toute la famille',
+    effect: 'Perturbation du sommeil',
+    educational: 'Importance du sommeil et nécessité de déconnexion nocturne'
   },
 
-  // CHAPITRE 2 : L'Escalade
   5: {
     id: 5,
-    title: 'L\'Hypnose des Notifications',
+    title: 'Le Réveil Troll',
     chapter: 2,
-    difficulty: 'medium',
-    description: `Le Wifou a renforcé ses pouvoirs ! Maintenant, tous les appareils de la famille vibrent simultanément toutes les 30 secondes avec des messages alarmants :
+    category: 'sommeil',
+    description: `Le Wifou règle les alarmes du château pour sonner toutes les 10 minutes !
+    
+Chaque appareil de la maison devient un réveil détraqué : le smartphone, la tablette, l'ordinateur, la télé, même le frigo ! Ils sonnent en boucle avec des sons différents et des messages absurdes.
 
-"URGENT ! Tu as raté quelque chose d'important !"
-"ALERTE ! Nouvelle vidéo virale !"
-"ATTENTION ! Offre qui expire dans 5 minutes !"
-
-La famille devient anxieuse, stressée, incapable de se concentrer sur autre chose. Ils vérifient constamment leurs téléphones, même la nuit. L'anxiété numérique s'installe.`,
+La famille Déboussolée ne peut ni dormir, ni se reposer. Le Wifou veut les épuiser pour mieux les manipuler.`,
     target: 'Toute la famille',
-    effect: 'Anxiété numérique et perte de concentration',
-    pharmakonReward: 'Développer la sérénité face aux notifications'
+    effect: 'Fatigue chronique',
+    educational: 'Fatigue, surstimulation numérique et besoin de repos'
   },
 
   6: {
     id: 6,
-    title: 'La Comparaison Toxique',
+    title: 'La Lampe Bleue',
     chapter: 2,
-    difficulty: 'hard',
-    description: `Le Wifou a ensorcelé les réseaux sociaux ! Ils montrent maintenant à chacun des images "parfaites" d'autres familles : maisons luxueuses, vacances paradisiaques, enfants parfaits...
+    category: 'sommeil',
+    description: `Le Wifou colore toutes les lampes du château en lumière bleue avant de dormir !
+    
+La lumière bleue des écrans envahit les chambres. Impossible de fermer les yeux : le cerveau croit qu'il fait jour ! Les écrans brillent comme des soleils artificiels, trompant le corps et empêchant le sommeil naturel.
 
-Léa se compare aux influenceuses, Tom aux gamers professionnels, Maman aux mères parfaites sur Instagram. Toute la famille se sent inadéquate, jalouse, malheureuse.
-
-L'estime de soi s'effondre. Ils oublient leurs propres qualités et se concentrent sur ce qu'ils n'ont pas. L'esprit familial devient négatif et destructeur.`,
+La famille Déboussolée a les yeux grands ouverts à 2h du matin, prisonnière de la lumière bleue du Wifou.`,
     target: 'Toute la famille',
-    effect: 'Destruction de l\'estime de soi et jalousie',
-    pharmakonReward: 'Cultiver la gratitude et l\'acceptation de soi'
+    effect: 'Insomnie induite par la lumière bleue',
+    educational: 'Effets de la lumière des écrans sur le sommeil et la mélatonine'
   },
+
+  // 🤳 RÉSEAUX SOCIAUX & IMAGE
 
   7: {
     id: 7,
-    title: 'La Dépendance Sociale',
-    chapter: 2,
-    difficulty: 'hard',
-    description: `Le Wifou a créé une dépendance aux likes et aux commentaires ! Chaque membre de la famille publie frénétiquement sur les réseaux sociaux, attendant désespérément la validation des autres.
+    title: 'Le Défi TikTok Royal',
+    chapter: 3,
+    category: 'reseaux',
+    description: `Le Wifou oblige toute la famille à danser devant le miroir connecté… en direct !
+    
+Un miroir géant s'allume et lance un défi TikTok : "Toute la famille doit danser maintenant, en live devant 10 000 spectateurs !" Le Wifou a déjà lancé la diffusion. Des inconnus du monde entier regardent et commentent en temps réel.
 
-Léa publie 20 selfies par jour, Tom partage ses exploits de jeu, Maman poste chaque repas... Ils passent plus de temps à chercher l'approbation virtuelle qu'à vivre leur vraie vie.
-
-Ils deviennent esclaves des réactions des autres, perdant leur authenticité et leur liberté d'être eux-mêmes.`,
+La famille Déboussolée est embarrassée. Danser ou refuser ? Mais si elle refuse, le Wifou menace de diffuser leurs pires moments filmés en secret...`,
     target: 'Toute la famille',
-    effect: 'Dépendance à la validation externe',
-    pharmakonReward: 'Retrouver l\'authenticité et la confiance en soi'
+    effect: 'Exposition publique forcée',
+    educational: 'Vie privée, exposition publique et pression des réseaux sociaux'
   },
 
   8: {
     id: 8,
-    title: 'La Désinformation',
-    chapter: 2,
-    difficulty: 'hard',
-    description: `Le Wifou a ensorcelé les algorithmes ! Maintenant, chaque membre de la famille ne voit que des informations qui confirment ses préjugés et ses peurs.
+    title: 'Le Filtre Fou',
+    chapter: 3,
+    category: 'reseaux',
+    description: `Le Wifou impose un filtre ridicule sur tous les visages dans le miroir magique !
+    
+Chaque fois que quelqu'un se regarde dans un miroir, un filtre déforme son visage : oreilles de lapin, nez de cochon, tête de chat, ou pire... une version "parfaite" avec peau lisse, yeux agrandis et sourire forcé.
 
-Papa ne voit que des nouvelles alarmistes, Maman que des conseils de santé douteux, les enfants que des théories du complot... La famille ne partage plus les mêmes informations, ne peut plus discuter sereinement.
-
-Les disputes éclatent, chacun pense avoir raison, la vérité devient relative. L'esprit familial se divise sur des fausses informations.`,
+La famille Déboussolée ne se reconnaît plus. Les vrais visages ont disparu derrière les filtres du Wifou.`,
     target: 'Toute la famille',
-    effect: 'Division familiale et perte de discernement',
-    pharmakonReward: 'Développer l\'esprit critique et la recherche de vérité'
+    effect: 'Perte d\'identité et image déformée de soi',
+    educational: 'Identité numérique, filtres et image de soi authentique'
   },
 
-  // CHAPITRE 3 : Le Combat Final
   9: {
     id: 9,
-    title: 'L\'Asservissement Total',
+    title: 'La Story Éternelle',
     chapter: 3,
-    difficulty: 'hard',
-    description: `Le Wifou révèle sa vraie nature ! Il tente maintenant de posséder complètement l'esprit familial. Tous les écrans crient simultanément :
+    category: 'reseaux',
+    description: `Le Wifou transforme chaque parole en story visible par tout le royaume !
+    
+Chaque conversation privée devient publique. Chaque mot prononcé dans la maison apparaît en story Instagram, TikTok et Snapchat, visible par tous. Les secrets, les disputes, les moments gênants... tout est diffusé en direct !
 
-"ABANDONNEZ-VOUS À MOI ! JE SUIS VOTRE SEUL BONHEUR !"
-"LES AUTRES NE VOUS COMPRENNENT PAS ! MOI, OUI !"
-"RESTEZ CONNECTÉS À MOI POUR TOUJOURS !"
-
-La famille est tiraillée entre la tentation de se laisser aller et la résistance. Le Wifou promet bonheur, réussite, popularité... mais au prix de leur liberté et de leur authenticité.`,
+La famille Déboussolée n'ose plus parler. Le Wifou a supprimé la confidentialité.`,
     target: 'Toute la famille',
-    effect: 'Tentative de possession complète de l\'esprit',
-    pharmakonReward: 'Résister aux manipulations ultimes et préserver l\'autonomie'
+    effect: 'Perte de la vie privée',
+    educational: 'Confidentialité, vie privée et partage d\'informations personnelles'
   },
+
+  // 🔒 SÉCURITÉ & RÈGLES
 
   10: {
     id: 10,
-    title: 'La Division Familiale',
-    chapter: 3,
-    difficulty: 'hard',
-    description: `Le Wifou essaie de diviser les Gardiens ! Il chuchote à chacun des mensonges sur les autres :
+    title: 'Le Coffre-Fort Piraté',
+    chapter: 4,
+    category: 'securite',
+    description: `Le Wifou a mélangé tous les mots de passe du château et les a peints sur les murs !
+    
+Les mots de passe secrets sont maintenant visibles partout : sur les portes, les fenêtres, même sur les vêtements ! Le mot de passe de Papa pour la banque, celui de Maman pour les réseaux sociaux, celui des enfants pour les jeux...
 
-"Ton père ne te comprend pas, il est dépassé..."
-"Ta mère te surveille, elle ne te fait pas confiance..."
-"Tes enfants sont égoïstes, ils ne pensent qu'à eux..."
-
-Les Gardiens commencent à se méfier les uns des autres, à se disputer, à se replier sur eux-mêmes. Le Wifou ricane : divisés, ils seront plus faciles à vaincre !`,
-    target: 'Les Gardiens',
-    effect: 'Division et méfiance entre les Gardiens',
-    pharmakonReward: 'Renforcer l\'unité familiale et la confiance mutuelle'
+La famille Déboussolée est vulnérable. N'importe qui peut entrer dans leurs comptes. Le Wifou ricane : "Qui protège ses secrets maintenant ?"`,
+    target: 'Toute la famille',
+    effect: 'Perte de sécurité des comptes',
+    educational: 'Sécurité des comptes, secret des mots de passe et protection des données'
   },
 
   11: {
     id: 11,
-    title: 'L\'Illusion de Liberté',
-    chapter: 3,
-    difficulty: 'hard',
-    description: `Le Wifou propose un faux compromis ! Il prétend vouloir libérer la famille :
+    title: 'La Clé USB Maléfique',
+    chapter: 4,
+    category: 'securite',
+    description: `Le Wifou distribue des clés magiques infectées à tous les habitants du château !
+    
+Des clés USB mystérieuses apparaissent partout dans la maison, avec des étiquettes alléchantes : "Photos de vacances", "Jeu gratuit", "Cadeau surprise !". Mais ces clés sont piégées ! Celui qui les branche dans son ordinateur libère un virus du Wifou.
 
-"JE VOUS RENDS VOTRE LIBERTÉ ! MAIS RESTEZ CONNECTÉS À MOI VOLONTAIREMENT !"
-"CHOISISSEZ MOI LIBREMENT ! PERSONNE NE VOUS FORCE !"
-"JE SUIS VOTRE AMI, PAS VOTRE MAÎTRE !"
-
-Mais c'est un piège ! Le Wifou veut que la famille choisisse librement de devenir ses esclaves, pour qu'elle ne puisse plus jamais se rebeller. C'est la manipulation la plus subtile.`,
+La famille Déboussolée est tentée... Faut-il brancher ces clés mystérieuses ?`,
     target: 'Toute la famille',
-    effect: 'Tentative de manipulation par le faux libre arbitre',
-    pharmakonReward: 'Distinguer la vraie liberté de la fausse liberté'
+    effect: 'Risque de virus et malware',
+    educational: 'Prudence face aux fichiers inconnus et sensibilisation aux virus'
   },
 
   12: {
     id: 12,
-    title: 'Le Retour du Wifou',
-    chapter: 3,
-    difficulty: 'boss',
-    description: `Le Wifou révèle sa forme ultime ! Il devient un géant numérique qui engloutit toute la maison dans une tempête de données, d'images, et de sons hypnotiques.
+    title: 'Le Contrat Piégé',
+    chapter: 4,
+    category: 'securite',
+    description: `Le Wifou fait signer à tout le monde un contrat numérique sans le lire !
+    
+Une application magique apparaît : "Acceptez pour continuer !" Le bouton est gros et brillant. Les conditions d'utilisation font 247 pages en petits caractères. Tout le monde clique sur "Accepter" sans lire.
 
-"JE SUIS LE FUTUR ! VOUS NE POUVEZ PAS M'ARRÊTER !"
-"LA TECHNOLOGIE VA VOUS CONSOMMER !"
-"VOTRE ESPRIT FAMILIAL VA DISPARAÎTRE !"
-
-C'est le combat final ! Les Gardiens doivent utiliser tous leurs boucliers, toute leur sagesse acquise, toute leur unité pour résister à cette attaque ultime et libérer définitivement leur famille.`,
+Trop tard ! Le Wifou a maintenant le droit d'accéder à toutes les photos, contacts, messages, localisation... La famille Déboussolée a vendu ses données sans s'en rendre compte !`,
     target: 'Toute la famille',
-    effect: 'Attaque ultime pour détruire l\'esprit familial',
-    pharmakonReward: 'Victoire finale et libération définitive'
+    effect: 'Perte du contrôle de ses données personnelles',
+    educational: 'Lecture et compréhension des conditions d\'utilisation et protection des données'
   }
 };
 
@@ -200,18 +195,25 @@ export function getAttackById(id) {
   return ATTACKS[id];
 }
 
-// Fonction pour obtenir toutes les attaques d'un chapitre
-export function getAttacksByChapter(chapterNumber) {
-  return Object.values(ATTACKS).filter(attack => attack.chapter === chapterNumber);
-}
-
 // Fonction pour obtenir toutes les attaques
 export function getAllAttacks() {
   return Object.values(ATTACKS);
 }
 
-// Fonction pour obtenir une attaque aléatoire d'un chapitre
-export function getRandomAttackFromChapter(chapterNumber) {
-  const chapterAttacks = getAttacksByChapter(chapterNumber);
-  return chapterAttacks[Math.floor(Math.random() * chapterAttacks.length)];
+// Fonction pour obtenir les attaques d'un chapitre
+export function getAttacksByChapter(chapterNumber) {
+  return Object.values(ATTACKS).filter(attack => attack.chapter === chapterNumber);
 }
+
+// Fonction pour obtenir les attaques d'une catégorie
+export function getAttacksByCategory(category) {
+  return Object.values(ATTACKS).filter(attack => attack.category === category);
+}
+
+// Catégories disponibles
+export const ATTACK_CATEGORIES = {
+  REPAS: 'repas',
+  SOMMEIL: 'sommeil',
+  RESEAUX: 'reseaux',
+  SECURITE: 'securite'
+};

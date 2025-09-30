@@ -97,7 +97,7 @@ export default function WelcomeScreen({ onStartGame }) {
             👻 Le Wifou
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed">
-            Le Wifou est un cyber-fantôme qui cherche à posséder la famille De Boussolée.<br />
+            Le Wifou est un cyber-fantôme qui cherche à posséder la famille Déboussolée.<br />
             Vous, gardiens de l'esprit de famille, réussirez-vous à chasser le Wifou<br />
             et restaurer l'harmonie entre technologie et famille ?
           </p>

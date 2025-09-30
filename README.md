@@ -1,133 +1,167 @@
-# 🛡️ Les Gardiens de l'Esprit Familial
+# 👻 Le Wifou
 
-Un jeu éducatif et coopératif pour protéger votre famille contre les dangers numériques du Wi-Fou maléfique.
+Un jeu éducatif et coopératif pour aider la famille Déboussolée à se libérer du cyber-fantôme Wifou !
 
 ## 🎮 À Propos du Jeu
 
-**Les Gardiens de l'Esprit Familial** est un jeu de société numérique conçu pour sensibiliser les familles aux enjeux de la vie numérique. À travers une aventure épique, les joueurs apprennent à résister aux manipulations numériques et à protéger leur esprit familial.
+**Le Wifou** est un cyber-fantôme farceur qui cherche à posséder la famille Déboussolée. Dans ce jeu, les joueurs devinent les choix du Maître du Jeu et découvrent au fil des tours quelles valeurs guident la famille.
 
-### 🎯 Objectifs Pédagogiques
+### 🎯 Objectifs
 
-- **Développer l'esprit critique** face aux contenus numériques
-- **Comprendre les mécanismes d'addiction** aux écrans et réseaux sociaux
-- **Renforcer les liens familiaux** et la communication
-- **Apprendre à gérer le temps** passé sur les écrans
-- **Développer une immunité numérique** durable
+- **Chasser le Wifou** et libérer la famille Déboussolée
+- **Deviner les choix** du Maître du Jeu
+- **Découvrir les valeurs** qui guident chaque joueur
+- **Discuter des enjeux** numériques de manière ludique
 
-## 🎲 Comment Jouer
+---
 
-### Configuration de la Partie
+## 👥 Joueurs
 
-1. **Nombre de joueurs** : 2 à 6 Gardiens
-2. **Durée de partie** :
-   - **Courte** (5 tours, 15 min) : Idéal pour débuter
-   - **Normale** (8 tours, 25 min) : Expérience équilibrée
-   - **Longue** (12 tours, 35 min) : Aventure complète
-   - **Marathon** (20 tours, 50 min) : Épopée légendaire
+- **2 à 6 joueurs**
+- Un seul **Maître du Jeu** à la fois (tourne à chaque tour)
 
-### Déroulement d'une Partie
+---
 
-#### 1. 🌅 Introduction du Chapitre
-- Découverte de la nouvelle menace du Wi-Fou
-- Compréhension du contexte et des enjeux
+## ⏱️ Durée
 
-#### 2. ⚔️ Attaque du Wi-Fou
-- Le Maître Gardien lit l'attaque
-- Les autres Gardiens choisissent un bouclier et expliquent leur parade
-- Chaque joueur soumet sa stratégie de défense
+- **Courte** : 5 tours (~15 min)
+- **Normale** : 8 tours (~25 min)
+- **Longue** : 12 tours (~35 min)
+- **Marathon** : 20 tours (~50 min)
 
-#### 3. 👑 Vote du Maître Gardien
-- Le Maître évalue les parades
-- Distribution de 3 points Pharmakon selon la qualité des explications
-- Rotation du rôle de Maître Gardien
+---
 
-#### 4. 🤔 Énigme de Réflexion
-- Question sur les motivations du Wi-Fou
-- Bonus de 1 point pour une bonne réponse
-- Approfondissement de la compréhension
+## 🎲 Déroulement d'un Tour
 
-#### 5. 🔄 Tour Suivant
-- Nouveau Maître Gardien
-- Nouvelle attaque
-- Progression dans l'aventure
+### 1. 📖 Attaque du Wifou
 
-## 🛡️ Les Boucliers Magiques
+Le Maître du Jeu lit à voix haute une situation loufoque préparée par le Wifou.
+
+**Exemple** : *"Au repas, chaque assiette projette un TikTok en direct"*
+
+### 2. 👑 Choix Secret du Maître
+
+Sur le smartphone/tablette, le **Maître choisit EN SECRET** une réponse parmi **4 boucliers magiques** :
+
+- 🆓 **Bouclier de Liberté** : dire NON et garder son autonomie
+- ❤️ **Bouclier du Cœur** : renforcer les liens et l'amour
+- 📋 **Bouclier des Règles** : instaurer un cadre juste
+- 🔒 **Bouclier de Sécurité** : bloquer les menaces et protéger
+
+Le Maître explique aussi **brièvement** pourquoi il a fait ce choix (quelle valeur le guide).
+
+### 3. 🗳️ Vote des Autres Joueurs
+
+Tous les **autres joueurs** (pas le Maître) devinent quel bouclier le Maître a choisi.
+
+Ils votent chacun leur tour sur l'application.
+
+### 4. 🎭 Révélation
+
+L'appli dévoile le choix du Maître et affiche qui a bien deviné !
+
+Le Maître explique brièvement sa décision.
+
+### 5. ⭐ Attribution des Points
+
+- Chaque joueur qui a **trouvé la bonne réponse** → **+1 point**
+- Le Maître **ne gagne pas de points** (il reste neutre)
+
+### 6. 🔄 Rotation
+
+Le rôle de Maître passe au joueur suivant.
+
+---
+
+## 🛡️ Les 4 Boucliers Magiques
 
 ### 🆓 Bouclier de Liberté
 - **Pouvoir** : Donne le pouvoir de dire "NON" et de choisir librement
 - **Protège contre** : L'asservissement et la manipulation
-- **Exemple** : Libérer Léa en lui donnant le choix conscient de regarder TikTok ou non
+- **Valeur** : Autonomie et choix personnel
 
 ### ❤️ Bouclier du Cœur
 - **Pouvoir** : Renforce l'amour et la solidarité familiale
 - **Protège contre** : L'isolement et la déconnexion émotionnelle
-- **Exemple** : Renforcer les liens familiaux en passant du temps ensemble sans écran
+- **Valeur** : Liens familiaux et amour
 
 ### 📋 Bouclier des Règles
 - **Pouvoir** : Établit des limites saines et équitables
 - **Protège contre** : Le chaos et l'excès
-- **Exemple** : Établir une règle : TikTok limité à 30 minutes par jour
+- **Valeur** : Cadre protecteur et discipline
 
 ### 🔒 Bouclier de Sécurité
 - **Pouvoir** : Bloque les menaces et préserve l'intégrité
 - **Protège contre** : Les dangers et les manipulations
-- **Exemple** : Bloquer les notifications toxiques et protéger la vie privée
+- **Valeur** : Protection et prévention
 
-## 📚 Les Chapitres de l'Aventure
+---
 
-### 🌅 Chapitre 1 : La Première Invasion
-**L'éveil des Gardiens**
-- Apprendre les bases des boucliers de défense
-- Découvrir les premiers pièges du Wi-Fou
-- Attaques : Tentation TikTok, Achat Compulsif, Isolement Numérique, Jeu Infini
+## 🏆 Fin de Partie
 
-### ⚔️ Chapitre 2 : L'Escalade
-**Le Wi-Fou se renforce**
-- Comprendre les motivations du Wi-Fou
-- Développer des stratégies avancées
-- Attaques : Hypnose des Notifications, Comparaison Toxique, Dépendance Sociale, Désinformation
+À la fin du dernier tour, l'appli affiche :
 
-### 👑 Chapitre 3 : Le Combat Final
-**Face à face avec le Wi-Fou**
-- Affronter le boss final
-- Utiliser toutes les compétences acquises
-- Attaques : Asservissement Total, Division Familiale, Illusion de Liberté, Retour du Wi-Fou
+### 1. 🎖️ Scores
 
-## 🏆 Système de Points Pharmakon
+**Classement des joueurs** → celui qui a deviné le plus souvent est le **Meilleur Chasseur de Wifou**
 
-Les **points Pharmakon** représentent la sagesse acquise contre le Wi-Fou :
+### 2. 📊 Statistiques de Valeurs
 
-- **3 points par tour** distribués par le Maître Gardien
-- **1 point bonus** pour une bonne réponse à l'énigme
-- **Classement en temps réel** pendant la partie
-- **Grand Gardien** : Le joueur avec le plus de points à la fin
+Pour chaque joueur (quand il a été Maître) → **% de ses choix de valeurs**
 
-## 🎵 Fonctionnalités Avancées
+**Exemple** :
+- Alice → Liberté 40% | Cœur 30% | Règles 20% | Sécurité 10%
+- Bob → Sécurité 50% | Règles 30% | Cœur 20%
 
-### 💾 Sauvegarde Automatique
-- Sauvegarde automatique de la progression
-- Reprise de partie possible
-- Données conservées 7 jours maximum
+### 3. 🏠 Valeur Dominante
 
-### 📊 Statistiques et Achievements
-- Suivi des parties jouées
-- Comptage des boucliers utilisés
-- Achievements à débloquer :
-  - 🎮 Première Partie
-  - 🏆 Vétéran (10 parties)
-  - 🛡️ Maître des Boucliers (50 boucliers)
-  - 🧠 Sage des Énigmes (20 bonnes réponses)
-  - 🏃 Marathon (partie de 15+ tours)
+Un **récapitulatif collectif** → quelle valeur a dominé dans la famille Déboussolée ?
 
-### 🔔 Système de Notifications
-- Notifications en temps réel
-- Feedback immédiat sur les actions
-- Alertes pour les transitions de phase
+---
 
-### 🎵 Effets Sonores
-- Sons générés par le navigateur
-- Feedback audio pour les actions
-- Sons de victoire et de transition
+## 📚 Les 12 Attaques du Wifou
+
+### 🍽️ Repas & Vie Familiale
+
+1. **Le Repas Fantôme** - Chaque assiette diffuse un TikTok
+2. **La Chaise Connectée** - Pas de place sans smartphone
+3. **Le Wifou des Selfies** - Selfie obligatoire à chaque bouchée
+
+### 🌙 Sommeil & Rythme de Vie
+
+4. **La Nuit des Notifications** - Bombardement d'alertes fantômes
+5. **Le Réveil Troll** - Alarmes toutes les 10 minutes
+6. **La Lampe Bleue** - Lumière bleue avant de dormir
+
+### 🤳 Réseaux Sociaux & Image
+
+7. **Le Défi TikTok Royal** - Danse en direct obligatoire
+8. **Le Filtre Fou** - Filtres ridicules sur tous les visages
+9. **La Story Éternelle** - Chaque parole devient une story publique
+
+### 🔒 Sécurité & Règles
+
+10. **Le Coffre-Fort Piraté** - Mots de passe affichés sur les murs
+11. **La Clé USB Maléfique** - Clés USB infectées distribuées
+12. **Le Contrat Piégé** - Signer sans lire les conditions
+
+---
+
+## 💡 Points Forts Éducatifs
+
+### 🎭 Coopératif et Fun
+On rit en devinant les choix des autres !
+
+### 📖 Éducatif en Creux
+Les attaques illustrent de vrais enjeux numériques : sommeil, repas, réseaux sociaux, sécurité...
+
+### 💭 Réflexif
+Les explications du Maître et les stats de fin ouvrent la discussion sur les valeurs familiales.
+
+### 🗣️ Discussion Ouverte
+Après chaque tour : *"Et dans la vraie vie, ça t'est déjà arrivé ?"*
+
+---
 
 ## 🛠️ Technologies Utilisées
 
@@ -137,6 +171,8 @@ Les **points Pharmakon** représentent la sagesse acquise contre le Wi-Fou :
 - **Web Audio API** : Génération de sons
 - **LocalStorage** : Sauvegarde des données
 
+---
+
 ## 🚀 Installation et Lancement
 
 ### Prérequis
@@ -144,6 +180,7 @@ Les **points Pharmakon** représentent la sagesse acquise contre le Wi-Fou :
 - npm ou yarn
 
 ### Installation
+
 ```bash
 # Cloner le projet
 git clone [url-du-repo]
@@ -161,6 +198,8 @@ npm run build
 ### Accès au Jeu
 Le jeu est accessible à l'adresse : `http://localhost:5173`
 
+---
+
 ## 🎯 Public Cible
 
 - **Familles** avec enfants de 8 à 16 ans
@@ -168,34 +207,63 @@ Le jeu est accessible à l'adresse : `http://localhost:5173`
 - **Thérapeutes** spécialisés dans l'addiction numérique
 - **Associations** de prévention
 
+---
+
 ## 📖 Guide d'Utilisation
 
 ### Pour les Parents
+
 1. **Jouez ensemble** : Le jeu est conçu pour être joué en famille
-2. **Discutez** : Utilisez les énigmes comme point de départ pour des conversations
-3. **Appliquez** : Encouragez l'application des stratégies apprises dans la vraie vie
-4. **Répétez** : Rejouez régulièrement pour renforcer les apprentissages
+2. **Discutez** : Utilisez les situations comme point de départ pour des conversations
+3. **Appliquez** : Encouragez l'application des valeurs découvertes dans la vraie vie
+4. **Répétez** : Rejouez régulièrement pour renforcer la réflexion
 
 ### Pour les Éducateurs
+
 1. **Adaptez** : Modifiez les règles selon l'âge des participants
 2. **Débrieffez** : Organisez des discussions après chaque partie
-3. **Suivez** : Utilisez les statistiques pour mesurer les progrès
-4. **Étendez** : Créez vos propres attaques et énigmes
+3. **Analysez** : Utilisez les statistiques pour comprendre les valeurs du groupe
+4. **Créez** : Inventez vos propres attaques du Wifou
 
-## 🔮 Évolutions Futures
+---
 
-- **Mode multijoueur en ligne**
-- **Créateur d'attaques personnalisées**
-- **Tableaux de bord pour éducateurs**
-- **Version mobile native**
-- **Intégration avec des plateformes éducatives**
+## 🎉 Exemple de Partie (3 tours)
 
-## 📞 Support et Contact
+### Joueurs : Alice, Bob, Clara
 
-Pour toute question ou suggestion :
-- **Issues GitHub** : Signaler des bugs ou proposer des améliorations
-- **Discussions** : Partager des retours d'expérience
-- **Contributions** : Proposer du code ou du contenu
+**Tour 1 - Maître : Alice**
+- Attaque : *Le Repas Fantôme*
+- Alice choisit : 📋 Règles
+- Bob vote : ❤️ Cœur → ❌
+- Clara vote : 📋 Règles → ✅ +1 pt
+
+**Tour 2 - Maître : Bob**
+- Attaque : *La Nuit des Notifications*
+- Bob choisit : 🔒 Sécurité
+- Alice vote : 🔒 Sécurité → ✅ +1 pt
+- Clara vote : 🆓 Liberté → ❌
+
+**Tour 3 - Maître : Clara**
+- Attaque : *Le Coffre-Fort Piraté*
+- Clara choisit : 🆓 Liberté
+- Alice vote : ❤️ Cœur → ❌
+- Bob vote : 🆓 Liberté → ✅ +1 pt
+
+### Résultats Finaux
+
+**Classement** :
+- Alice : 1 pt
+- Bob : 2 pts ← 👑 Meilleur Chasseur de Wifou !
+- Clara : 1 pt
+
+**Statistiques de valeurs** :
+- Alice → Règles 100%
+- Bob → Sécurité 100%
+- Clara → Liberté 100%
+
+**Valeur dominante** : Diversité ! La famille utilise toutes les valeurs.
+
+---
 
 ## 📄 Licence
 
@@ -203,4 +271,4 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ---
 
-**🛡️ Ensemble, protégeons l'esprit familial contre le Wi-Fou maléfique !**
+**👻 Ensemble, chassons le Wifou et restaurons l'harmonie familiale !**

@@ -8,7 +8,7 @@ export default function Tutorial({ onComplete }) {
   const steps = [
     {
       title: "🛡️ Bienvenue, Gardiens !",
-      content: `Le Wifou est un cyber-fantôme qui cherche à posséder la famille De Boussolée.
+      content: `Le Wifou est un cyber-fantôme qui cherche à posséder la famille Déboussolée.
 
 Ce fantôme numérique veut prendre le contrôle de l'esprit familial pour transformer tous les membres en esclaves des écrans.
 
@@ -59,7 +59,7 @@ Réfléchissez bien : une bonne réponse vous donne un bonus !`
 • Renforcer l'unité familiale
 • Développer une immunité numérique durable
 
-Prêts à chasser le Wifou et sauver la famille De Boussolée ?`
+Prêts à chasser le Wifou et sauver la famille Déboussolée ?`
     }
   ];
 

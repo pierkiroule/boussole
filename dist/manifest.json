@@ -1,7 +1,7 @@
 {
-  "name": "Les Gardiens de l'Esprit Familial",
-  "short_name": "Gardiens Esprit",
-  "description": "Jeu éducatif coopératif pour protéger la famille contre les dangers numériques",
+  "name": "Le Wifou",
+  "short_name": "Le Wifou",
+  "description": "Chassez le cyber-fantôme Wifou et restaurez l'harmonie entre technologie et famille",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1e1b4b",
