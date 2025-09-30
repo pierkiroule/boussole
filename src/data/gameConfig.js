@@ -15,8 +15,8 @@ export const GAME_CONFIG = {
       label: 'Partie courte',
       turns: 5,
       estimatedTime: '15 min',
-      description: 'Idéal pour débuter',
-      attacks: [1, 2, 3, 4, 5] // 1 chapitre + 1 attaque du chapitre 2
+      description: 'Idéal pour jouer en famille sans complexité',
+      attacks: [1, 2, 3, 4, 5] // 5 attaques simples pour la version familiale
     },
     NORMAL: {
       id: 'normal',
@@ -72,10 +72,10 @@ export const GAME_CONFIG = {
 
   // Configuration des boucliers
   SHIELD_CONFIG: {
-    LIBERTY: { color: '#3B82F6', bgColor: '#EFF6FF', borderColor: '#3B82F6' },
+    SECURITY: { color: '#F59E0B', bgColor: '#FFFBEB', borderColor: '#F59E0B' },
     HEART: { color: '#EF4444', bgColor: '#FEF2F2', borderColor: '#EF4444' },
-    RULES: { color: '#10B981', bgColor: '#F0FDF4', borderColor: '#10B981' },
-    SECURITY: { color: '#F59E0B', bgColor: '#FFFBEB', borderColor: '#F59E0B' }
+    LIBERTY: { color: '#3B82F6', bgColor: '#EFF6FF', borderColor: '#3B82F6' },
+    RESPECT: { color: '#10B981', bgColor: '#F0FDF4', borderColor: '#10B981' }
   }
 };
 
